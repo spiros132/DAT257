@@ -1,5 +1,4 @@
 "use client";
-import ResultLabel from "@/components/ResultLabel";
 import SearchBar from "@/components/SearchBar";
 import React, {useState} from "react";
 
