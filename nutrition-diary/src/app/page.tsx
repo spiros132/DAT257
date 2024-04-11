@@ -1,20 +1,51 @@
+"use client";
+import ResultLabel from "@/components/ResultLabel";
 import SearchBar from "@/components/SearchBar";
-import Image from "next/image";
-
+import React, {useState} from "react";
 
 export default function Home() {
+  const onSearch = (searchInput: string) => { fetchData(searchInput); };
+  const [foodName, setFoodName] = useState<string>('');
+  const [calories, setCalories] = useState<string>('');
+
+  function handleResult(result: any){
+    result.foods.forEach((food: any) => {
+      setFoodName(food.food_name);
+      setCalories(food.nf_calories);});
+  }
+
+  function fetchData(searchInput: string){
+    console.log(searchInput);
+    const myHeaders = new Headers();
+    myHeaders.append("x-app-id", "12e033fb");
+    myHeaders.append("x-app-key", "039977dee92c04ad730011a5f77c3855	");
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("query", searchInput);
+  
+    const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: "follow"
+    };
+  
+    fetch("https://trackapi.nutritionix.com/v2/natural/nutrients", requestOptions)
+    .then((response) => response.json())
+    .then((result) => handleResult(result))
+    .catch((error) => console.error(error));
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 ">
-              <SearchBar /> 
+              <SearchBar onSearch={onSearch} /> 
               <div className="items-center min-h-screen">
-              <label id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              Food name: 
+              <label className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              Food name: {foodName}
               </label>
-              <label id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              Food category: 
-              </label>
-              <label id="message" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              Calories: 
+              <label className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              Calories: {calories}
               </label>
             </div>
     </main>

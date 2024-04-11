@@ -1,17 +1,15 @@
 "use client";
 import React, {useState} from "react";
 
-function searchBar() {
+function searchBar({onSearch}) {
     const [searchInput, setSearchInput] = useState<string>('');
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
     };
-
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        onSearch(searchInput);
     };
-
     return (
         <form onSubmit={handleSearch}>
             <div className="mb-3 md:w-96">
