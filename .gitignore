@@ -52,5 +52,4 @@ jspm_packages
 *.vsix
 
 # Environment
-.env
-*.env.*
+*.env*
