@@ -13,7 +13,7 @@ export default function Home() {
   function fetchData(searchInput: string){
     startTransition(() => {
       SearchForFood(searchInput)
-      .then((res: any) => {
+      .then((res: string | undefined) => {
         if(res != undefined)
           setResult(res);
       })

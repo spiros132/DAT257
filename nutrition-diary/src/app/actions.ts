@@ -1,6 +1,8 @@
 "use server";
 
-export async function SearchForFood(foodname: string): Promise<any> {
+import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
+
+export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
     const key = process.env.X_APP_KEY;
 
@@ -23,20 +25,28 @@ export async function SearchForFood(foodname: string): Promise<any> {
     
         // Request options
         const requestOptions: RequestInit = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: "follow"
+            method: "POST",
+            headers: myHeaders,
+            body: urlencoded,
+            redirect: "follow"
         };
     
         const res = await fetch(url, requestOptions);
 
+        const json = await res.json();
+        const obj = new SearchFoodItemNutrientsData();
+        
+        // Assign the json data to the an object
+        Object.assign(obj, json)
+        
+        // Error checking
+
         // Return the json of the response body
-        return await res.json();
+        return JSON.stringify(obj);
     }
 }
 
-export async function SearchForFoodList(foodname: string): Promise<any> {
+export async function SearchForFoodList(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
     const key = process.env.X_APP_KEY;
 
@@ -55,14 +65,22 @@ export async function SearchForFoodList(foodname: string): Promise<any> {
     
         // Request options
         const requestOptions: RequestInit = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
         };
     
         const res = await fetch(url, requestOptions);
 
+        const json = await res.json();
+        const obj = new SearchListFoodItemData();
+        
+        // Assign the json data to the an object
+        Object.assign(obj, json)
+
+        // Error checking
+
         // Return the json of the response body
-        return await res.json();
+        return JSON.stringify(obj);
     }
 }

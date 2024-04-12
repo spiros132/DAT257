@@ -1,20 +1,20 @@
 // Common interfaces
-interface Photo {
+export interface Photo {
     thumb: string;
     highres: any;
     is_user_uploaded: boolean | undefined;
 }
 
-interface Nutrient {
+export interface Nutrient {
     attr_id: number;
     value: number;
 }
 
-interface Metadata {
+export interface Metadata {
     is_raw_food: boolean;
 }
 
-interface Tags {
+export interface Tags {
     item: string;
     measure: string | null;
     quantity: string;
@@ -22,7 +22,7 @@ interface Tags {
     tag_id: number;
 }
 
-interface AltMeasures {
+export interface AltMeasures {
     serving_weight: number;
     measure: string;
     seq: number;
@@ -30,7 +30,7 @@ interface AltMeasures {
 }
 
 // The API for searching multiple items
-interface SearchListFoodItemBase {
+export interface SearchListFoodItemBase {
     food_name: string;
     serving_unit: string;
     serving_qty: number;
@@ -38,13 +38,13 @@ interface SearchListFoodItemBase {
     locale: string;
 }
 
-interface SearchListFoodItemCommon extends SearchListFoodItemBase {
+export interface SearchListFoodItemCommon extends SearchListFoodItemBase {
     tag_name: string;
     common_type: any;
     tag_id: string;
 }
 
-interface SearchListFoodItemBranded extends SearchListFoodItemBase {
+export interface SearchListFoodItemBranded extends SearchListFoodItemBase {
     nix_brand_id: string;
     brand_name_item_name: string;
     nf_calories: number;
@@ -55,7 +55,7 @@ interface SearchListFoodItemBranded extends SearchListFoodItemBase {
 }
 
 // The API for searching of the nutrients of item(s)
-interface SearchFoodItemNutrients {
+export interface SearchFoodItemNutrients {
     food_name: string;
     brand_name: string | null;
     
@@ -105,3 +105,12 @@ interface SearchFoodItemNutrients {
 }
 
 
+// The API classes
+export class SearchFoodItemNutrientsData {
+    foods: SearchFoodItemNutrients[] = [];
+}
+
+export class SearchListFoodItemData {
+    common: SearchListFoodItemCommon[] = [];
+    branded: SearchListFoodItemBranded[] = [];
+}

@@ -17,7 +17,7 @@ function searchBar({onSearch}: {onSearch: (searchInput: string) => void}){
                     <input
                         type="text"
                         id="searchBar"
-                        className="block flex-auto border border-solid px-3 bg-white"
+                        className="block flex-auto border border-solid px-3 bg-white text-black font-bold"
                         placeholder="Search"
                         aria-label="Search"
                         value={searchInput}

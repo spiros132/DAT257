@@ -1,17 +1,21 @@
 "use client";
 import React, {useState, useEffect} from "react";
 
-export default function ResultDisplay(props: {readonly result: any}){
+import { SearchFoodItemNutrientsData, SearchFoodItemNutrients } from '@/app/interfaces';
+
+export default function ResultDisplay(props: {readonly result: string}){
     const [foodName, setFoodName] = useState<string>('');
-    const [calories, setCalories] = useState<string>('');
+    const [calories, setCalories] = useState<number>(0);
     const [photo, setPhoto] = useState<string>('');
 
     useEffect(() => {
         if (props.result){handleResult(props.result);}
     }, [props.result]); 
 
-    function handleResult(result: any){
-        result.foods.forEach((food: any) => {
+    function handleResult(result: string){
+        const data: SearchFoodItemNutrientsData = JSON.parse(result);
+        
+        data.foods.forEach((food: SearchFoodItemNutrients) => {
             setPhoto(food.photo.thumb);
             setFoodName(food.food_name);
             setCalories(food.nf_calories);
