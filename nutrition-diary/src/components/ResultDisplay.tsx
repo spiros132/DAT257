@@ -8,7 +8,7 @@ export default function ResultDisplay(props: {result: any}){
     const [photo, setPhoto] = useState<string>('');
 
     useEffect(() => {
-        handleResult(props.result);
+        if (props.result){handleResult(props.result);}
     }, [props.result]); 
 
     function handleResult(result: any){

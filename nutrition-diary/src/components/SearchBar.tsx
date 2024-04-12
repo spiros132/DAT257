@@ -3,6 +3,7 @@ import React, {useState} from "react";
 
 function searchBar({onSearch}: {onSearch: (searchInput: string) => void}){
     const [searchInput, setSearchInput] = useState<string>('');
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
     };
