@@ -1,7 +1,9 @@
 "use client";
 import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
-import React, {useState} from "react";
+import React, {startTransition, useState} from "react";
+
+import SearchForFood from "./actions";
 
 export default function Home() {
 
@@ -9,25 +11,16 @@ export default function Home() {
   const [result, setResult] = useState<string>('');
 
   function fetchData(searchInput: string){
-    const myHeaders = new Headers();
-    myHeaders.append("x-app-id", "12e033fb");
-    myHeaders.append("x-app-key", "039977dee92c04ad730011a5f77c3855	");
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-  
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("query", searchInput);
-  
-    const requestOptions: RequestInit = {
-    method: "POST",
-    headers: myHeaders,
-    body: urlencoded,
-    redirect: "follow"
-    };
-  
-    fetch("https://trackapi.nutritionix.com/v2/natural/nutrients", requestOptions)
-    .then((response) => response.json())
-    .then((result) => setResult(result))
-    .catch((error) => console.error(error));
+    startTransition(() => {
+      SearchForFood(searchInput)
+      .then((res) => {
+        if(res != undefined)
+          setResult(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    });
   }
 
   return (
