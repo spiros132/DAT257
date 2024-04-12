@@ -1,7 +1,7 @@
 "use client";
 import React, {useState, useEffect} from "react";
 
-export default function ResultDisplay(props: {result: any}){
+export default function ResultDisplay(props: {readonly result: any}){
     const [foodName, setFoodName] = useState<string>('');
     const [calories, setCalories] = useState<string>('');
     const [photo, setPhoto] = useState<string>('');
