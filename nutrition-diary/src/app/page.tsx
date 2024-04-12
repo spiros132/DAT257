@@ -17,7 +17,7 @@ export default function Home() {
     const urlencoded = new URLSearchParams();
     urlencoded.append("query", searchInput);
   
-    const requestOptions = {
+    const requestOptions: RequestInit = {
     method: "POST",
     headers: myHeaders,
     body: urlencoded,
