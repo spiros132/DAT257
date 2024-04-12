@@ -3,7 +3,7 @@ import React, {useState} from "react";
 
 function searchBar({onSearch}: {onSearch: (searchInput: string) => void}){
     const [searchInput, setSearchInput] = useState<string>('');
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
     };
@@ -13,7 +13,6 @@ function searchBar({onSearch}: {onSearch: (searchInput: string) => void}){
     };
     return (
         <form onSubmit={handleSearch}>
-            <div className="md:w-96">
                 <div className="relative mb-4 flex w-full flex-wrap">
                     <input
                         type="text"
@@ -41,7 +40,6 @@ function searchBar({onSearch}: {onSearch: (searchInput: string) => void}){
                         </svg>
                     </button>
                 </div>
-            </div>
         </form>
     );
 
