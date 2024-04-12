@@ -3,7 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import React, {startTransition, useState} from "react";
 
-import SearchForFood from "./actions";
+import { SearchForFood } from "./actions";
 
 export default function Home() {
 
@@ -13,11 +13,11 @@ export default function Home() {
   function fetchData(searchInput: string){
     startTransition(() => {
       SearchForFood(searchInput)
-      .then((res) => {
+      .then((res: any) => {
         if(res != undefined)
           setResult(res);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.log(error);
       });
     });

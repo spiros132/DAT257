@@ -1,6 +1,6 @@
 "use server";
 
-export default async function SearchForFood(foodsearch: string): Promise<any | undefined> {
+export async function SearchForFood(foodsearch: string): Promise<any> {
     const id = process.env.X_APP_ID;
     const key = process.env.X_APP_KEY;
 
