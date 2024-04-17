@@ -41,8 +41,7 @@ export async function SearchForFood(foodname: string): Promise<string | undefine
         Object.assign(obj, json);
         
         // Error checking
-        insertUser("test4", "test4", 1, 1);
-        getUserInfo("test");
+        
         // Return the json of the response body
         return JSON.stringify(obj);
     }

@@ -96,7 +96,7 @@ async function executeQuery(query : string, params : any, timeout : number = 500
 }
 
 
-export function insertUser(username: string, password: string, height: number, weight: number){
+export function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
     password = createHash('sha256').update(password).digest('hex');
     executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
 }
