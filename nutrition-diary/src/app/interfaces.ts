@@ -114,3 +114,10 @@ export class SearchListFoodItemData {
     common: SearchListFoodItemCommon[] = [];
     branded: SearchListFoodItemBranded[] = [];
 }
+
+// Database interfaces
+export interface UserInterface {
+    username: string;
+    height: number;
+    weight: number;
+}

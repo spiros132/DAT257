@@ -1,6 +1,7 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
+import { getUserInfo, insertUser } from "./database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -37,10 +38,11 @@ export async function SearchForFood(foodname: string): Promise<string | undefine
         const obj = new SearchFoodItemNutrientsData();
         
         // Assign the json data to the an object
-        Object.assign(obj, json)
+        Object.assign(obj, json);
         
         // Error checking
-
+        insertUser("test4", "test4", 1, 1);
+        getUserInfo("test");
         // Return the json of the response body
         return JSON.stringify(obj);
     }
