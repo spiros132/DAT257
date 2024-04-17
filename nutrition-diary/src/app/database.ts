@@ -84,7 +84,7 @@ async function executeQuery(query : string, params : any, timeout : number = 500
             return result;
         }
     }
-    catch (error){
+    catch (error: any){
         console.error(error);
         if (error.message == "SQLITE_BUSY: database is locked" && timeout > 0){
             console.log("Database is locked, retrying in 500ms");

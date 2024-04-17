@@ -1,7 +1,7 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { getUserInfo, insertUser } from "./database";
+import { getUserInfo, registerUser } from "./database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
