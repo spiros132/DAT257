@@ -4,7 +4,6 @@ export default function CreateAccountPage(){
 
 
     return (
-        <>
       <div className="flex min-h-screen"> 
         <div className="flex-1 flex items-center justify-center"> {/* Center the image */}
           <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" className="centered-image" style={{ width: '450px', filter: 'grayscale(3%) brightness(95%)' }} />
@@ -46,6 +45,5 @@ export default function CreateAccountPage(){
           </div>
         </div>
       </div>
-    </>
       )
 } 
