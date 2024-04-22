@@ -28,7 +28,7 @@ export default function LoginPage(){
             SIGN IN
           </button>
           <div className="mb-6"></div> {/* Empty div for spacing */}
-          <p className="text-sm text-black">Don't have an account</p>
+          <p className="text-sm text-black">Don't have an account?</p>
           <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2">
             CREATE ACCOUNT
           </button>
