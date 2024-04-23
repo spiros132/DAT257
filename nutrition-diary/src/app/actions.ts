@@ -89,7 +89,7 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database
-    users[] = getUserInfo(username);
+    //users[] = getUserInfo(username);
 
     // If it is, generate a new token for the user and save it a list with all tokens
 
