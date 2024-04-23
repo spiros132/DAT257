@@ -1,10 +1,14 @@
 "use client";
 
-export default function MealCard(){
+import React from "react";
 
+interface MealCardProps {
+    className?: string; // Define the className prop
+}
 
+const MealCard: React.FC<MealCardProps> = ({ className }) => {
     return (
-        <div className="h-[35vh] w-[12vw] bg-white">
+        <div className={`h-[35vh] w-[12vw] bg-white ${className}`}>
             <div className="bg-greenTheme h-[20%] w-[100%] rounded-t-[20px] flex">
                 <p className="text-white text-[20px] m-auto">
                   Meal Name  
@@ -46,4 +50,7 @@ export default function MealCard(){
             </div>
         </div>
       )
-} 
+}
+
+
+export default MealCard;
