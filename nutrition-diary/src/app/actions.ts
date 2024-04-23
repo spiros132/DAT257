@@ -1,7 +1,8 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { getUserInfo, registerUser } from "./database";
+import { getUserInfo, loginUser, registerUser } from "./database";
+import { cookies } from "next/headers";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -84,4 +85,27 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
         // Return the json of the response body
         return JSON.stringify(obj);
     }
+}
+
+export async function Login(username: string, password: string): Promise<boolean> {
+    // Check if the username and password are correct in the database
+    users[] = getUserInfo(username);
+
+    // If it is, generate a new token for the user and save it a list with all tokens
+
+    // Return the token in a cookie to the user
+    // Or return an error based on if it's correct or not
+    loginUser(username, password);
+    
+    return true;
+}
+
+export async function RegisterUser(username: string, password: string, height: number = 0, weight: number = 0) {
+    // Check if there is already a user with this username, and then return if there is
+    
+    // Validate the username and password that you just got
+    
+    // Register the user in the database and redirect the client to the login page
+    // Or return an error based on if it's correct or not
+    registerUser(username, password, height, weight);
 }
