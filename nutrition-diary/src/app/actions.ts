@@ -89,6 +89,10 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
     }
 }
 
+// WIP!!!
+// gives a list of meals with the calories
+// export async function GetMealList(username: string, )
+
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database
     //users[] = getUserInfo(username);

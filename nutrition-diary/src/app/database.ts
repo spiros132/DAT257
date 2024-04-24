@@ -105,8 +105,15 @@ export async function registerEatenMealItem(meal: number, food: string, quantity
 }
 
 export async function viewMeals(user: string){
-  executeQuery(`SELECT eatenMeals.name FROM eatenMeal
-                INNER JOIN users ON users.id == eatenMeal.user`, [])
+  return executeQuery(`SELECT eatenMeals.name FROM eatenMeals
+                       INNER JOIN users ON eatenMeals.user == users.id
+                       WHERE username == ?`, [user]);
+}
+
+export async function viewFoodsOfMeal(meal: string){
+  return executeQuery(`SELECT eatenMealItem.name FROM eatenMealItem
+                       INNER JOIN eatenMeals ON eatenMealItem.meal == eatenMeals.id
+                       WHERE meal == ?`, [meal]);
 }
 
 export async function deleteMeal(mealname: string){
