@@ -1,7 +1,8 @@
 "use client";
+import {RegisterUser} from "@/app/actions";
+
 
 export default function CreateAccountPage(){
-
 
     return (
       <div className="flex min-h-screen"> 
@@ -11,23 +12,28 @@ export default function CreateAccountPage(){
         <div className="flex-1 flex flex-col items-center justify-center mt-1"> 
           <div className="flex flex-col items-center"> 
             <h2 className="text-2xl font-semibold mb-4">Welcome to Nutrition Diary</h2>
-            <form className="flex flex-col items-center">
+            <form action={RegisterUser} className="flex flex-col items-center">
               <input
+                name="username"
                 type="text"
                 placeholder="CREATE USERNAME"
                 className="border border-gray-300 rounded-md p-2 mb-2"
               />
               <input
+                name="password"
                 type="password"
                 placeholder="CREATE PASSWORD"
                 className="border border-gray-300 rounded-md p-2 mb-4"
               />
               <input
-                type="text"
+                name="confirmPassword"
+                type="password"
                 placeholder="CONFIRM PASSWORD"
                 className="border border-gray-300 rounded-md p-2 mb-2"
               />
-              <button 
+              <button
+                name="registerButton"
+                type="submit" 
                 className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md"
               >
                 CONFIRM REGISTRATION

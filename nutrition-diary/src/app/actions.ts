@@ -3,6 +3,8 @@
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
 import { getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
+import { use } from "react";
+import { get } from "http";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -89,23 +91,36 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database
-    users[] = getUserInfo(username);
+    //users[] = getUserInfo(username);
 
     // If it is, generate a new token for the user and save it a list with all tokens
 
     // Return the token in a cookie to the user
     // Or return an error based on if it's correct or not
-    loginUser(username, password);
+    //loginUser(username, password);
     
-    return true;
+   // return true;
 }
 
-export async function RegisterUser(username: string, password: string, height: number = 0, weight: number = 0) {
+export async function RegisterUser(formData) {
     // Check if there is already a user with this username, and then return if there is
-    
+    var username = formData.get("username");
+    var password = formData.get("password");
+    var confirmationPassword = formData.get("confirmPassword");
+    var users = await getUserInfo(username);
+
+    if(users.length > 0){
+        console.log("User already exists")
+        return false;
+    };
     // Validate the username and password that you just got
-    
+    if(password != confirmationPassword || password.length < 8 || username.length < 4){
+        console.log("Password or username is not valid")
+        return false;
+    }
     // Register the user in the database and redirect the client to the login page
+    registerUser(username, password);
     // Or return an error based on if it's correct or not
-    registerUser(username, password, height, weight);
+    console.log("User registered")
+    return true;
 }
