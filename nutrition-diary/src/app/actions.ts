@@ -99,7 +99,7 @@ export async function Login(username: string, password: string): Promise<boolean
     // Or return an error based on if it's correct or not
     //loginUser(username, password);
     
-   // return true;
+   return true;
 }
 
 export async function RegisterUser(formData : FormData): Promise<boolean> {
@@ -107,7 +107,7 @@ export async function RegisterUser(formData : FormData): Promise<boolean> {
     let username = String(formData.get("username"));
     let password = String(formData.get("password"));
     let confirmationPassword = String(formData.get("confirmPassword"));
-    let users = await getUserInfo(username);
+    let users = await String(getUserInfo(username));
 
     if(users.length > 0){
         console.log("User already exists")
