@@ -102,11 +102,11 @@ export async function Login(username: string, password: string): Promise<boolean
    // return true;
 }
 
-export async function RegisterUser(formData) {
+export async function RegisterUser(formData : FormData): Promise<boolean> {
     // Check if there is already a user with this username, and then return if there is
-    var username = formData.get("username");
-    var password = formData.get("password");
-    var confirmationPassword = formData.get("confirmPassword");
+    var username = String(formData.get("username"));
+    var password = String(formData.get("password"));
+    var confirmationPassword = String(formData.get("confirmPassword"));
     var users = await getUserInfo(username);
 
     if(users.length > 0){
