@@ -97,11 +97,20 @@ async function executeQuery(query : string, params : any, timeout : number = 500
 }
 
 export async function registerEatenMeal(user: number, name: string, date: Date){
-  executeQuery(`INSERT INTO eatenMeal(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
+  executeQuery(`INSERT INTO eatenMeals(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
 }
 
 export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
-  executeQuery(`INSERT INTO eatenMeal(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+  executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+}
+
+export async function viewMeals(user: string){
+  executeQuery(`SELECT eatenMeals.name FROM eatenMeal
+                INNER JOIN users ON users.id == eatenMeal.user`, [])
+}
+
+export async function deleteMeal(mealname: string){
+  executeQuery(`DELETE FROM eatenMeals WHERE name == mealname`, [mealname])
 }
 
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
