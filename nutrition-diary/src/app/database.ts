@@ -46,14 +46,14 @@ function createDB(){
                 date DATETIME NOT NULL, 
                 FOREIGN KEY (user) REFERENCES users(username)
             )`);
-        newDB.run(
-            `CREATE TABLE IF NOT EXISTS eatenMealItem(
-                meal INTEGER,
-                food TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                FOREIGN KEY (meal) REFERENCES eatenMeals(name)
-        )`);
-    });
+            newDB.run(
+              `CREATE TABLE IF NOT EXISTS eatenMealItem(
+                  meal INTEGER,
+                  food TEXT NOT NULL,
+                  quantity INTEGER NOT NULL,
+                  FOREIGN KEY (meal) REFERENCES eatenMeals(name)
+          )`);
+      });
 };
 
 createDB();
@@ -96,6 +96,13 @@ async function executeQuery(query : string, params : any, timeout : number = 500
     }
 }
 
+export async function registerEatenMeal(user: number, name: string, date: Date){
+  executeQuery(`INSERT INTO eatenMeal(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
+}
+
+export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
+  executeQuery(`INSERT INTO eatenMeal(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+}
 
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
     password = createHash('sha256').update(password).digest('hex');
@@ -137,6 +144,7 @@ export async function getUserInfo(username: string): Promise<databaseReturnType>
         return await executeQuery(`SELECT username, height, weight FROM users WHERE username = ?`, [username]);
     });
 }
+
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {
