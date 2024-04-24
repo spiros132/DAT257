@@ -11,6 +11,7 @@ import LoginPage from "@/pages/LoginPage";
 import CreateAccountPage from "@/pages/CreateAccountPage";
 import MenuPage from "@/pages/MenuPage";
 import MainPage from "@/pages/MainPage";
+import AddMealButton from "@/components/AddMealButton";
 
 
 export default function Home() {

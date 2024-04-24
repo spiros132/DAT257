@@ -4,7 +4,7 @@ export default function CalorieCounter(){
 
 
     return (
-        <div className="h-[60vh] w-[18vw] bg-white absolute top-0 right-0 border border-black border-t-0 border-r-0">
+        <div className="h-[60vh] w-[18vw] bg-white absolute top-0 right-0 border border-gray-500 border-t-0 border-r-0">
             <div className="h-[33%] flex justify-center items-center flex-col">
                 <p className="text-[2em]">
                     Calories
