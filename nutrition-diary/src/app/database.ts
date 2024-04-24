@@ -110,7 +110,7 @@ export async function viewMeals(user: string){
 }
 
 export async function deleteMeal(mealname: string){
-  executeQuery(`DELETE FROM eatenMeals WHERE name == mealname`, [mealname])
+  executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, [mealname])
 }
 
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
