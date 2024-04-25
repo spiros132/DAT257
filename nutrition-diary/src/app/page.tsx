@@ -1,12 +1,18 @@
 "use client";
 import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
+import MealCard from "@/components/MealCard";
+import CalorieCounter from "@/components/CalorieCounter";
+
 import React, {startTransition, useState} from "react";
 
 import { SearchForFood } from "./actions";
 import LoginPage from "@/pages/LoginPage";
 import CreateAccountPage from "@/pages/CreateAccountPage";
 import MenuPage from "@/pages/MenuPage";
+import MainPage from "@/pages/MainPage";
+import AddMealButton from "@/components/AddMealButton";
+
 
 export default function Home() {
 
@@ -28,7 +34,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between bg-white text-black">
+
+
       <CreateAccountPage/>
+     CreateEditMealPage
     </main>
   );
 }
