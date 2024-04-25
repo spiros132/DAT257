@@ -3,6 +3,8 @@
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
 import { getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
+import { use } from "react";
+import { get } from "http";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -87,6 +89,10 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
     }
 }
 
+// WIP!!!
+// gives a list of meals with the calories
+// export async function GetMealList(username: string, )
+
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database
     //users[] = getUserInfo(username);
@@ -95,17 +101,31 @@ export async function Login(username: string, password: string): Promise<boolean
 
     // Return the token in a cookie to the user
     // Or return an error based on if it's correct or not
-    loginUser(username, password);
+    //loginUser(username, password);
     
-    return true;
+   return true;
 }
 
-export async function RegisterUser(username: string, password: string, height: number = 0, weight: number = 0) {
+export async function RegisterUser(formData : FormData): Promise<boolean> {
     // Check if there is already a user with this username, and then return if there is
-    
+    let username = String(formData.get("username"));
+    let password = String(formData.get("password"));
+    let confirmationPassword = String(formData.get("confirmPassword"));
+    let users = await String(getUserInfo(username));
+
+    if(users.length > 0){
+        console.log("User already exists")
+        return false;
+    };
+
     // Validate the username and password that you just got
-    
+    if(password != confirmationPassword || password.length < 8 || username.length < 4){
+        console.log("Password or username is not valid")
+        return false;
+    }
     // Register the user in the database and redirect the client to the login page
+    registerUser(username, password);
     // Or return an error based on if it's correct or not
-    registerUser(username, password, height, weight);
+    console.log("User registered")
+    return true;
 }

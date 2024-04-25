@@ -46,14 +46,14 @@ function createDB(){
                 date DATETIME NOT NULL, 
                 FOREIGN KEY (user) REFERENCES users(username)
             )`);
-        newDB.run(
-            `CREATE TABLE IF NOT EXISTS eatenMealItem(
-                meal INTEGER,
-                food TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                FOREIGN KEY (meal) REFERENCES eatenMeals(name)
-        )`);
-    });
+            newDB.run(
+              `CREATE TABLE IF NOT EXISTS eatenMealItem(
+                  meal INTEGER,
+                  food TEXT NOT NULL,
+                  quantity INTEGER NOT NULL,
+                  FOREIGN KEY (meal) REFERENCES eatenMeals(name)
+          )`);
+      });
 };
 
 createDB();
@@ -96,6 +96,29 @@ async function executeQuery(query : string, params : any, timeout : number = 500
     }
 }
 
+export async function registerEatenMeal(user: number, name: string, date: Date){
+  executeQuery(`INSERT INTO eatenMeals(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
+}
+
+export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
+  executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+}
+
+export async function viewMeals(user: string){
+  return executeQuery(`SELECT eatenMeals.name FROM eatenMeals
+                       INNER JOIN users ON eatenMeals.user == users.id
+                       WHERE username == ?`, [user]);
+}
+
+export async function viewFoodsOfMeal(meal: string){
+  return executeQuery(`SELECT eatenMealItem.name FROM eatenMealItem
+                       INNER JOIN eatenMeals ON eatenMealItem.meal == eatenMeals.id
+                       WHERE meal == ?`, [meal]);
+}
+
+export async function deleteMeal(mealname: string){
+  executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, [mealname])
+}
 
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
     password = createHash('sha256').update(password).digest('hex');
@@ -110,9 +133,14 @@ export async function updateWeight(username: string, weight: number){
     executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
 }
 
-export async function updatePassword(username: string, password: string){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
+export async function updatePassword(username: string, password: string): Promise<boolean> {
+    const result = errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
+    });
+
+    // Check so that the password has updated correctly before returning true / false
+    return true;
 }
 
 export async function loginUser(username: string, password: string): Promise<boolean> {
@@ -121,20 +149,18 @@ export async function loginUser(username: string, password: string): Promise<boo
         return await executeQuery(`SELECT id FROM users WHERE username = ? AND password = ?`, [username, password]);
     });
 
+    // Check if the result actually has any values, then return true / false based on that
     console.log(result);
 
     return false;
 }
 
-export async function getUserInfo(username: string): Promise<any[] | undefined>{
-    try {
+export async function getUserInfo(username: string): Promise<databaseReturnType>{
+    return errorHandler(async () => {
         return await executeQuery(`SELECT username, height, weight FROM users WHERE username = ?`, [username]);
-    }
-    catch(e) {
-        console.log(e);
-    }
-    
+    });
 }
+
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {
