@@ -135,20 +135,24 @@ export async function Login(username: string, password: string): Promise<boolean
 }
 
 export async function RegisterUser(username: string, password: string, confirmPassword: string, weight: number = 0, length: number = 0): Promise<string> {
-    // Check if there is already a user with this username, and then return if there is
+    // Does the user already exists? and if so return an error that says exactly that
     const users = await getUserInfo(undefined, username);
-
+    
     if(users != undefined && users.length > 0){
         console.log("User already exists")
         return "User already exists!";
     }
 
     // Validate the username and password that you just got
-    if(password != confirmPassword || password.length < 8 || username.length < 4){
-        console.log("Password or username is not valid")
-        return "Password or username is not valid";
-    }
-    
+    if(username.length < 4)
+        return "Username should be more than to 3 characters long!";
+
+    if(password.length < 8)
+        return "Password should be more than 7 characters long!";
+
+    if(password != confirmPassword)
+        return "Password and confirm password aren't matching!";
+
     // Register the user in the database and redirect the client to the login page
     registerUser(username, password);
     return "User registered successfully";
