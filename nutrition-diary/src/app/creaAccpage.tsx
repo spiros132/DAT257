@@ -7,11 +7,7 @@ import LoginPage from "@/pages/LoginPage";
 import MenuPage from "@/pages/MenuPage";
 import CreateAccountPage from "@/pages/CreateAccountPage";
 import AppRouter from "@/AppRouter";
-import ProfilePage from "@/pages/Profile";
 // import { useHistory } from 'react-router-dom';
-import profilePage1 from "@/pages/ProfilePage1";
-import MainPage from "@/pages/MainPage";
-import Approuter from "@/pages/Approuter"
 
 
 export default function App() { {/** Home */}
@@ -43,12 +39,14 @@ export default function App() { {/** Home */}
            {/* <LoginPage/>  */}
            {/*  <MenuPage/> */}
            {/** <CreateAccountPage/> */}
-           {/** <ProfilePage/> greentheme  */}
-           {/** <MainPage/>  */}
+         
+           <CreateAccountPage/>
+           
 
-           <ProfilePage/>
 
-      
+
+
+           
     </main>
   );
 }

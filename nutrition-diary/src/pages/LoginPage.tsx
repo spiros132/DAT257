@@ -1,9 +1,13 @@
 "use client";
 import logo from "/NutritionDiary1.png";
+import AppRouter from "@/AppRouter";
+import { Link } from 'react-router-dom';
+
 export default function LoginPage(){
 
 
   return(
+
     <>
       <div className="flex min-h-screen"> 
         <div className="flex-1 flex items-center justify-center"> {/* Center the image */}
@@ -13,30 +17,41 @@ export default function LoginPage(){
           <div className="flex flex-col items-center"> 
             <h2 className="text-2xl font-semibold mb-4">Welcome to Nutrition Diary</h2>
             
-        <form className="flex flex-col items-center">
-          <input
-            type="text"
-            placeholder="Username"
-            className="border border-green-300 rounded-md p-2 mb-2"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border border-green-300 rounded-md p-2 mb-4"
-          />
-          
-          <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mb-2">
-            SIGN IN
-          </button>
-          <div className="mb-6"></div> {/* Empty div for spacing */}
-          <p className="text-sm text-black">Don't have an account</p>
-          <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2">
-            CREATE ACCOUNT
-          </button>
-        </form>
+            <form className="flex flex-col items-center">
+              <input
+                type="text"
+                placeholder="Username"
+                className="border border-green-300 rounded-md p-2 mb-2"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="border border-green-300 rounded-md p-2 mb-4"
+              />
+              
+              <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mb-2">
+                SIGN IN
+              </button>
+              <div className="mb-6"></div> {/* Empty div for spacing */}
+              <p className="text-sm text-black">Don't have an account</p>
+              
+              {/* Wrap the button with Link */}
+              
+
+                <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2">
+                  CREATE ACCOUNT
+                </button>
+
+              
+              {/** <Link to="@/app/creaAccpage">
+               * </Link>
+               */}
+
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</>
+    </>
+    
   )
 } 
