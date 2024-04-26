@@ -28,7 +28,10 @@ function createDB(){
                 user INTEGER,
                 name TEXT NOT NULL,
                 description TEXT NOT NULL,   
-                calories INTEGER NOT NULL DEFAULT 0,             
+                calories INTEGER NOT NULL DEFAULT 0,  
+                protein REAL NOT NULL, 
+                fat REAL NOT NULL,
+                carbohydrates REAL NOT NULL,           
                 FOREIGN KEY (user) REFERENCES users(username)
         )`);
         newDB.run(
@@ -193,6 +196,49 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         return await executeQuery(`SELECT username, height, weight FROM users WHERE id = ? or username = ?`, [userID, username]);
     });
 }
+
+
+// function to save a meal starting with inserting the meal into the savedMeael table
+async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number ,items: { food: string, quantity: number }[]) {
+    // First, insert the meal into the savedMeals table
+    const mealInsertResult = await executeQuery(
+        `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [userId, name, description]
+    );
+    if (mealInsertResult && mealInsertResult.length > 0) {
+        const mealId = mealInsertResult[0].lastID; // Checking if the result isn'tt empty and then get lastID
+
+    // Insert each meal into the savedMealItem table
+    for (const item of items) { // meal items
+        await executeQuery(
+            `INSERT INTO savedMealItem(meal, food, quantity) VALUES (?, ?, ?)`,
+            [mealId, item.food, item.quantity]
+        );
+    }
+} else {
+    throw new Error("Failed to insert the meal into the database.");
+}
+
+// Fetch user's saved meals 
+ async function getSavedMeals(userId: number) {
+    return executeQuery(
+        `SELECT id, name, description FROM savedMeals WHERE user = ?`,
+        [userId]
+    );
+}
+
+// Fetch meal items for a saved meal
+ async function getMealItems(mealId: number) {
+    return executeQuery(
+        `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
+        [mealId]
+    );
+}}
+
+
+
+
+
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {
