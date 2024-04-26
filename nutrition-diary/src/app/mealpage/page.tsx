@@ -4,7 +4,7 @@ import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import React, { useState } from "react"; 
-import { SearchForFoodList } from "@/app/actions";
+import { SearchForFoodList } from "@/app/server/actions";
 import { SearchListFoodItemCommon, SearchListFoodItemData } from "@/app/interfaces";
 
 export default function CreateEditMealPage() {

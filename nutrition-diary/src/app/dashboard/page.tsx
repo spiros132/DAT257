@@ -5,11 +5,8 @@ import AddMealButton from "@/components/AddMealButton";
 import HamburgerDiv from "@/components/HamburgerDiv";
 
 
-export default function MainPage(){
-
-
+export default function Page(){
     return (
-        <>
         <div className="w-screen flex">
             <HamburgerDiv/>
             <div className="w-[93%] h-screen">
@@ -43,9 +40,5 @@ export default function MainPage(){
                 </div>
             </div>            
         </div>
-
-
-        </>
-
       )
 } 

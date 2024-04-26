@@ -5,19 +5,16 @@ import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 
 import React, {startTransition, useState} from "react";
-import { SearchForFood } from "./actions";
-import LoginPage from "@/pages/LoginPage";
-import CreateAccountPage from "@/pages/CreateAccountPage";
-import MenuPage from "@/pages/MenuPage";
-import MainPage from "@/pages/MainPage";
+import { SearchForFood } from "./server/actions";
+import LoginPage from "@/app/login/page";
+import CreateAccountPage from "@/app/register/page";
+import MenuPage from "@/app/menu/page";
+import MainPage from "@/app/dashboard/page";
 import AddMealButton from "@/components/AddMealButton";
-import CreateEditMealPage from "@/pages/CreateEditMealPage";
+import CreateEditMealPage from "@/app/mealpage/page";
 
 
-export default function App() { {/** Home */}
-  const App: React.FC = () => { {/** added */}
-    return <AppRouter />;
-  };
+export default function Home() {
 
   const onSearch = (searchInput: string) => { fetchData(searchInput); };
   const [result, setResult] = useState<string>('');
@@ -34,13 +31,9 @@ export default function App() { {/** Home */}
       });
     });
   }
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat&display=swap"></link>
-  
-  
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-white text-black">
-
-    </main>
+    <>
+    </>
   );
 }
