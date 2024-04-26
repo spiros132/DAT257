@@ -126,7 +126,7 @@ export async function Login(username: string, password: string): Promise<string>
         cookies().set("token", token);
     }
     else {
-        // If it is, generate a new token for the user and save it a list with all tokens
+        // Otherwise, generate a new token for the user and save it in a list with all tokens
         const token = uuidv4();
         
         // Add the token item to the database
