@@ -99,17 +99,23 @@ export async function Login(username: string, password: string): Promise<boolean
     // Check if the username and password are correct in the database    
     let result: databaseReturnType = await loginUser(username, password);
 
-    if(result == undefined)
+    // Helper function so that we don't write the same code in all of those
+    function returnFalse() {
+        cookies().delete("token");
         return false;
+    }
+
+    if(result == undefined)
+        return returnFalse();
     
     // Something went wrong and we have multiple users with the same username and password
     if(result.length > 1)
-        return false;
+        return returnFalse();
 
     const user = result[0];
     // Something went wrong and the database didn't return a user id that we wanted
     if(user?.id == undefined)
-        return false;
+        return returnFalse();
 
     // Check if there already is a token for this particular user
     result = await getTokenFromUserID(user.id);
