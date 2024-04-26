@@ -1,6 +1,6 @@
 "use client";
 import { startTransition, useState } from "react";
-import { RegisterUser } from "@/app/server/actions";
+import { RegisterUser } from "@/app/actions/actions";
 import Link from "next/link";
 
 export default function Page(){

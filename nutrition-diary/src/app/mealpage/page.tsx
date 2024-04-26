@@ -4,8 +4,8 @@ import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import React, { useState } from "react"; 
-import { SearchForFoodList } from "@/app/server/actions";
-import { SearchListFoodItemCommon, SearchListFoodItemData } from "@/app/interfaces";
+import { SearchForFoodList } from "@/app/actions/actions";
+import { SearchListFoodItemCommon, SearchListFoodItemData } from "@/app/lib/definitions";
 
 export default function CreateEditMealPage() {
     const [results, setResults] = useState<string[]>([]);
