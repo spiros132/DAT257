@@ -1,10 +1,8 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { addToken, databaseReturnType, getTokenData, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
+import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
-import { use } from "react";
-import { get } from "http";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
