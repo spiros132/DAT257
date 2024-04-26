@@ -1,7 +1,7 @@
 "use client";
 import { startTransition, useState } from "react";
-import logo from "/NutritionDiary1.png";
 import { Login } from "@/app/server/actions";
+import logo from "/NutritionDiary1.png";
 
 export default function Page(){
   const [username, setUsername] = useState<string>('');
@@ -60,12 +60,6 @@ export default function Page(){
           </button>
           <div className="mb-6"></div> {/* Empty div for spacing */}
           <p className="text-sm text-black">Don't have an account?</p>
-          <Link
-          className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2"
-          href="/register"
-          >
-            CREATE ACCOUNT
-          </Link>
         </form>
       </div>
     </div>
