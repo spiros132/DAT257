@@ -1,6 +1,7 @@
 "use client";
 import { startTransition, useState } from "react";
 import { Login } from "@/app/server/actions";
+import Link from "next/link";
 
 export default function Page(){
   const [username, setUsername] = useState<string>('');
@@ -23,7 +24,7 @@ export default function Page(){
       });
     });
   }
-  
+
   return(
       <div className="flex min-h-screen"> 
         <div className="flex-1 flex items-center justify-center"> {/* Center the image */}
@@ -51,14 +52,20 @@ export default function Page(){
           
           <p>{error}</p>
 
-          <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mb-2">
+          <button
+          className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mb-2"
+          type="submit"
+          >
             SIGN IN
           </button>
           <div className="mb-6"></div> {/* Empty div for spacing */}
           <p className="text-sm text-black">Don't have an account?</p>
-          <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2">
+          <Link
+          className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2"
+          href="/register"
+          >
             CREATE ACCOUNT
-          </button>
+          </Link>
         </form>
       </div>
     </div>

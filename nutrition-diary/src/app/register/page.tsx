@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
-
 "use client";
-import {RegisterUser} from "@/app/server/actions";
 import { startTransition, useState } from "react";
+import { RegisterUser } from "@/app/server/actions";
+import Link from "next/link";
 
 
 export default function Page(){
@@ -90,11 +89,12 @@ export default function Page(){
             <div className="mb-6"></div> {/* Empty div for spacing */}
             <p className="text-sm text-black">Already have an account?</p>
 
-            <button 
+            <Link
               className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md"
+              href="/login"
             >
               TO LOGIN SCREEN
-            </button>
+            </Link>
           </form>
         </div>
       </div>
