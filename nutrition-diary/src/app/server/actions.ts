@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../interfaces";
-import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
+import { addToken, databaseReturnType, getTokenData, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -92,6 +92,23 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 // WIP!!!
 // gives a list of meals with the calories
 // export async function GetMealList(username: string, )
+
+
+export async function GetUserID(token: string): Promise<number> {
+    const userID = await getTokenData(token);
+
+    if(userID == undefined)
+        return -1;
+
+    if(userID.length != 1)
+        return -1;
+
+    const user = userID[0];
+    if(user?.id == undefined)
+        return -1;
+
+    return user.id;
+}
 
 
 export async function Login(username: string, password: string): Promise<string> {
