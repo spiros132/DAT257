@@ -1,10 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../interfaces";
-import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
+import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../lib/definitions";
+import { databaseReturnType, getTokenData, getUserInfo, loginUser, registerUser } from "../lib/database";
 import { cookies } from "next/headers";
-import { v4 as uuidv4 } from 'uuid';
+import { createSession, deleteSession } from "../lib/session";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -94,13 +94,30 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 // export async function GetMealList(username: string, )
 
 
+export async function GetUserID(token: string): Promise<number> {
+    const userID = await getTokenData(token);
+
+    if(userID == undefined)
+        return -1;
+
+    if(userID.length != 1)
+        return -1;
+
+    const user = userID[0];
+    if(user?.id == undefined)
+        return -1;
+
+    return user.id;
+}
+
+
 export async function Login(username: string, password: string): Promise<string> {
     // Check if the username and password are correct in the database    
     let result: databaseReturnType = await loginUser(username, password);
 
     // Helper function so that we don't write the same code in all of those
     function returnError(error: string) {
-        cookies().delete("token");
+        deleteSession();
         return error;
     }
 
@@ -116,25 +133,7 @@ export async function Login(username: string, password: string): Promise<string>
     if(user?.id == undefined)
         return returnError("Username or password is incorrect!");
 
-    // Check if there already is a token for this particular user
-    result = await getTokenFromUserID(user.id);
-
-    // If you found a token send that back instead of making a new one
-    if(result != undefined && result.length > 0 && result[0]?.token != undefined) {
-        const token = result[0].token;
-
-        cookies().set("token", token);
-    }
-    else {
-        // Otherwise, generate a new token for the user and save it in a list with all tokens
-        const token = uuidv4();
-        
-        // Add the token item to the database
-        addToken(token, user.id);
-
-        // Add the token cookie to the clients cookies
-        cookies().set("token", token);
-    }
+    createSession(user.id);
 
     redirect('/dashboard');
 }

@@ -1,0 +1,1 @@
+export const database_location: string = "./database/database.db";

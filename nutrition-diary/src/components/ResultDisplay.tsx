@@ -1,7 +1,7 @@
 "use client";
 import React, {useState, useEffect} from "react";
 
-import { SearchFoodItemNutrientsData, SearchFoodItemNutrients, SearchListFoodItemCommon } from '@/app/interfaces';
+import { SearchFoodItemNutrientsData, SearchFoodItemNutrients, SearchListFoodItemCommon } from '@/app/lib/definitions';
 
 export default function ResultDisplay(props: {readonly result: SearchListFoodItemCommon | undefined}){
     const [foodName, setFoodName] = useState<string>('');
