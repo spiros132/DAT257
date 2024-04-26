@@ -3,9 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import React, {startTransition, useState} from "react";
 
-import { SearchForFood } from "./actions";
-import LoginPage from "@/pages/LoginPage";
-import CreateAccountPage from "@/pages/CreateAccountPage";
+import { SearchForFood } from "./server/actions";
 import MenuPage from "@/pages/MenuPage";
 
 export default function Home() {
@@ -26,9 +24,12 @@ export default function Home() {
     });
   }
 
+  // The main page when you go into the website
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-white text-black">
-      <LoginPage/>
-    </main>
+    <div>
+      <div className="flex-1 flex items-center justify-center"> {/* Center the image */}
+        <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" className="centered-image" style={{ width: '450px', filter: 'grayscale(3%) brightness(95%)' }} />
+      </div>
+    </div>
   );
 }

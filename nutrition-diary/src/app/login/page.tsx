@@ -1,9 +1,9 @@
 "use client";
 import { startTransition, useState } from "react";
 import logo from "/NutritionDiary1.png";
-import { Login } from "@/app/actions";
+import { Login } from "@/app/server/actions";
 
-export default function LoginPage(){
+export default function Page(){
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   

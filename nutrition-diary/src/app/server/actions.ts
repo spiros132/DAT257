@@ -1,6 +1,6 @@
 "use server";
 
-import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
+import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../interfaces";
 import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from 'uuid';

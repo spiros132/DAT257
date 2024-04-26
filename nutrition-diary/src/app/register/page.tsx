@@ -1,9 +1,8 @@
 "use client";
-import {RegisterUser} from "@/app/actions";
+import {RegisterUser} from "@/app/server/actions";
 import { startTransition, useState } from "react";
 
-
-export default function CreateAccountPage(){
+export default function Page(){
   // Variables and their set functions for the input fields
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
