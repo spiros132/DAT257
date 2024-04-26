@@ -1,6 +1,7 @@
 "use client";
 import { startTransition, useState } from "react";
 import { Login } from "@/app/actions/users";
+import Link from "next/link";
 
 export default function Page(){
   const [username, setUsername] = useState<string>('');
@@ -59,6 +60,12 @@ export default function Page(){
           </button>
           <div className="mb-6"></div> {/* Empty div for spacing */}
           <p className="text-sm text-black">Don't have an account?</p>
+          <Link
+          href="/register"
+          className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mt-2"
+          >
+            Create Account
+          </Link>
         </form>
       </div>
     </div>
