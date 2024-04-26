@@ -95,13 +95,16 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database
-    //users[] = getUserInfo(username);
+    let valid = loginUser(username, password);
+
+    if(!valid){
+        console.log("Username or password is incorrect")
+        return false;
+    }
 
     // If it is, generate a new token for the user and save it a list with all tokens
 
     // Return the token in a cookie to the user
-    // Or return an error based on if it's correct or not
-    //loginUser(username, password);
     
    return true;
 }

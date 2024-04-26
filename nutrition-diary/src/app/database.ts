@@ -150,8 +150,9 @@ export async function loginUser(username: string, password: string): Promise<boo
     });
 
     // Check if the result actually has any values, then return true / false based on that
-    console.log(result);
-
+    if(result && result.length > 0){
+        return true;
+    }
     return false;
 }
 
