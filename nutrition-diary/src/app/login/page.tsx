@@ -13,9 +13,14 @@ export default function Page(){
     setPassword(e.target.value);
   };
 
+  const [error, setError] = useState<string>('');
+
   function loginUser(){
     startTransition(() => {
-      Login(username, password);
+      Login(username, password)
+      .then((error) => {
+        setError(error);
+      });
     });
   }
   
@@ -44,6 +49,8 @@ export default function Page(){
             value={password}
           />
           
+          <p>{error}</p>
+
           <button className="bg-green-400 text-white font-semibold py-2 px-4 rounded-md mb-2">
             SIGN IN
           </button>

@@ -94,27 +94,27 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 // export async function GetMealList(username: string, )
 
 
-export async function Login(username: string, password: string): Promise<boolean> {
+export async function Login(username: string, password: string): Promise<string> {
     // Check if the username and password are correct in the database    
     let result: databaseReturnType = await loginUser(username, password);
 
     // Helper function so that we don't write the same code in all of those
-    function returnFalse() {
+    function returnError(error: string) {
         cookies().delete("token");
-        return false;
+        return error;
     }
 
     if(result == undefined)
-        return returnFalse();
+        return returnError("Username or password is incorrect!");
     
     // Something went wrong and we have multiple users with the same username and password
     if(result.length > 1)
-        return returnFalse();
+        return returnError("Server error!");
 
     const user = result[0];
     // Something went wrong and the database didn't return a user id that we wanted
     if(user?.id == undefined)
-        return returnFalse();
+        return returnError("Username or password is incorrect!");
 
     // Check if there already is a token for this particular user
     result = await getTokenFromUserID(user.id);
@@ -137,8 +137,6 @@ export async function Login(username: string, password: string): Promise<boolean
     }
 
     redirect('/dashboard');
-
-    return true;
 }
 
 export async function RegisterUser(username: string, password: string, confirmPassword: string, weight: number = 0, length: number = 0): Promise<string> {
