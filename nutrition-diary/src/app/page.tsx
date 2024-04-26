@@ -5,14 +5,9 @@ import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 
 import React, {startTransition, useState} from "react";
-import { SearchForFood } from "./server/actions";
-import LoginPage from "@/app/login/page";
-import CreateAccountPage from "@/app/register/page";
-import MenuPage from "@/app/menu/page";
-import MainPage from "@/app/dashboard/page";
-import AddMealButton from "@/components/AddMealButton";
-import CreateEditMealPage from "@/app/mealpage/page";
 
+import { SearchForFood } from "./server/actions";
+import MenuPage from "@/pages/MenuPage";
 
 export default function Home() {
 
@@ -32,8 +27,12 @@ export default function Home() {
     });
   }
 
+  // The main page when you go into the website
   return (
-    <>
-    </>
+    <div>
+      <div className="flex-1 flex items-center justify-center"> {/* Center the image */}
+        <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" className="centered-image" style={{ width: '450px', filter: 'grayscale(3%) brightness(95%)' }} />
+      </div>
+    </div>
   );
 }
