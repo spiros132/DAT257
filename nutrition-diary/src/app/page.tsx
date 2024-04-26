@@ -12,6 +12,7 @@ import CreateAccountPage from "@/pages/CreateAccountPage";
 import MenuPage from "@/pages/MenuPage";
 import MainPage from "@/pages/MainPage";
 import AddMealButton from "@/components/AddMealButton";
+import CreateEditMealPage from "@/pages/CreateEditMealPage";
 
 
 export default function Home() {
@@ -34,10 +35,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between bg-white text-black">
-
-
-      <CreateAccountPage/>
-     CreateEditMealPage
+      <CreateEditMealPage/>
     </main>
   );
 }
