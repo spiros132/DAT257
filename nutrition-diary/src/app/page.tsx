@@ -1,17 +1,17 @@
 "use client";
 import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
+import MealCard from "@/components/MealCard";
+import CalorieCounter from "@/components/CalorieCounter";
+
 import React, {startTransition, useState} from "react";
 import { SearchForFood } from "./actions";
 import LoginPage from "@/pages/LoginPage";
-import MenuPage from "@/pages/MenuPage";
 import CreateAccountPage from "@/pages/CreateAccountPage";
-import AppRouter from "@/AppRouter";
-import ProfilePage from "@/pages/Profile";
-// import { useHistory } from 'react-router-dom';
-import profilePage1 from "@/pages/ProfilePage1";
+import MenuPage from "@/pages/MenuPage";
 import MainPage from "@/pages/MainPage";
-import Approuter from "@/pages/Approuter"
+import AddMealButton from "@/components/AddMealButton";
+import CreateEditMealPage from "@/pages/CreateEditMealPage";
 
 
 export default function App() { {/** Home */}
@@ -39,16 +39,8 @@ export default function App() { {/** Home */}
   
 
   return (
-<main className="flex h-screen flex-col items-center justify-between p-24 ">
-           {/* <LoginPage/>  */}
-           {/*  <MenuPage/> */}
-           {/** <CreateAccountPage/> */}
-           {/** <ProfilePage/> greentheme  */}
-           {/** <MainPage/>  */}
+    <main className="flex min-h-screen flex-col items-center justify-between bg-white text-black">
 
-           <ProfilePage/>
-
-      
     </main>
   );
 }

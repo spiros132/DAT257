@@ -1,9 +1,9 @@
 "use client";
 import React, {useState, useEffect} from "react";
 
-import { SearchFoodItemNutrientsData, SearchFoodItemNutrients } from '@/app/interfaces';
+import { SearchFoodItemNutrientsData, SearchFoodItemNutrients, SearchListFoodItemCommon } from '@/app/interfaces';
 
-export default function ResultDisplay(props: {readonly result: string}){
+export default function ResultDisplay(props: {readonly result: SearchListFoodItemCommon | undefined}){
     const [foodName, setFoodName] = useState<string>('');
     const [calories, setCalories] = useState<number>(-1);
     const [photo, setPhoto] = useState<string>('');
@@ -12,16 +12,20 @@ export default function ResultDisplay(props: {readonly result: string}){
         if (props.result){handleResult(props.result);}
     }, [props.result]); 
 
-    function handleResult(result: string){
-        const data: SearchFoodItemNutrientsData = JSON.parse(result);
-        
-        data.foods.forEach((food: SearchFoodItemNutrients) => {
-            setPhoto(food.photo.thumb);
-            setFoodName(food.food_name);
-            setCalories(food.nf_calories);
-        });
-    }
 
+    function handleResult(result: SearchListFoodItemCommon | undefined) {
+        try {
+                if(result != undefined) {  
+                setPhoto(result.photo.thumb);
+                setFoodName(result.food_name);
+                setCalories(result.serving_qty);
+                }
+        } catch (error) {
+            console.error('Error parsing result:', error);
+            // Handle non-JSON data gracefully here
+        }
+    }
+    
 
     if(photo != "" && foodName != "" && calories != -1)
         return (

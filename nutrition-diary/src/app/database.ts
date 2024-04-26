@@ -3,9 +3,8 @@ import sqlite3, { OPEN_CREATE, OPEN_READWRITE } from 'sqlite3';
 import { createHash} from 'crypto';
 import { database_location } from './config';
 import { open, Database } from "sqlite";
-import { UserInterface } from './interfaces';
 
-
+export type databaseReturnType = any[] | undefined;
 
 function createDB(){
     const newDB = new sqlite3.Database(database_location, OPEN_CREATE | OPEN_READWRITE, (err) => {     
@@ -49,16 +48,20 @@ function createDB(){
                 FOREIGN KEY (user) REFERENCES users(username)
             )`);
         newDB.run(
-            `CREATE TABLE IF NOT EXISTS eatenMealItem(
-                meal INTEGER,
-                food TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                FOREIGN KEY (meal) REFERENCES eatenMeals(name)
-        )`);
-        newDB.run(
-            `ALTER TABLE savedMeals ADD COLUMN calories INTEGER NOT NULL DEFAULT 0;`
-        );
-    });
+              `CREATE TABLE IF NOT EXISTS eatenMealItem(
+                  meal INTEGER,
+                  food TEXT NOT NULL,
+                  quantity INTEGER NOT NULL,
+                  FOREIGN KEY (meal) REFERENCES eatenMeals(name)
+            )`);
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS tokens(
+                token TEXT NOT NULL UNIQUE,
+                userID INTEGER,
+                valid DATETIME NOT NULL,
+                FOREIGN KEY (userID) REFERENCES users(id)
+            )`);
+      });
 };
 
 createDB();
@@ -81,7 +84,7 @@ function closeDB(){
     }
 }
 
-async function executeQuery(query : string, params : any, timeout : number = 5000) {
+async function executeQuery(query : string, params : any, timeout : number = 5000): Promise<any[] | undefined> {
     try{
         await openDB();
         if (db){
@@ -101,85 +104,102 @@ async function executeQuery(query : string, params : any, timeout : number = 500
     }
 }
 
-
-export function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+export async function registerEatenMeal(user: number, name: string, date: Date){
+  executeQuery(`INSERT INTO eatenMeals(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
 }
 
-export function updateHeight(username: string, height: number){
+export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
+  executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+}
+
+export async function viewMeals(user: string){
+  return executeQuery(`SELECT eatenMeals.name FROM eatenMeals
+                       INNER JOIN users ON eatenMeals.user == users.id
+                       WHERE username == ?`, [user]);
+}
+
+export async function viewFoodsOfMeal(meal: string){
+  return executeQuery(`SELECT eatenMealItem.name FROM eatenMealItem
+                       INNER JOIN eatenMeals ON eatenMealItem.meal == eatenMeals.id
+                       WHERE meal == ?`, [meal]);
+}
+
+export async function deleteMeal(mealname: string){
+  executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, [mealname])
+}
+
+async function deleteOldTokens() {
+    await errorHandler(async () => {
+        return await executeQuery(`DELETE FROM tokens WHERE valid <= datetime('now')`, []);
+    });
+}
+
+// All tokens should be valid for a whole day and then you should need to login again if you haven't
+export async function addToken(token: string, userID: number) {
+    await errorHandler(async () => {
+        await deleteOldTokens();
+
+        return await executeQuery(`INSERT INTO tokens(token, userID, valid) VALUES(?, ?, datetime('now', '+1 day'))`, [token, userID]);
+    });
+}
+
+export async function getTokenData(token: string) {
+    return await errorHandler(async () => {
+        await deleteOldTokens();
+        return await executeQuery(`SELECT userID FROM tokens WHERE token = ?`, [token])
+    });
+}
+
+export async function getTokenFromUserID(userID: number) {
+    return await errorHandler(async () => {
+        await deleteOldTokens();
+        return await executeQuery(`SELECT token FROM tokens WHERE userID = ?`, [userID]);
+    });
+}
+
+export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
+    return await errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+    });
+}
+
+export async function updateHeight(username: string, height: number){
     executeQuery(`UPDATE users SET height = ? WHERE username = ?`, [height, username]);
 }
 
-export function updateWeight(username: string, weight: number){
+export async function updateWeight(username: string, weight: number){
     executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
 }
 
-export function updatePassword(username: string, password: string){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
+export async function updatePassword(username: string, password: string) {
+    await errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
+    });
 }
 
-export function loginUser(username: string, password: string){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`SELECT id FROM users WHERE username = ? AND password = ?`, [username, password]);
-}
-
-export function getUserInfo(username: string){
-    const result = executeQuery(`SELECT username, height, weight FROM users WHERE username = ?`, [username])
-    result.then((res) => {
-        const user : UserInterface = res?.pop();
-        if(user){
-            return user;
-        }
-        console.log("No user found");
-        return [null, null, null];
-    })
-    .catch((error) => {
-        console.error(error);
+export async function loginUser(username: string, password: string) {
+    const result = await errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`SELECT id FROM users WHERE username = ? AND password = ?`, [username, password]);
     });
 
-    // function to save a meal starting with inserting the meal into the savedMeael table
- async function saveMeal(userId: number, name: string, description: string, items: { food: string, quantity: number }[]) {
-    // First, insert the meal into the savedMeals table
-    const mealInsertResult = await executeQuery(
-        `INSERT INTO savedMeals(user, name, description) VALUES (?, ?, ?)`,
-        [userId, name, description]
-    );
-    if (mealInsertResult && mealInsertResult.length > 0) {
-        const mealId = mealInsertResult[0].lastID; // Checking if the result isn'tt empty and then retrieve the lastID
+    return result;
+}
 
-    // Insert each meal into the savedMealItem table
-    for (const item of items) { // meal items
-        await executeQuery(
-            `INSERT INTO savedMealItem(meal, food, quantity) VALUES (?, ?, ?)`,
-            [mealId, item.food, item.quantity]
-        );
+export async function getUserInfo(userID: number = -1, username: string = ""){
+    return errorHandler(async () => {
+        return await executeQuery(`SELECT username, height, weight FROM users WHERE id = ? or username = ?`, [userID, username]);
+    });
+}
+
+type errorHandlerFunction = () => Promise<databaseReturnType>;
+async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {
+    try {
+        return await fn();
     }
-} else {
-    throw new Error("Failed to insert meal into the database.");
-}
-
-// Fetch user's saved meals 
- async function getSavedMeals(userId: number) {
-    return executeQuery(
-        `SELECT id, name, description FROM savedMeals WHERE user = ?`,
-        [userId]
-    );
-}
-
-// Fetch meal items for a saved meal
- async function getMealItems(mealId: number) {
-    return executeQuery(
-        `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
-        [mealId]
-    );
-}
-
-}
-
-
-
-
-
+    catch(e) {
+        console.log(e);
+    }
 }
