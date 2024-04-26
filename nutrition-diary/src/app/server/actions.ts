@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../interfaces";
 import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
@@ -134,6 +135,8 @@ export async function Login(username: string, password: string): Promise<boolean
         // Add the token cookie to the clients cookies
         cookies().set("token", token);
     }
+
+    redirect('/dashboard');
 
     return true;
 }
