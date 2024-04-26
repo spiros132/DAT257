@@ -3,7 +3,6 @@ import { startTransition, useState } from "react";
 import { RegisterUser } from "@/app/server/actions";
 import Link from "next/link";
 
-
 export default function Page(){
   // Variables and their set functions for the input fields
   const [username, setUsername] = useState<string>('');

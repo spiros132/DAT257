@@ -1,7 +1,7 @@
 "use client";
 import { startTransition, useState } from "react";
+import logo from "/NutritionDiary1.png";
 import { Login } from "@/app/server/actions";
-import Link from "next/link";
 
 export default function Page(){
   const [username, setUsername] = useState<string>('');
