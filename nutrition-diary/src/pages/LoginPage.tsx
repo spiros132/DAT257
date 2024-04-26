@@ -2,18 +2,11 @@
 import { startTransition, useState } from "react";
 import logo from "/NutritionDiary1.png";
 import { Login } from "@/app/actions";
-export default function LoginPage(){
 
+export default function LoginPage(){
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-
-  function loginUser(){
-    startTransition(() => {
-      const result =  Login(username, password);
-      console.log(result);
-    });
-  }
+  
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
@@ -21,6 +14,13 @@ export default function LoginPage(){
     setPassword(e.target.value);
   };
 
+  function loginUser(){
+    startTransition(() => {
+      const result =  Login(username, password);
+      console.log(result);
+    });
+  }
+  
   return(
       <div className="flex min-h-screen"> 
         <div className="flex-1 flex items-center justify-center"> {/* Center the image */}

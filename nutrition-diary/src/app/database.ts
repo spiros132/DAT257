@@ -56,8 +56,8 @@ function createDB(){
         newDB.run(`
             CREATE TABLE IF NOT EXISTS tokens(
                 token TEXT NOT NULL UNIQUE,
-                userID INTEGER
-                validTill DATETIME NOT NULL,
+                userID INTEGER,
+                valid DATETIME NOT NULL,
                 FOREIGN KEY (userID) REFERENCES users(id)
             )`);
       });
@@ -129,7 +129,7 @@ export async function deleteMeal(mealname: string){
 
 async function deleteOldTokens() {
     await errorHandler(async () => {
-        return await executeQuery(`DELETE FROM tokens WHERE validTill <= datetime('now')`, []);
+        return await executeQuery(`DELETE FROM tokens WHERE valid <= datetime('now')`, []);
     });
 }
 
@@ -138,20 +138,29 @@ export async function addToken(token: string, userID: number) {
     await errorHandler(async () => {
         await deleteOldTokens();
 
-        return await executeQuery(`INSERT INTO tokens(token, userID, validTill) VALUES(?, ?, datetime('now', '+1 day'))`, [token, userID]);
-    })
+        return await executeQuery(`INSERT INTO tokens(token, userID, valid) VALUES(?, ?, datetime('now', '+1 day'))`, [token, userID]);
+    });
 }
 
-export async function getToken(token: string) {
+export async function getTokenData(token: string) {
     return await errorHandler(async () => {
         await deleteOldTokens();
         return await executeQuery(`SELECT userID FROM tokens WHERE token = ?`, [token])
     });
 }
 
+export async function getTokenFromUserID(userID: number) {
+    return await errorHandler(async () => {
+        await deleteOldTokens();
+        return await executeQuery(`SELECT token FROM tokens WHERE userID = ?`, [userID]);
+    });
+}
+
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+    return await errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+    });
 }
 
 export async function updateHeight(username: string, height: number){
@@ -162,17 +171,14 @@ export async function updateWeight(username: string, weight: number){
     executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
 }
 
-export async function updatePassword(username: string, password: string): Promise<boolean> {
-    const result = errorHandler(async () => {
+export async function updatePassword(username: string, password: string) {
+    await errorHandler(async () => {
         password = createHash('sha256').update(password).digest('hex');
         return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
     });
-
-    // Check so that the password has updated correctly before returning true / false
-    return true;
 }
 
-export async function loginUser(username: string, password: string): Promise<databaseReturnType> {
+export async function loginUser(username: string, password: string) {
     const result = await errorHandler(async () => {
         password = createHash('sha256').update(password).digest('hex');
         return await executeQuery(`SELECT id FROM users WHERE username = ? AND password = ?`, [username, password]);
@@ -181,12 +187,11 @@ export async function loginUser(username: string, password: string): Promise<dat
     return result;
 }
 
-export async function getUserInfo(username: string): Promise<databaseReturnType>{
+export async function getUserInfo(userID: number = -1, username: string = ""){
     return errorHandler(async () => {
-        return await executeQuery(`SELECT username, height, weight FROM users WHERE username = ?`, [username]);
+        return await executeQuery(`SELECT username, height, weight FROM users WHERE id = ? or username = ?`, [userID, username]);
     });
 }
-
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {

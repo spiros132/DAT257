@@ -1,7 +1,7 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { addToken, databaseReturnType, getToken, getUserInfo, loginUser, registerUser } from "./database";
+import { addToken, databaseReturnType, getTokenData, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
 import { use } from "react";
 import { get } from "http";
@@ -97,7 +97,7 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 
 export async function Login(username: string, password: string): Promise<boolean> {
     // Check if the username and password are correct in the database    
-    const result: databaseReturnType = await loginUser(username, password);
+    let result: databaseReturnType = await loginUser(username, password);
 
     if(result == undefined)
         return false;
@@ -111,38 +111,45 @@ export async function Login(username: string, password: string): Promise<boolean
     if(user?.id == undefined)
         return false;
 
-    // If it is, generate a new token for the user and save it a list with all tokens
-    const token = uuidv4();
-    
-    // Add the token item to the database
-    addToken(token, user.id);
+    // Check if there already is a token for this particular user
+    result = await getTokenFromUserID(user.id);
 
-    // Add the token cookie to the clients cookies
-    cookies().set("token", token);
-    
+    // If you found a token send that back instead of making a new one
+    if(result != undefined && result.length > 0 && result[0]?.token != undefined) {
+        const token = result[0].token;
+
+        cookies().set("token", token);
+    }
+    else {
+        // If it is, generate a new token for the user and save it a list with all tokens
+        const token = uuidv4();
+        
+        // Add the token item to the database
+        addToken(token, user.id);
+
+        // Add the token cookie to the clients cookies
+        cookies().set("token", token);
+    }
+
     return true;
 }
 
-export async function RegisterUser(formData : FormData): Promise<boolean> {
+export async function RegisterUser(username: string, password: string, confirmPassword: string, weight: number = 0, length: number = 0): Promise<string> {
     // Check if there is already a user with this username, and then return if there is
-    let username = String(formData.get("username"));
-    let password = String(formData.get("password"));
-    let confirmationPassword = String(formData.get("confirmPassword"));
-    let users = await String(getUserInfo(username));
+    const users = await getUserInfo(undefined, username);
 
-    if(users.length > 0){
+    if(users != undefined && users.length > 0){
         console.log("User already exists")
-        return false;
-    };
+        return "User already exists!";
+    }
 
     // Validate the username and password that you just got
-    if(password != confirmationPassword || password.length < 8 || username.length < 4){
+    if(password != confirmPassword || password.length < 8 || username.length < 4){
         console.log("Password or username is not valid")
-        return false;
+        return "Password or username is not valid";
     }
+    
     // Register the user in the database and redirect the client to the login page
     registerUser(username, password);
-    // Or return an error based on if it's correct or not
-    console.log("User registered")
-    return true;
+    return "User registered successfully";
 }
