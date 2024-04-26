@@ -1,6 +1,6 @@
 "use client";
 import { startTransition, useState } from "react";
-import { Login } from "@/app/actions/actions";
+import { Login } from "@/app/actions/users";
 
 export default function Page(){
   const [username, setUsername] = useState<string>('');
