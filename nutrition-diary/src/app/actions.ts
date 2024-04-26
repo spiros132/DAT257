@@ -1,10 +1,11 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { getUserInfo, loginUser, registerUser } from "./database";
+import { addToken, databaseReturnType, getToken, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
 import { use } from "react";
 import { get } from "http";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -93,17 +94,33 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 // gives a list of meals with the calories
 // export async function GetMealList(username: string, )
 
+
 export async function Login(username: string, password: string): Promise<boolean> {
-    // Check if the username and password are correct in the database
-    //users[] = getUserInfo(username);
+    // Check if the username and password are correct in the database    
+    const result: databaseReturnType = await loginUser(username, password);
+
+    if(result == undefined)
+        return false;
+    
+    // Something went wrong and we have multiple users with the same username and password
+    if(result.length > 1)
+        return false;
+
+    const user = result[0];
+    // Something went wrong and the database didn't return a user id that we wanted
+    if(user?.id == undefined)
+        return false;
 
     // If it is, generate a new token for the user and save it a list with all tokens
-
-    // Return the token in a cookie to the user
-    // Or return an error based on if it's correct or not
-    //loginUser(username, password);
+    const token = uuidv4();
     
-   return true;
+    // Add the token item to the database
+    addToken(token, user.id);
+
+    // Add the token cookie to the clients cookies
+    cookies().set("token", token);
+    
+    return true;
 }
 
 export async function RegisterUser(formData : FormData): Promise<boolean> {
