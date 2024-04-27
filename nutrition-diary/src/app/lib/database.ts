@@ -64,6 +64,13 @@ function createDB(){
                 valid DATETIME NOT NULL,
                 FOREIGN KEY (userID) REFERENCES users(id)
             )`);
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS favoriteFoods (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
+                foodName TEXT NOT NULL,
+                FOREIGN KEY (userId) REFERENCES users(id)
+            )`);
       });
 };
 
@@ -234,6 +241,22 @@ async function saveMeal(userId: number, name: string, description: string, calor
         [mealId]
     );
 }}
+
+// Add user's fav. food
+    export async function addFavoriteFood(userId: number, foodName: string) {
+        return await executeQuery(
+            `INSERT INTO favoriteFoods (userId, foodName) VALUES (?, ?)`, 
+            [userId, foodName]
+        );
+}
+
+// Remove user's fav. food
+    export async function removeFavoriteFood(userId: number, foodName: string) {
+        return await executeQuery(
+            `DELETE FROM favoriteFoods WHERE userId = ? AND foodName = ?`, 
+            [userId, foodName]);
+}
+
 
 
 
