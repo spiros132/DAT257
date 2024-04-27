@@ -220,7 +220,7 @@ async function saveMeal(userId: number, name: string, description: string, calor
     // First, insert the meal into the savedMeals table
     const mealInsertResult = await executeQuery(
         `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [userId, name, description]
+        [userId, name, description, calories, protein, fat, carbohydrates]
     );
     if (mealInsertResult && mealInsertResult.length > 0) {
         const mealId = mealInsertResult[0].lastID; // Checking if the result isn'tt empty and then get lastID
@@ -228,8 +228,8 @@ async function saveMeal(userId: number, name: string, description: string, calor
     // Insert each meal into the savedMealItem table
     for (const item of items) { // meal items
         await executeQuery(
-            `INSERT INTO savedMealItem(meal, food, quantity) VALUES (?, ?, ?)`,
-            [mealId, item.food, item.quantity]
+            `INSERT INTO savedMealItem(meal, food, quantity, calories, protein, fat, carbohydrates) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [mealId, item.food, item.quantity, calories, protein, fat, carbohydrates]
         );
     }
 } else {
