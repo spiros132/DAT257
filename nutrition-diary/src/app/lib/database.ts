@@ -82,6 +82,17 @@ function createDB(){
                 FOREIGN KEY (userId) REFERENCES users(id)
             )`);
       });
+
+      newDB.run(`
+        CREATE TABLE IF NOT EXISTS targetGoal (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            targetType TEXT NOT NULL, 
+            targetValue REAL NOT NULL,
+            FOREIGN KEY (userId) REFERENCES users(id)
+        )`);
+        // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
+        // target value is the numeric goal
 };
 
 createDB();
@@ -299,6 +310,23 @@ async function saveMeal(userId: number, name: string, description: string, calor
         return progressData;
 
     }
+
+
+// functions to set and get target value for a specific time slope
+    export async function setTargetGoal(user_id: number, targetType: string, targetValue: number){
+        return await executeQuery(
+            `INSERT INTO targerGoal (user_id, targetType, targetValue) VALUES (?, ?, ?)`,
+            [user_id, targetType, targetValue]
+        );
+    }
+
+    export async function getTargetGoal(user_id: number, targetType: string, targetValue: number){
+        return await executeQuery(
+            `SELECT targetValue FROM targetGoal WHERE user_id=? AND targetType=?`,
+            [user_id, targetType]
+        );
+    }
+
 
     
 
