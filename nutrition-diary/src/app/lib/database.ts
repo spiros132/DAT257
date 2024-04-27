@@ -34,14 +34,24 @@ function createDB(){
                 carbohydrates REAL NOT NULL,           
                 FOREIGN KEY (user) REFERENCES users(username)
         )`);
-        newDB.run(
-            `CREATE TABLE IF NOT EXISTS savedMealItem(
-                meal INTEGER,
-                food TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                FOREIGN KEY (meal) REFERENCES savedMeals(name)
-            )`);
-            
+        newDB.serialize(() => {
+            newDB.run(`
+                CREATE TABLE IF NOT EXISTS savedMealItem(
+                    meal INTEGER,
+                    food TEXT NOT NULL,
+                    quantity INTEGER NOT NULL,
+                    FOREIGN KEY (meal) REFERENCES savedMeals(name)
+                )`);
+        
+            newDB.run(`
+                ALTER TABLE savedMealItem
+                ADD COLUMN calories INTEGER NOT NULL DEFAULT 0,
+                ADD COLUMN protein REAL NOT NULL DEFAULT 0,
+                ADD COLUMN fat REAL NOT NULL DEFAULT 0,
+                ADD COLUMN carbohydrates REAL NOT NULL DEFAULT 0;
+            `);
+        });
+        
         newDB.run(
             `CREATE TABLE IF NOT EXISTS eatenMeals(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
