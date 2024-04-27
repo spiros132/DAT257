@@ -125,11 +125,11 @@ async function executeQuery(query : string, params : any, timeout : number = 500
 }
 
 export async function registerEatenMeal(user: number, name: string, date: Date){
-  executeQuery(`INSERT INTO eatenMeals(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
+  await executeQuery(`INSERT INTO eatenMeals(user, name, date) VALUES(?, ?, ?, ?)`, [user, name, date])
 }
 
 export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
-  executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
+  await executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
 }
 
 export async function viewMeals(user: string){
@@ -215,6 +215,8 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 }
 
 
+
+
 // function to save a meal starting with inserting the meal into the savedMeael table
 async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number ,items: { food: string, quantity: number }[]) {
     // First, insert the meal into the savedMeals table
@@ -244,7 +246,7 @@ async function saveMeal(userId: number, name: string, description: string, calor
     );
 }
 
-// Fetch meal items for a saved meal
+// Fetch mealItems for a saved meal
  async function getMealItems(mealId: number) {
     return executeQuery(
         `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
@@ -266,6 +268,39 @@ async function saveMeal(userId: number, name: string, description: string, calor
             `DELETE FROM favoriteFoods WHERE userId = ? AND foodName = ?`, 
             [userId, foodName]);
 }
+
+// Retrieve user's progress interval
+    export async function getUserProgress(userId:number, datetime: string){
+        let startProgInterval, endProgInterval;
+        switch (datetime){
+            case 'Today':
+                startProgInterval  = new Date();
+                endProgInterval    = new Date();
+                break;
+            case 'Weekly':
+                startProgInterval  = new Date();
+                startProgInterval.setDate(startProgInterval.getDate()-7);
+                endProgInterval    = new Date();
+                break;
+            case 'Monthly':
+                startProgInterval  = new Date();
+                startProgInterval.setMonth(startProgInterval.getMonth()-1);
+                endProgInterval    = new Date();
+                break;
+            default:
+                throw new Error(' Unknown time interval')
+        }
+        // query to retrieve data for a specific time 
+        const progressData = await executeQuery(
+            `SELECT * FROM user_progress
+             WHERE user_id = ? AND date BETWEEN ? AND ?`,
+            [userId, startProgInterval, endProgInterval]
+        );
+        return progressData;
+
+    }
+
+    
 
 
 
