@@ -93,6 +93,16 @@ function createDB(){
         )`);
         // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
         // target value is the numeric goal
+
+        // store deleted fav. food
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS deletedFavoriteFoods (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
+                foodName TEXT NOT NULL,
+                deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (userId) REFERENCES users(id)
+            )`);
 };
 
 createDB();
@@ -301,6 +311,24 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         } 
     }
 
+// Add user's deleted fav. foods into db
+    export async function addDeletedFavoriteFood(userId: number, foodName: string) {
+        return await executeQuery(
+            `INSERT INTO deletedFavoriteFoods (userId, foodName) VALUES (?, ?)`, 
+            [userId, foodName]
+        );
+    }  
+
+// Retrive user's deleted fav. foods within the past day
+    export async function getDeletedFavoriteFood(userId: number){
+        const oneDay = new Date();
+        oneDay.setDate(oneDay.getDate()-1);
+        return await executeQuery(
+            `SELECT foodName FROM deletedFavoriteFood WHERE userId = ? AND deletionTime >=?`,
+            [userId, oneDay.toISOString()] // toLocaleString
+        );
+    }
+
 // Retrieve user's progress interval
     export async function getUserProgress(userId:number, datetime: string){
         let startProgInterval, endProgInterval;
@@ -356,6 +384,9 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             [targetValue, userId, targetType]
         );
     }
+
+
+
 
 
     
