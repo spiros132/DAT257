@@ -166,7 +166,8 @@ export async function viewFoodsOfMeal(meal: string){
 }
 
 export async function deleteMeal(mealname: string){
-  executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, [mealname])
+  await executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, 
+  [mealname])
 }
 
 async function deleteOldTokens() {
@@ -360,7 +361,6 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
     }
 
-
 // Set user's target value for a specific time slope
     export async function setTargetGoal(userId: number, targetType: string, targetValue: number){
         return await executeQuery(
@@ -384,17 +384,6 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             [targetValue, userId, targetType]
         );
     }
-
-
-
-
-
-    
-
-
-
-
-
 
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
