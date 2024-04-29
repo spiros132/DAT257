@@ -4,7 +4,7 @@ import { createHash} from 'crypto';
 import { database_location } from './config';
 import { open, Database } from "sqlite";
 
-type databaseReturnType = any[] | undefined;
+export type databaseReturnType = any[] | undefined;
 
 function createDB(){
     const newDB = new sqlite3.Database(database_location, OPEN_CREATE | OPEN_READWRITE, (err) => {     
@@ -46,13 +46,20 @@ function createDB(){
                 date DATETIME NOT NULL, 
                 FOREIGN KEY (user) REFERENCES users(username)
             )`);
-            newDB.run(
+        newDB.run(
               `CREATE TABLE IF NOT EXISTS eatenMealItem(
                   meal INTEGER,
                   food TEXT NOT NULL,
                   quantity INTEGER NOT NULL,
                   FOREIGN KEY (meal) REFERENCES eatenMeals(name)
-          )`);
+            )`);
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS tokens(
+                token TEXT NOT NULL UNIQUE,
+                userID INTEGER,
+                valid DATETIME NOT NULL,
+                FOREIGN KEY (userID) REFERENCES users(id)
+            )`);
       });
 };
 
@@ -120,9 +127,40 @@ export async function deleteMeal(mealname: string){
   executeQuery(`DELETE FROM eatenMeals WHERE name == ?`, [mealname])
 }
 
+async function deleteOldTokens() {
+    await errorHandler(async () => {
+        return await executeQuery(`DELETE FROM tokens WHERE valid <= datetime('now')`, []);
+    });
+}
+
+// All tokens should be valid for a whole day and then you should need to login again if you haven't
+export async function addToken(token: string, userID: number) {
+    await errorHandler(async () => {
+        await deleteOldTokens();
+
+        return await executeQuery(`INSERT INTO tokens(token, userID, valid) VALUES(?, ?, datetime('now', '+1 day'))`, [token, userID]);
+    });
+}
+
+export async function getTokenData(token: string) {
+    return await errorHandler(async () => {
+        await deleteOldTokens();
+        return await executeQuery(`SELECT userID FROM tokens WHERE token = ?`, [token])
+    });
+}
+
+export async function getTokenFromUserID(userID: number) {
+    return await errorHandler(async () => {
+        await deleteOldTokens();
+        return await executeQuery(`SELECT token FROM tokens WHERE userID = ?`, [userID]);
+    });
+}
+
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
-    password = createHash('sha256').update(password).digest('hex');
-    executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+    return await errorHandler(async () => {
+        password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
+    });
 }
 
 export async function updateHeight(username: string, height: number){
@@ -133,34 +171,27 @@ export async function updateWeight(username: string, weight: number){
     executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
 }
 
-export async function updatePassword(username: string, password: string): Promise<boolean> {
-    const result = errorHandler(async () => {
+export async function updatePassword(username: string, password: string) {
+    await errorHandler(async () => {
         password = createHash('sha256').update(password).digest('hex');
         return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
     });
-
-    // Check so that the password has updated correctly before returning true / false
-    return true;
 }
 
-export async function loginUser(username: string, password: string): Promise<boolean> {
+export async function loginUser(username: string, password: string) {
     const result = await errorHandler(async () => {
         password = createHash('sha256').update(password).digest('hex');
         return await executeQuery(`SELECT id FROM users WHERE username = ? AND password = ?`, [username, password]);
     });
 
-    // Check if the result actually has any values, then return true / false based on that
-    console.log(result);
-
-    return false;
+    return result;
 }
 
-export async function getUserInfo(username: string): Promise<databaseReturnType>{
+export async function getUserInfo(userID: number = -1, username: string = ""){
     return errorHandler(async () => {
-        return await executeQuery(`SELECT username, height, weight FROM users WHERE username = ?`, [username]);
+        return await executeQuery(`SELECT username, height, weight FROM users WHERE id = ? or username = ?`, [userID, username]);
     });
 }
-
 
 type errorHandlerFunction = () => Promise<databaseReturnType>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {

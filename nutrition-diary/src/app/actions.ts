@@ -1,10 +1,9 @@
 "use server";
 
 import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "./interfaces";
-import { getUserInfo, loginUser, registerUser } from "./database";
+import { addToken, databaseReturnType, getTokenFromUserID, getUserInfo, loginUser, registerUser } from "./database";
 import { cookies } from "next/headers";
-import { use } from "react";
-import { get } from "http";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -93,39 +92,72 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 // gives a list of meals with the calories
 // export async function GetMealList(username: string, )
 
+
 export async function Login(username: string, password: string): Promise<boolean> {
-    // Check if the username and password are correct in the database
-    //users[] = getUserInfo(username);
+    // Check if the username and password are correct in the database    
+    let result: databaseReturnType = await loginUser(username, password);
 
-    // If it is, generate a new token for the user and save it a list with all tokens
-
-    // Return the token in a cookie to the user
-    // Or return an error based on if it's correct or not
-    //loginUser(username, password);
-    
-   return true;
-}
-
-export async function RegisterUser(formData : FormData): Promise<boolean> {
-    // Check if there is already a user with this username, and then return if there is
-    let username = String(formData.get("username"));
-    let password = String(formData.get("password"));
-    let confirmationPassword = String(formData.get("confirmPassword"));
-    let users = await String(getUserInfo(username));
-
-    if(users.length > 0){
-        console.log("User already exists")
-        return false;
-    };
-
-    // Validate the username and password that you just got
-    if(password != confirmationPassword || password.length < 8 || username.length < 4){
-        console.log("Password or username is not valid")
+    // Helper function so that we don't write the same code in all of those
+    function returnFalse() {
+        cookies().delete("token");
         return false;
     }
+
+    if(result == undefined)
+        return returnFalse();
+    
+    // Something went wrong and we have multiple users with the same username and password
+    if(result.length > 1)
+        return returnFalse();
+
+    const user = result[0];
+    // Something went wrong and the database didn't return a user id that we wanted
+    if(user?.id == undefined)
+        return returnFalse();
+
+    // Check if there already is a token for this particular user
+    result = await getTokenFromUserID(user.id);
+
+    // If you found a token send that back instead of making a new one
+    if(result != undefined && result.length > 0 && result[0]?.token != undefined) {
+        const token = result[0].token;
+
+        cookies().set("token", token);
+    }
+    else {
+        // If it is, generate a new token for the user and save it a list with all tokens
+        const token = uuidv4();
+        
+        // Add the token item to the database
+        addToken(token, user.id);
+
+        // Add the token cookie to the clients cookies
+        cookies().set("token", token);
+    }
+
+    return true;
+}
+
+export async function RegisterUser(username: string, password: string, confirmPassword: string, weight: number = 0, length: number = 0): Promise<string> {
+    // Does the user already exists? and if so return an error that says exactly that
+    const users = await getUserInfo(undefined, username);
+    
+    if(users != undefined && users.length > 0){
+        console.log("User already exists")
+        return "User already exists!";
+    }
+
+    // Validate the username and password that you just got
+    if(username.length < 4)
+        return "Username should be more than to 3 characters long!";
+
+    if(password.length < 8)
+        return "Password should be more than 7 characters long!";
+
+    if(password != confirmPassword)
+        return "Password and confirm password aren't matching!";
+
     // Register the user in the database and redirect the client to the login page
     registerUser(username, password);
-    // Or return an error based on if it's correct or not
-    console.log("User registered")
-    return true;
+    return "User registered successfully";
 }
