@@ -364,7 +364,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 // Set user's target value for a specific time slope
     export async function setTargetGoal(userId: number, targetType: string, targetValue: number){
         return await executeQuery(
-            `INSERT INTO targerGoal (userId, targetType, targetValue) VALUES (?, ?, ?)`,
+            `INSERT INTO targetGoal (userId, targetType, targetValue) VALUES (?, ?, ?)`,
             [userId, targetType, targetValue]
         );
     }
@@ -378,7 +378,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     }
 
 // Update user's target goal
-    export async function updateTargetVGoal(userId: number, targetType: string, targetValue: number) {
+    export async function updateTargetGoal(userId: number, targetType: string, targetValue: number) {
         return await executeQuery(
             `UPDATE targetGoal SET targetValue = ? WHERE userId = ? AND targetType = ?`,
             [targetValue, userId, targetType]
@@ -386,12 +386,13 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     }
 
 
-type errorHandlerFunction = () => Promise<databaseReturnType>;
-async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType> {
+type errorHandlerFunction = () => Promise<databaseReturnType | undefined>;
+async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType | undefined> {
     try {
         return await fn();
     }
     catch(e) {
-        console.log(e);
+        console.log(e); // or maybe console.e("Error:", e);
+        return undefined;
     }
 }
