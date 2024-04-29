@@ -228,42 +228,43 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 
 
-// function to save a meal starting with inserting the meal into the savedMeael table
-async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number ,items: { food: string, quantity: number }[]) {
-    // First, insert the meal into the savedMeals table
-    const mealInsertResult = await executeQuery(
-        `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [userId, name, description, calories, protein, fat, carbohydrates]
-    );
-    if (mealInsertResult && mealInsertResult.length > 0) {
-        const mealId = mealInsertResult[0].lastID; // Checking if the result isn'tt empty and then get lastID
+// Save a meal starting with inserting the meal into the savedMeael table
+    async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number ,items: { food: string, quantity: number }[]) {
+        const mealInsertResult = await executeQuery(
+            `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [userId, name, description, calories, protein, fat, carbohydrates]
+        );
 
-    // Insert each meal into the savedMealItem table
-    for (const item of items) { // meal items
-        await executeQuery(
-            `INSERT INTO savedMealItem(meal, food, quantity, calories, protein, fat, carbohydrates) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [mealId, item.food, item.quantity, calories, protein, fat, carbohydrates]
+        // Check result isn't empty & then get lastId
+        if (mealInsertResult && mealInsertResult.length > 0) {
+            const mealId = mealInsertResult[0].lastID; 
+
+        // Insert the meal into savedMealItem table
+        for (const item of items) { // meal items
+            await executeQuery(
+                `INSERT INTO savedMealItem(meal, food, quantity, calories, protein, fat, carbohydrates) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [mealId, item.food, item.quantity, calories, protein, fat, carbohydrates]
+            );
+        }
+    } else {
+        throw new Error("Failed to insert the meal into the database.");
+    }
+
+    // Fetch user's saved meals 
+    async function getSavedMeals(userId: number) {
+        return executeQuery(
+            `SELECT id, name, description FROM savedMeals WHERE user = ?`,
+            [userId]
         );
     }
-} else {
-    throw new Error("Failed to insert the meal into the database.");
-}
 
-// Fetch user's saved meals 
- async function getSavedMeals(userId: number) {
-    return executeQuery(
-        `SELECT id, name, description FROM savedMeals WHERE user = ?`,
-        [userId]
-    );
-}
-
-// Fetch mealItems for a saved meal
- async function getMealItems(mealId: number) {
-    return executeQuery(
-        `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
-        [mealId]
-    );
-}}
+    // Fetch mealItems for a saved meal
+    async function getMealItems(mealId: number) {
+        return executeQuery(
+            `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
+            [mealId]
+        );
+    }}
 
 // Add user's fav. food
     export async function addFavoriteFood(userId: number, foodName: string) {
@@ -273,12 +274,32 @@ async function saveMeal(userId: number, name: string, description: string, calor
         );
 }
 
+// Fetch user's fav. food to display
+    export async function getFavoriteFood(userId: number) {
+        return await executeQuery(`SELECT foodName FROM favoriteFoods WHERE userId = ?`, [userId]);
+    }
+
 // Remove user's fav. food
     export async function removeFavoriteFood(userId: number, foodName: string) {
         return await executeQuery(
             `DELETE FROM favoriteFoods WHERE userId = ? AND foodName = ?`, 
             [userId, foodName]);
 }
+// Remove user's fav. food list
+    export async function deleteFavFoods(userId: number) { 
+        // open the db connection asynchronously, if database connection is successfull
+        try { await openDB(); if (db) { 
+            // delete all rows from fav.Foods table, of the selected userId 
+            await db.run(
+                `DELETE FROM favoriteFoods WHERE user = ?`,
+                [userId]); 
+                // logging message to the console to indicate that all fav.foods are deleted from db
+                console.log("All fav. foods are cleared."); 
+            } 
+        } catch (error) { 
+            console.error("Error deleting favorite foods:", error); 
+        } 
+    }
 
 // Retrieve user's progress interval
     export async function getUserProgress(userId:number, datetime: string){
@@ -312,18 +333,27 @@ async function saveMeal(userId: number, name: string, description: string, calor
     }
 
 
-// functions to set and get target value for a specific time slope
-    export async function setTargetGoal(user_id: number, targetType: string, targetValue: number){
+// Set user's target value for a specific time slope
+    export async function setTargetGoal(userId: number, targetType: string, targetValue: number){
         return await executeQuery(
-            `INSERT INTO targerGoal (user_id, targetType, targetValue) VALUES (?, ?, ?)`,
-            [user_id, targetType, targetValue]
+            `INSERT INTO targerGoal (userId, targetType, targetValue) VALUES (?, ?, ?)`,
+            [userId, targetType, targetValue]
         );
     }
 
-    export async function getTargetGoal(user_id: number, targetType: string, targetValue: number){
+// Get user's target value for a specific time slope
+    export async function getTargetGoal(userId: number, targetType: string, targetValue: number){
         return await executeQuery(
-            `SELECT targetValue FROM targetGoal WHERE user_id=? AND targetType=?`,
-            [user_id, targetType]
+            `SELECT targetValue FROM targetGoal WHERE userId=? AND targetType=?`,
+            [userId, targetType]
+        );
+    }
+
+// Update user's target goal
+    export async function updateTargetVGoal(userId: number, targetType: string, targetValue: number) {
+        return await executeQuery(
+            `UPDATE targetGoal SET targetValue = ? WHERE userId = ? AND targetType = ?`,
+            [targetValue, userId, targetType]
         );
     }
 
