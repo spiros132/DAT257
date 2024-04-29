@@ -103,6 +103,16 @@ function createDB(){
                 deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (userId) REFERENCES users(id)
             )`);
+
+        // 
+        newDB.run(`
+        CREATE TABLE IF NOT EXISTS userProgress (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            progressValue INTEGER,
+            date DATETIME NOT NULL,
+            FOREIGN KEY (userId) REFERENCES users(id)
+        `);
 };
 
 createDB();
@@ -325,7 +335,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         const oneDay = new Date();
         oneDay.setDate(oneDay.getDate()-1);
         return await executeQuery(
-            `SELECT foodName FROM deletedFavoriteFood WHERE userId = ? AND deletionTime >=?`,
+            `SELECT foodName FROM deletedFavoriteFoods WHERE userId = ? AND deletionTime >=?`,
             [userId, oneDay.toISOString()] // toLocaleString
         );
     }
@@ -385,6 +395,50 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         );
     }
 
+// Store user's progress
+    export async function storeUserProgress(userId:number, progressValue: number) {
+        const CURRENT_TIMESTAMP = new Date().toISOString();
+        await executeQuery(
+            `   INSERT INTO userProgress (userId, progressValue, date) VALUES (?,?,?)`,
+            [userId, progressValue, CURRENT_TIMESTAMP]
+        )
+    }
+
+// Retrieve user's progress intervall
+    export async function getProgInterval(userId: number, interval: string) {
+        let startDateSlope, endDateSlope;
+        switch (interval) {
+            case 'today':
+                startDateSlope = new Date().toISOString().split('T')[0];
+                endDateSlope = startDateSlope;
+                break;
+            case 'this_week':
+                startDateSlope = new Date();
+                startDateSlope.setDate(startDateSlope.getDate() - startDateSlope.getDay()); // Start on sunday
+                endDateSlope = new Date();
+                endDateSlope.setDate(endDateSlope.getDate() + (6 - endDateSlope.getDay())); // End on saturday
+                startDateSlope = startDateSlope.toISOString().split('T')[0];
+                endDateSlope = endDateSlope.toISOString().split('T')[0];
+                break;
+            case 'this_month':
+                startDateSlope = new Date();
+                startDateSlope.setDate(1); // Start of the month
+                endDateSlope = new Date();
+                endDateSlope.setMonth(endDateSlope.getMonth() + 1); // End of the month
+                endDateSlope.setDate(0); // Last day of the previous month
+                startDateSlope = startDateSlope.toISOString().split('T')[0];
+                endDateSlope = endDateSlope.toISOString().split('T')[0];
+                break;
+            default:
+                throw new Error('Invalid interval type');
+        }
+    
+        // Query to retrieve progress of a specified interval
+        return await executeQuery(
+            `SELECT * FROM user_progress WHERE user_id = ? AND date BETWEEN ? AND ?`,
+            [userId, startDateSlope, endDateSlope]
+        );
+    }
 
 type errorHandlerFunction = () => Promise<databaseReturnType | undefined>;
 async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnType | undefined> {
