@@ -3,13 +3,13 @@ import HamburgerDiv from "@/components/HamburgerDiv";
 import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
+import FoodListItem from "@/components/FoodListItem";
 import React, { useState } from "react"; 
 import { SearchForFoodList } from "@/app/actions/actions";
 import { SearchListFoodItemCommon, SearchListFoodItemData } from "@/app/lib/definitions";
 
 export default function CreateEditMealPage() {
-    const [results, setResults] = useState<string[]>([]);
-    const [result, setResult] = useState<SearchListFoodItemCommon | undefined>(undefined);
+    const [results, setResults] = useState<SearchListFoodItemCommon[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
     const [activeButton, setActiveButton] = useState<"search" | "favorites">("search");
 
@@ -22,10 +22,9 @@ export default function CreateEditMealPage() {
         SearchForFoodList(searchInput)
             .then((res: string | undefined) => {
                 if (res != undefined) {
-                    const data: SearchListFoodItemData = JSON.parse(res);
-                    if (data && data.common) {
-                                        
-                        setResult(data.common[0])            
+                    const data: SearchListFoodItemData = JSON.parse(res);  
+                    if (data && data.common) {                        
+                        setResults(data.common)         
                     }
                 }
             })
@@ -51,7 +50,7 @@ export default function CreateEditMealPage() {
                 <HamburgerDiv />
             </div>
             {/* Second column: SearchBar and ResultDisplay */}
-            <div className="absolute top-0 left-0 right-0 flex flex-col justify-center items-center gap-4 p-4">
+            <div className="absolute top-0 left-0 right-0 flex flex-col justify-center items-center gap-5 p-4">
                 <div className="w-1000" style={{ width: '60%', borderTop: 'none' }}> 
                     <SearchBar onSearch={onSearch} />
                     <div className="relative mb-4 gap-20 flex justify-start">
@@ -74,8 +73,28 @@ export default function CreateEditMealPage() {
                     <div>
                         <ScrollPanel>
                             {loading ? (<p>Loading...</p>) : (
-                                 <ResultDisplay result={result} />)}
+                                 <ResultDisplay results={results} />)}
                         </ScrollPanel>
+                    </div>
+                    <div className="h-20">
+
+                    </div>
+                    <input className="block flex-auto px-3 w-28 bg-white text-black justify-self-start font-bold"
+                        type="text"
+                        id="DishName"
+                        placeholder="Dish Name"
+                        aria-label="Dish Name">
+                
+                        </input>
+                    <div className="flex flex-col justify-center items-center gap-2">
+                        <h2 className="text-lg font-semibold">
+                            Current Foods
+                        </h2>
+                        <div className="overflow-y-scroll flex whitespace-nowrap bg-gray-200 h-60 py-2 px-4">
+                            <div className="inline-flex" style={{ minWidth: "100%" }}>
+                                    <FoodListItem name={""} amount={0} unit={""}/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
