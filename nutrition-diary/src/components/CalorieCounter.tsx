@@ -1,7 +1,22 @@
 "use client";
+import React, {useState, useEffect} from "react";
 
-export default function CalorieCounter(){
+export default function CalorieCounter(nutrients: {consumed: number[], target: number[]}){
 
+    const [consumedNutrients, setConsumedNutrients] = useState<number[]>([0,0,0,0]);
+    const [targetNutrients, setTargetNutrients] = useState<number[]>([0,0,0,0]);
+
+
+    useEffect(() => {
+        populateInfo(nutrients);
+    }, [nutrients.consumed, nutrients.target]); 
+
+    function populateInfo(nutrients: {consumed: number[], target: number[]}){
+    
+        setConsumedNutrients(nutrients.consumed);
+        setTargetNutrients(nutrients.target);
+
+    }
 
     return (
         <div className="h-[60vh] w-[18vw] bg-white absolute top-0 right-0 border border-gray-500 border-t-0 border-r-0">
@@ -14,7 +29,7 @@ export default function CalorieCounter(){
                     </div>
                 </div>
                 <p className="text-[1.4em]">
-                    1500 / 3000
+                    {consumedNutrients[0]} / {targetNutrients[0]}
                 </p>
             </div>
 
@@ -27,7 +42,7 @@ export default function CalorieCounter(){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    1500 / 3000
+                    {consumedNutrients[1]} / {targetNutrients[1]}
                 </p>
             </div>
             
@@ -40,7 +55,7 @@ export default function CalorieCounter(){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    1500 / 3000
+                    {consumedNutrients[2]} / {targetNutrients[2]}
                 </p>
             </div>
 
@@ -53,7 +68,7 @@ export default function CalorieCounter(){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    1500 / 3000
+                    {consumedNutrients[3]} / {targetNutrients[3]}
                 </p>
             </div>
 
