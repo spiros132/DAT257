@@ -3,6 +3,7 @@ import sqlite3, { OPEN_CREATE, OPEN_READWRITE } from 'sqlite3';
 import { createHash} from 'crypto';
 import { database_location } from './config';
 import { open, Database } from "sqlite";
+// import { createHash } from 'crypto';
 
 export type databaseReturnType = any[] | undefined;
 
