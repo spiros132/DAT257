@@ -108,8 +108,17 @@ function createDB(){
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             userId INTEGER,
             progressValue INTEGER,
-            date DATETIME NOT NULL,
+            date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+        `);
+
+        newDB.run(`
+        CREATE TABLE IF NOT EXISTS deletedAccount (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id)
+        )
         `);
 };
 // Initialize the database and create the tables
@@ -193,6 +202,11 @@ async function deleteOldTokens() {
     await errorHandler(async () => {
         return await executeQuery(`DELETE FROM tokens WHERE valid <= datetime('now')`, []);
     });
+}
+
+// Function to delete all tokens associated with the user
+async function deleteUserTokens(userId: number) {
+    return await executeQuery(`DELETE FROM tokens WHERE userID = ?`, [userId]);
 }
 
 // All tokens should be valid for a whole day and then you should need to login again if you haven't
@@ -330,17 +344,32 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 // Remove user's fav. food list
     export async function deleteFavFoods(userId: number) { 
         // open the db connection asynchronously, if database connection is successfull
-        try { await openDB(); if (db) { 
+        try { 
+            await openDB(); 
+            if (db) { 
             // delete all rows from fav.Foods table, of the selected userId 
             await db.run(
-                `DELETE FROM favoriteFoods WHERE user = ?`,
+                `DELETE FROM favoriteFoods WHERE userId = ?`,
                 [userId]); 
+                // delete the user's account and date
+            await db.run(
+                `DELETE FROM users WHERE id=?`,
+                [userId]
+            );
+            // log the deletion time and user's id in the deleteAccount table
+            await db.run(
+                `INSERT INTO deleteAccount (userId) VALUES (?)`,
+                [userId]
+            );
+
                 // logging message to the console to indicate that all fav.foods are deleted from db
                 console.log("All fav. foods are cleared."); 
             } 
         } catch (error) { 
             console.error("Error deleting favorite foods:", error); 
-        } 
+        } finally{
+            closeDB();
+        }
     }
 
 // Add user's deleted fav. foods into db
@@ -471,6 +500,65 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             `SELECT * FROM user_progress WHERE user_id = ? AND date BETWEEN ? AND ?`,
             [userId, startDateSlope, endDateSlope]
         );
+    }
+
+// Delete user's progress
+    async function deleteProgress(userId:number) {
+        return await executeQuery(
+            `DELETE FROM userProgress WHERE userId=?`,
+            [userId]
+        );
+    }
+// Delete user's fav. meals
+    async function deleteFavoriteMeals(userId: number) {
+        return await executeQuery(`DELETE FROM favoriteFoods WHERE userId = ?`, [userId]);
+    }
+// Delete user's meals
+    async function deleteUserEatenMeals(userId: number) {
+        await executeQuery(`DELETE FROM eatenMeals WHERE user = ?`, 
+        [userId]);
+        await executeQuery(`DELETE FROM eatenMealItem WHERE 
+        meal IN (SELECT id FROM eatenMeals WHERE user = ?)`, 
+        [userId]);
+    }
+// Delete user's saved meals
+    async function deleteUserSavedMeals(userId: number) {
+        await executeQuery(`DELETE FROM savedMeals WHERE user = ?`, [userId]);
+        await executeQuery(`DELETE FROM savedMealItem WHERE meal IN (SELECT id FROM savedMeals WHERE user = ?)`, [userId]);
+    }
+
+
+// Delete user's account along with all the associated data
+    export async function deleteAccount(userId:number){
+        try{
+            // delete the tokens associated with the user
+            await deleteUserTokens(userId);
+
+            // delete user's progress
+            await deleteProgress(userId);
+
+            // delete user's fav. meals
+            await deleteFavoriteMeals(userId);
+            
+            // delete user's meals
+            await deleteUserEatenMeals(userId);
+
+            // delete user's saved meals
+            await deleteUserSavedMeals(userId);
+
+            // delete saved nutrients... (Not completed)
+
+            // delete user's account 
+            await executeQuery(`DELETE FROM users WHERE id=?`, 
+            [userId]);
+
+            // log message for the successfull deletion
+            console.log(`Account deleted successfully`);
+            return true;
+        } catch(error){
+            console.error("Error occurred, failed deleting the account", error);
+            return false;
+        }
     }
 
 // Function to handle errors in async db operations
