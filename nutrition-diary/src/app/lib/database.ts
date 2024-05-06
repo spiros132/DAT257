@@ -3,7 +3,6 @@ import sqlite3, { OPEN_CREATE, OPEN_READWRITE } from 'sqlite3';
 import { createHash} from 'crypto';
 import { database_location } from './config';
 import { open, Database } from "sqlite";
-import { createHash } from 'crypto';
 
 export type databaseReturnType = any[] | undefined;
 
@@ -211,8 +210,8 @@ function generateSalt(): string {
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
     return await errorHandler(async () => {
         const salt = generateSalt();
-        const hashedPassword = createHash('sha256').update(password + salt).digest('hex');
-        return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, hashedPassword, salt, height, weight])
+         password = createHash('sha256').update(password).digest('hex');
+        return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
     });
 }
 
@@ -446,7 +445,7 @@ async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnTyp
         return await fn();
     }
     catch(e) {
-        console.log(e); // or maybe console.e("Error:", e);
+        console.log(e); // or maybe console.e("Error:", e); ?
         return undefined;
     }
 }
