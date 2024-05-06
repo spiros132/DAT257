@@ -513,6 +513,9 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     async function deleteFavoriteMeals(userId: number) {
         return await executeQuery(`DELETE FROM favoriteFoods WHERE userId = ?`, [userId]);
     }
+    export async function deleteUserFavoriteFoods(userId: number) {
+        return await executeQuery(`DELETE FROM favoriteFoods WHERE userId = ?`, [userId]);
+    }
 // Delete user's meals
     async function deleteUserEatenMeals(userId: number) {
         await executeQuery(`DELETE FROM eatenMeals WHERE user = ?`, 
@@ -525,6 +528,12 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     async function deleteUserSavedMeals(userId: number) {
         await executeQuery(`DELETE FROM savedMeals WHERE user = ?`, [userId]);
         await executeQuery(`DELETE FROM savedMealItem WHERE meal IN (SELECT id FROM savedMeals WHERE user = ?)`, [userId]);
+    }
+    export async function deleteSavedMeals(userId: number) {
+        // First, delete meal items associated with each saved meal
+        await executeQuery(`DELETE FROM savedMealItem WHERE meal IN (SELECT id FROM savedMeals WHERE user = ?)`, [userId]);
+        // Then, delete the saved meals themselves
+        await executeQuery(`DELETE FROM savedMeals WHERE user = ?`, [userId]);
     }
 
 
@@ -539,12 +548,14 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
             // delete user's fav. meals
             await deleteFavoriteMeals(userId);
+            await deleteUserFavoriteFoods(userId);
             
             // delete user's meals
             await deleteUserEatenMeals(userId);
 
             // delete user's saved meals
             await deleteUserSavedMeals(userId);
+            await deleteSavedMeals(userId);
 
             // delete saved nutrients... (Not completed)
 
