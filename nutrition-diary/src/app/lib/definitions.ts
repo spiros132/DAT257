@@ -54,6 +54,7 @@ export interface SearchListFoodItemBranded extends SearchListFoodItemBase {
     nix_item_id: string;
 }
 
+
 // The API for searching of the nutrients of item(s)
 export interface SearchFoodItemNutrients {
     food_name: string;
@@ -120,4 +121,18 @@ export interface UserInterface {
     username: string;
     height: number;
     weight: number;
+}
+export interface SavedFoodData {
+    food_name: string;
+    serving_unit: string;
+    serving_qty: number;
+    nix_brand_name: string | null | undefined;
+    nix_item_name: string | null | undefined;
+    photo: string;
+    nix_item_id: string | null | undefined;
+    upc: string | null | undefined;
+    nf_calories: number;
+    nf_protein: number;
+    nf_total_fat: number;
+    nf_total_carbohydrate: number;
 }
