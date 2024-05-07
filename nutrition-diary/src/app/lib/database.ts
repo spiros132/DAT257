@@ -79,6 +79,21 @@ function createDB(){
                 foodName TEXT NOT NULL,
                 FOREIGN KEY (userId) REFERENCES users(id)
             )`);
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS foodNutrients (
+                food_name TEXT PRIMARY KEY,
+                serving_unit TEXT NOT NULL,
+                serving_qty REAL NOT NULL,
+                nix_brand_name TEXT,
+                nix_item_name TEXT,
+                photo_thumb TEXT,
+                nix_item_id TEXT,
+                upc TEXT,
+                calories REAL NOT NULL,
+                protein REAL NOT NULL,
+                fat REAL NOT NULL,
+                carbohydrates REAL NOT NULL
+            )`);
       });
 
       newDB.run(`
@@ -457,6 +472,21 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             `   INSERT INTO userProgress (userId, progressValue, date) VALUES (?,?,?)`,
             [userId, progressValue, CURRENT_TIMESTAMP]
         )
+    }
+// Save food data in db
+    export async function saveFoodData(foodName: string, servingUnit: string, servingQty: number, nixBrandName: string, nixItemName: string, photoThumb: string, nixItemId: string, upc: string, calories: number, protein: number, fat: number, carbohydrates: number) {
+        await executeQuery(
+            `INSERT INTO foodNutrients (food_name, serving_unit, serving_qty, nix_brand_name, nix_item_name, photo_thumb, nix_item_id, upc, calories, protein, fat, carbohydrates) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [foodName, servingUnit, servingQty, nixBrandName, nixItemName, photoThumb, nixItemId, upc, calories, protein, fat, carbohydrates]);
+
+    }
+
+// Get food data from db
+    export async function getFoodData(foodName: string) {
+        return await executeQuery(
+            `SELECT * FROM foodNutrients WHERE food_name = ?`,
+            [foodName]
+        );
     }
 
 // Retrieve user's progress intervall

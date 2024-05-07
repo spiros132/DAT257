@@ -1,3 +1,5 @@
+"use client";
+
 import CalorieCounter from "@/components/CalorieCounter";
 import HamburgerDiv from "@/components/HamburgerDiv";
 import SearchBar from "@/components/SearchBar";
@@ -23,7 +25,7 @@ export default function CreateEditMealPage() {
             .then((res: string | undefined) => {
                 if (res != undefined) {
                     const data: SearchListFoodItemData = JSON.parse(res);  
-                    if (data && data.common) {                        
+                    if (data && data.common) {   
                         setResults(data.common)         
                     }
                 }
