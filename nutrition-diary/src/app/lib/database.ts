@@ -18,6 +18,22 @@ function createDB(){
 
     // Serialize db operations to make sure they execute in sequence
     newDB.serialize(() => {
+        // Create the tables if they don't exist
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS foodNutrients (
+                food_name TEXT PRIMARY KEY NOT NULL,
+                serving_unit TEXT ,
+                serving_qty INTEGER ,
+                nix_brand_name TEXT,
+                nix_item_name TEXT,
+                photo TEXT,
+                nix_item_id TEXT,
+                upc TEXT,
+                nf_calories INTEGER,
+                nf_protein REAL,
+                nf_fat REAL,
+                nf_carbohydrates REAL
+            );`);
         newDB.run(
             `CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +41,7 @@ function createDB(){
             password TEXT NOT NULL, 
             weight INTEGER NOT NULL,
             height INTEGER NOT NULL
-        )`);
+        );`);
         newDB.run(
             `CREATE TABLE IF NOT EXISTS savedMeals(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +53,7 @@ function createDB(){
                 fat REAL NOT NULL,
                 carbohydrates REAL NOT NULL,           
                 FOREIGN KEY (user) REFERENCES users(username)
-        )`);
+        );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS savedMealItem(
                 meal INTEGER,
@@ -48,7 +64,7 @@ function createDB(){
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
                 FOREIGN KEY (meal) REFERENCES savedMeals(name)
-            )`);
+            );`);
         
         newDB.run(
             `CREATE TABLE IF NOT EXISTS eatenMeals(
@@ -57,28 +73,29 @@ function createDB(){
                 name TEXT NOT NULL,
                 date DATETIME NOT NULL, 
                 FOREIGN KEY (user) REFERENCES users(username)
-            )`);
+            );`);
         newDB.run(
               `CREATE TABLE IF NOT EXISTS eatenMealItem(
                   meal INTEGER,
                   food TEXT NOT NULL,
                   quantity INTEGER NOT NULL,
                   FOREIGN KEY (meal) REFERENCES eatenMeals(name)
-            )`);
+            );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS tokens(
                 token TEXT NOT NULL UNIQUE,
                 userID INTEGER,
                 valid DATETIME NOT NULL,
                 FOREIGN KEY (userID) REFERENCES users(id)
-            )`);
+            );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS favoriteFoods (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER,
                 foodName TEXT NOT NULL,
                 FOREIGN KEY (userId) REFERENCES users(id)
-            )`);
+            );`);
+        
       });
 
       newDB.run(`
@@ -88,7 +105,7 @@ function createDB(){
             targetType TEXT NOT NULL, 
             targetValue REAL NOT NULL,
             FOREIGN KEY (userId) REFERENCES users(id)
-        )`);
+        );`);
         // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
         // target value is the numeric goal
 
@@ -100,7 +117,7 @@ function createDB(){
                 foodName TEXT NOT NULL,
                 deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (userId) REFERENCES users(id)
-            )`);
+            );`);
 
         // 
         newDB.run(`
@@ -110,7 +127,7 @@ function createDB(){
             progressValue INTEGER,
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-        `);
+        );`);
 
         newDB.run(`
         CREATE TABLE IF NOT EXISTS deletedAccount (
@@ -118,7 +135,7 @@ function createDB(){
             userId INTEGER,
             deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id)
-        )
+        );
         `);
 };
 // Initialize the database and create the tables
@@ -243,7 +260,7 @@ function generateSalt(): string {
 export async function registerUser(username: string, password: string, height: number = 0, weight: number = 0){
     return await errorHandler(async () => {
         // const salt = generateSalt();
-         password = createHash('sha256').update(password).digest('hex');
+        password = createHash('sha256').update(password).digest('hex');
         return await executeQuery(`INSERT INTO users(username, password, height, weight) VALUES(?, ?, ?, ?)`, [username, password, height, weight])
     });
 }
@@ -459,6 +476,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         )
     }
 
+
 // Retrieve user's progress intervall
     export async function getProgInterval(userId: number, interval: string) {
         let startDateSlope, endDateSlope;
@@ -585,4 +603,33 @@ async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnTyp
         console.log(e); // Alternatively, use console.e("Error:", e); ?
         return undefined;
     }
+}
+
+
+// Save food data in db
+export async function saveFoodData(foodName: string, servingUnit: string, servingQty: number, nixBrandName: string | null | undefined, nixItemName: string | null | undefined, photoThumb: string, nixItemId: string | null | undefined, upc: string | null | undefined, calories: number, protein: number, fat: number, carbohydrates: number) {
+    foodName = foodName[0].toUpperCase  + foodName.slice(1).toLowerCase();
+    await executeQuery(
+        `INSERT INTO foodNutrients(food_name, serving_unit, serving_qty, nix_brand_name, nix_item_name, photo, nix_item_id, upc, nf_calories, nf_protein, nf_fat, nf_carbohydrates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);`,
+        [foodName, servingUnit, servingQty, nixBrandName, nixItemName, photoThumb, nixItemId, upc, calories, protein, fat, carbohydrates]);
+    //testInsert();
+}
+
+async function testInsert(){
+    let res = await executeQuery(`SELECT * FROM foodNutrients;`, []);
+    console.log(res);
+}
+
+// Get food data from db
+export async function getFoodData(foodName: string) {
+    let res = await executeQuery(
+        `SELECT * FROM foodNutrients WHERE food_name = ?;`,
+        [foodName]);
+    return res;
+}
+
+export async function deleteFoodData() {
+    await executeQuery(
+        `DELETE FROM foodNutrients WHERE 1=1;`,
+        []);
 }

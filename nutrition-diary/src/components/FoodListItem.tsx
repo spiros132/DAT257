@@ -25,8 +25,8 @@ function FoodListItem(props: {name: string, amount: number, unit: string}){
     };
 
     return (
-        <div className="absolute top-5">
-            <div className="flex h-20 w-screen rounded-lg border border-black bg-green-300">
+        <div>
+            <div className="flex h-20  rounded-lg border border-black bg-green-300">
                 <div className="grid h-20 grid-cols-2">
                     <div className="m-auto w-screen">
                         <h5 className="ml-20 text-xl">{foodName}</h5>
@@ -38,7 +38,7 @@ function FoodListItem(props: {name: string, amount: number, unit: string}){
                         <button id="infoButton" className="inline-flex items-center border border-gray-400 bg-gray-200 px-2">
                             More info
                             <svg className="ms-3 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
                     </div>
