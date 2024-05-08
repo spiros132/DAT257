@@ -10,7 +10,7 @@ export default function Page(){
         <div className="w-screen flex">
             <HamburgerDiv/>
             <div className="w-[93%] h-screen">
-                <CalorieCounter/>
+                <CalorieCounter consumed = {[0,0,0,0]} target = {[0,0,0,0]}/>
                 <div className="h-screen flex flex-col">
                     <div className="h-[50%] w-[75vw] flex">
                         <nav className="w-full h-[15vh] flex justify-around">
@@ -31,9 +31,9 @@ export default function Page(){
 
                     <div className="h-[50%] w-full">
                         <div className="flex justify-center items-center">
-                            <MealCard/>
-                            <MealCard/>
-                            <MealCard/>   
+                            <MealCard consumed = {[0,0,0,0]} target = {[0,0,0,0]}/>
+                            <MealCard consumed = {[0,0,0,0]} target = {[0,0,0,0]}/>
+                            <MealCard consumed = {[0,0,0,0]} target = {[0,0,0,0]}/>   
                             <AddMealButton/>
                         </div>                
                     </div>                
