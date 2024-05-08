@@ -48,6 +48,7 @@ function createDB(){
                 user INTEGER,
                 name TEXT NOT NULL,
                 description TEXT NOT NULL,   
+                saveTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 calories INTEGER NOT NULL DEFAULT 0,  
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,

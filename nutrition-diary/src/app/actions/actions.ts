@@ -1,7 +1,7 @@
 "use server";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
-import { deleteFoodData, getFoodData, saveFoodData } from "../lib/database";
+import { getFoodData, saveFoodData } from "../lib/database";
 
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
@@ -124,67 +124,62 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
 }
 
 export async function handleCommonResult(results: SearchListFoodItemCommon[], nutrientData: SavedFoodData[], secondTry: boolean = false){
-    results.forEach(async (result) => {
-        await getFoodData(result.food_name).then((nutrients: SavedFoodData[] | undefined) => {
-            if (nutrients != undefined && nutrients.length > 0) {
-                nutrientData.push(nutrients[0] as SavedFoodData);
+    for(const result of results){ 
+        let nutrients = await getFoodData(result.food_name);
+        if (nutrients != undefined && nutrients.length > 0) {
+            nutrientData.push(nutrients[0] as SavedFoodData);
+        }
+        else {
+            console.log("Failed to find " + result.food_name +" in database")
+            let res = await SearchForFood(result.food_name)
+            if (res != undefined ) {
+                const data_list = JSON.parse(res);
+                const data = data_list.foods[0];
+                let p = data.photo;
+                let t = "";
+                if(p != undefined){t = p.thumb;}
+                await saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
+                if (!secondTry) {await handleCommonResult(results, nutrientData, true); }
             }
-            else {
-                console.log("Failed to find " + result.food_name +" in database")
-                SearchForFood(result.food_name).then((res: string | undefined) => {
-                    if (res != undefined ) {
-                        const data_list = JSON.parse(res);
-                        const data = data_list.foods[0];
-                        let p = data.photo;
-                        let t = "";
-                        if(p != undefined){t = p.thumb;}
-                        saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
-                        if (!secondTry) {handleCommonResult(results, nutrientData, true); }
-                    }
-                });
-            }
-        });
-    });
+        }
+    }
     return nutrientData;
 }
 
 export async function handleBrandedResult(results: SearchListFoodItemBranded[], nutrientData: SavedFoodData[], secondTry: boolean = false){
-    results.forEach(async (result) => {
-        getFoodData(result.food_name).then((nutrients: SavedFoodData[] | undefined) => {
-            if (nutrients != undefined && nutrients.length > 0) {
-                nutrientData.push(nutrients[0]);
-            }
-            else {
-                console.log("Failed to find " + result.food_name +" in database")
-                if(result.nix_item_id != undefined){
-                    SearchForBrandedFood(result.nix_item_id).then((res: string | undefined) => {
-                        if (res != undefined) {
-                            const data_list = JSON.parse(res);
-                            const data = data_list.foods[0];
-                            let p = data.photo;
-                            let t = "";
-                            if(p != undefined){t = p.thumb;}
-                            saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
-                            if (!secondTry) {handleBrandedResult(results, nutrientData, true); }
-                        }
-                    });
-                }
-                else{
-                    SearchForFood(result.food_name).then((res: string | undefined) => {
-                        if (res != undefined) {
-                            const data_list = JSON.parse(res);
-                            const data = data_list.foods[0];
-                            let p = data.photo;
-                            let t = "";
-                            if(p != undefined){t = p.thumb;}
-                            saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
-                            if (!secondTry) {handleBrandedResult(results, nutrientData, true); }
-                        }
-                    });
+    for (const result of results) {
+        let nutrients = await getFoodData(result.food_name)
+        if (nutrients != undefined && nutrients.length > 0) {
+            nutrientData.push(nutrients[0]);
+        }
+        else {
+            console.log("Failed to find " + result.food_name +" in database")
+            if(result.nix_item_id != undefined){
+                let res = await SearchForBrandedFood(result.nix_item_id)
+                if (res != undefined) {
+                    const data_list = JSON.parse(res);
+                    const data = data_list.foods[0];
+                    let p = data.photo;
+                    let t = "";
+                    if(p != undefined){t = p.thumb;}
+                    saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
+                    if (!secondTry) {await handleBrandedResult(results, nutrientData, true); }
                 }
             }
-        });
-    });
+            else{
+                let res = await SearchForFood(result.food_name)
+                if (res != undefined) {
+                    const data_list = JSON.parse(res);
+                    const data = data_list.foods[0];
+                    let p = data.photo;
+                    let t = "";
+                    if(p != undefined){t = p.thumb;}
+                    await saveFoodData(result.food_name, data.serving_unit, data.serving_qty, data.nix_brand_name, data.nix_item_name, t, data.nix_item_id, data.upc, data.nf_calories, data.nf_protein, data.nf_total_fat, data.nf_total_carbohydrate);
+                    if (!secondTry) {await handleBrandedResult(results, nutrientData, true); }
+                }
+            }
+        }
+    }
     return nutrientData;
 }
 // WIP!!!

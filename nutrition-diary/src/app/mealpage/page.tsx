@@ -21,29 +21,22 @@ export default function CreateEditMealPage() {
 
 
     const fetchData = async (searchInput: string) => {
+        let nutrientData: SavedFoodData[] = [];
         setLoading(true);
-        SearchForFoodList(searchInput)
-            .then(async (res: string | undefined) => {
-                if (res != undefined) {
-                    const data: SearchListFoodItemData = JSON.parse(res);  
-                    let nutrientData: SavedFoodData[] = [];
-                    if (data) {
-                        if (data.common) {
-                            nutrientData = await handleCommonResult(data.common, nutrientData);
-                        }
-                        if (data.branded) {
-                            nutrientData = await handleBrandedResult(data.branded, nutrientData);
-                        } 
-                    }
-                    setResults(nutrientData);
+        let res = await SearchForFoodList(searchInput)
+        if (res != undefined) {
+            const data: SearchListFoodItemData = JSON.parse(res);  
+            if (data) {
+                if (data.common) {
+                    nutrientData = await handleCommonResult(data.common, nutrientData);
                 }
-            })
-            .catch((error: Error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+                if (data.branded) {
+                    nutrientData = await handleBrandedResult(data.branded, nutrientData);
+                } 
+            }
+        }
+        setResults(nutrientData);
+        setLoading(false);
     };
 
     const handleSearchButtonClick = () => {
