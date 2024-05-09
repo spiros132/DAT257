@@ -4,7 +4,8 @@ import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
 import HamburgerDiv from "@/components/HamburgerDiv";
-import WeeklyProgress from "@/components/WeeklyProgress";
+import UserProgress from "@/components/UserProgressHistogram";
+import { verifySession } from "./lib/session";
 
 export default function Home() {
   const [activeButton, setActiveButton] = useState("Today");
@@ -56,7 +57,7 @@ export default function Home() {
 
             <div className="h-[50%] w-full">
               {activeButton === "Weekly" ? (
-                <WeeklyProgress data={[]} />
+                <UserProgress interval={"weekly"}  />
               ) : (
                 <div className="flex justify-center items-center">
                   <MealCard />

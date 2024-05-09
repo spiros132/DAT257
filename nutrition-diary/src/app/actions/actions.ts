@@ -5,6 +5,7 @@ import { SearchFoodItemNutrientsData, SearchListFoodItemData } from "../lib/defi
 import { databaseReturnType, getTokenData, getUserInfo, loginUser, registerUser } from "../lib/database";
 import { cookies } from "next/headers";
 import { createSession, deleteSession } from "../lib/session";
+import { getProgInterval } from "../lib/database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -88,6 +89,32 @@ export async function SearchForFoodList(foodname: string): Promise<string | unde
         return JSON.stringify(obj);
     }
 }
+
+export async function fetchUserProgress(userId: number, interval: string) {
+    try {
+     
+        const results = await getProgInterval(userId, interval);
+        if (!results) {
+            console.error('No data returned from getProgInterval');
+            return [];  // Handle the case where results might be undefined
+        }
+        const formattedData = results.map((item, index) => ({
+            day: `Day ${index + 1}`,
+            calories: item.calories,
+            carbohydrates: item.carbohydrates,
+            protein: item.protein,
+            fat: item.fat
+        }));
+
+       
+        return formattedData;
+    } catch (error) {
+        console.error('Error fetching weekly progress:', error);
+        return []; // Return an empty array in case of an error
+    }
+}
+
+
 
 // WIP!!!
 // gives a list of meals with the calories

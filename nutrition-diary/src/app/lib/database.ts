@@ -22,7 +22,7 @@ function createDB(){
             `CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL, 
+            password TEXT NOT NULL,     
             weight INTEGER NOT NULL,
             height INTEGER NOT NULL
         )`);
@@ -107,9 +107,10 @@ function createDB(){
         CREATE TABLE IF NOT EXISTS userProgress (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             userId INTEGER,
-            progressValue INTEGER,
+            savedMeals INTEGER,
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (savedMeals) REFRENCES savedMeals(userId) ON DELETE CASCADE
         `);
 
         newDB.run(`
@@ -497,7 +498,9 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     
         // Query to retrieve progress of a specified interval
         return await executeQuery(
-            `SELECT * FROM user_progress WHERE user_id = ? AND date BETWEEN ? AND ?`,
+            `SELECT savedMeals.calories, savedMeals.fat, savedMeals.carbohydrates, savedMeals.protein
+            FROM userProgress
+            WHERE userId = ? AND date BETWEEN ? AND ?`,
             [userId, startDateSlope, endDateSlope]
         );
     }
