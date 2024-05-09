@@ -1,7 +1,9 @@
 "use server";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
-import { deleteFoodData, getFoodData, saveFoodData } from "../lib/database";
+import { deleteFoodData, getFoodData, saveFoodData, getSavedMeals, getMealItems } from "../lib/database";
+import { verifySession} from "@/app/lib/session";
+
 
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
@@ -186,6 +188,37 @@ export async function handleBrandedResult(results: SearchListFoodItemBranded[], 
         });
     });
     return nutrientData;
+}
+
+export async function getCalorieCounterInfo() {
+    let calories = 0;
+    let carbs = 0;
+    let protein = 0;
+    let fat = 0;
+
+    const session = await verifySession();
+    if (typeof session.userId === 'number') {
+        const userId = session.userId;
+        const meals = await getSavedMeals(userId);
+
+        if(meals){
+            for (const meal of meals) {
+                const foodItems = await getMealItems(meal.id);
+                if(foodItems){
+                    for (const item of foodItems) {
+                        calories += item.calories;
+                        carbs += item.carbohydrates;
+                        protein += item.protein;
+                        fat += item.fat;
+                    }                    
+                }
+
+            }
+        }
+
+    }
+
+    return [calories, carbs, protein, fat];
 }
 // WIP!!!
 // gives a list of meals with the calories

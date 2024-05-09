@@ -52,7 +52,7 @@ function createDB(){
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,
                 carbohydrates REAL NOT NULL,           
-                FOREIGN KEY (user) REFERENCES users(username)
+                FOREIGN KEY (user) REFERENCES users(id)
         );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS savedMealItem(
@@ -63,7 +63,7 @@ function createDB(){
                 protein NOT NULL DEFAULT 0,
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
-                FOREIGN KEY (meal) REFERENCES savedMeals(name)
+                FOREIGN KEY (meal) REFERENCES savedMeals(id)
             );`);
         
         newDB.run(
@@ -196,14 +196,14 @@ export async function registerEatenMealItem(meal: number, food: string, quantity
 
 // Function to view the meals eaten by the user
 export async function viewMeals(user: string){
-  return executeQuery(`SELECT eatenMeals.name FROM eatenMeals
+  return executeQuery(`SELECT eatenMeals.name, eatenMeals.id FROM eatenMeals
                        INNER JOIN users ON eatenMeals.user == users.id
                        WHERE username == ?`, [user]);
 }
 
 // Function to view the meal items (food items) of the meal eaten by the user
 export async function viewFoodsOfMeal(meal: string){
-  return executeQuery(`SELECT eatenMealItem.name FROM eatenMealItem
+  return executeQuery(`SELECT * FROM eatenMealItem
                        INNER JOIN eatenMeals ON eatenMealItem.meal == eatenMeals.id
                        WHERE meal == ?`, [meal]);
 }
@@ -322,22 +322,23 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     } else {
         throw new Error("Failed to insert the meal into the database.");
     }
+}
 
 // Fetch user's saved meals 
-    async function getSavedMeals(userId: number) {
-        return executeQuery(
+  export async function getSavedMeals(userId: number) {
+        return await executeQuery(
             `SELECT id, name, description FROM savedMeals WHERE user = ?`,
             [userId]
         );
     }
 
 // Fetch mealItems for a saved meal
-    async function getMealItems(mealId: number) {
-        return executeQuery(
-            `SELECT food, quantity FROM savedMealItem WHERE meal = ?`,
+  export  async function getMealItems(mealId: number) {
+        return await executeQuery(
+            `SELECT * FROM savedMealItem WHERE meal = ?`,
             [mealId]
         );
-    }}
+    }
 
 // Add user's fav. food
     export async function addFavoriteFood(userId: number, foodName: string) {
