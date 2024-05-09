@@ -6,7 +6,7 @@ import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import FoodListItem from "@/components/FoodListItem";
-import React, { useState } from "react"; 
+import React, { use, useEffect, useState } from "react"; 
 import { SearchForFoodList,  handleBrandedResult,  handleCommonResult} from "@/app/actions/actions";
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 
@@ -14,11 +14,20 @@ export default function CreateEditMealPage() {
     const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
     const [activeButton, setActiveButton] = useState<"search" | "favorites">("search");
+    const [currentFoods, setCurrentFoods] = useState<SavedFoodData[]>([]);
+
+    const listItemChanged = (name: string, amount: number, unit: string) => {
+        currentFoods.find((food) => food.food_name === name)!.serving_qty = amount;
+        setCurrentFoods([...currentFoods]);
+    }    
 
     const onSearch = (searchInput: string) => {
         fetchData(searchInput);
     };
 
+    const onAdd = (foodName: SavedFoodData) => {
+        setCurrentFoods([...currentFoods, foodName]);
+    }
 
     const fetchData = async (searchInput: string) => {
         let nutrientData: SavedFoodData[] = [];
@@ -46,6 +55,27 @@ export default function CreateEditMealPage() {
     const handleFavoritesButtonClick = () => {
         setActiveButton("favorites");
     };
+
+    const makeFoodListItems = (foods: SavedFoodData[]) => {
+        if(!foods || foods.length == 0) return (
+            <div className="flex justify-center items-center h-20">
+                <p>No foods added yet.</p>
+            </div>
+        );
+        
+        
+        let items = foods.map((food, index) => (
+            <FoodListItem key={index} name={food.food_name} amount={food.serving_qty} unit={food.serving_unit} valueChanged={listItemChanged} />
+        ));
+
+        return(
+        <div className="overflow-y-scroll flex whitespace-nowrap bg-gray-200 h-60 py-2 px-4">
+            <div className="" style={{ minWidth: "100%" }}>
+                {items}
+            </div>
+        </div>
+        );
+    }
 
     return (
         <div className="grid grid-cols-3 p-4 min-h-screen">
@@ -76,7 +106,7 @@ export default function CreateEditMealPage() {
                     <div>
                         <ScrollPanel>
                             {loading ? (<p>Loading...</p>) : (
-                                 <ResultDisplay results={results} />)}
+                                 <ResultDisplay results={results} onAdd={onAdd}  />)}
                         </ScrollPanel>
                     </div>
                     <div className="h-20">
@@ -93,17 +123,13 @@ export default function CreateEditMealPage() {
                         <h2 className="text-lg font-semibold">
                             Current Foods
                         </h2>
-                        <div className="overflow-y-scroll flex whitespace-nowrap bg-gray-200 h-60 py-2 px-4">
-                            <div className="inline-flex" style={{ minWidth: "100%" }}>
-                                    <FoodListItem name={""} amount={0} unit={""}/>
-                            </div>
-                        </div>
+                        {makeFoodListItems(currentFoods)}
                     </div>
                 </div>
             </div>
             {/* Third column: CalorieCounter */}
             <div>
-                <CalorieCounter />
+                <CalorieCounter result={currentFoods}/>
             </div>
         </div>
     );
