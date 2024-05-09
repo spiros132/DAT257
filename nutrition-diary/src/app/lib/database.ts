@@ -80,7 +80,10 @@ function createDB(){
                 FOREIGN KEY (userId) REFERENCES users(id)
             )`);
       });
-
+      
+      // Table for User's target goal
+      // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
+      // target value: Numeric goal
       newDB.run(`
         CREATE TABLE IF NOT EXISTS targetGoal (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -89,10 +92,8 @@ function createDB(){
             targetValue REAL NOT NULL,
             FOREIGN KEY (userId) REFERENCES users(id)
         )`);
-        // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
-        // target value is the numeric goal
 
-        // store deleted fav. food
+        // Store deleted fav. food
         newDB.run(`
             CREATE TABLE IF NOT EXISTS deletedFavoriteFoods (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,7 +103,7 @@ function createDB(){
                 FOREIGN KEY (userId) REFERENCES users(id)
             )`);
 
-        // 
+        // Table for user's progress
         newDB.run(`
         CREATE TABLE IF NOT EXISTS userProgress (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
