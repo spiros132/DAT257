@@ -8,7 +8,7 @@ export default function ResultDisplay(props: { results: SearchListFoodItemCommon
             handleResult(props.results);
         }
     }, [props.results]);
-
+    
     function handleResult(results: SearchListFoodItemCommon[] | undefined) {
         if (!results) return;
 
