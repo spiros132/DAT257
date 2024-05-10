@@ -3,11 +3,9 @@
 import Link from "next/link";
 
 
-export default function MenuBar(){
-
+export default function SideNav(){
    const logoPath = "/NutritionDiary.png";
    return (
-    <div className="flex items-start justify-start bg-white"> {/*justify-start: to align to the left side of the page */}
       <div className="menu-container flex flex-col items-center justify-center border border-black rounded-lg p-0 mt-0"> 
         <div className="logo-menu-container">
           <div className="logo-container mb-4">
@@ -37,6 +35,5 @@ export default function MenuBar(){
           </Link>
         </div>
       </div>
-    </div>
   );
 }

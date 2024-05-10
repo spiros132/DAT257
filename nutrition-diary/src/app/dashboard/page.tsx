@@ -8,7 +8,6 @@ import HamburgerDiv from "@/components/HamburgerDiv";
 export default function Page(){
     return (
         <div className="w-screen flex">
-            <HamburgerDiv/>
             <div className="w-[93%] h-screen">
                 <CalorieCounter/>
                 <div className="h-screen flex flex-col">
