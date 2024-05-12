@@ -1,8 +1,11 @@
 "use server";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
-import { getFoodData, saveFoodData } from "../lib/database";
-
+import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
+import { GetUserID } from "./users";
+import { cookies } from "next/headers";
+import { decrypt, verifySession } from "../lib/session";
+import { verify } from "crypto";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -181,6 +184,14 @@ export async function handleBrandedResult(results: SearchListFoodItemBranded[], 
         }
     }
     return nutrientData;
+}
+
+export async function saveMealAction(mealName: string, description: string, totalCalories: number, totalProtein: number, totalCarbohydrates: number, totalFat: number, items: {food: string, quantity: number}[]) {
+    const session = await verifySession();
+    if(session.isAuth == false ) return;
+    const userId: number = session.userId as number;
+    saveMeal(userId, mealName, "No description", totalCalories, totalProtein, totalCarbohydrates, totalFat, items);
+    
 }
 // WIP!!!
 // gives a list of meals with the calories

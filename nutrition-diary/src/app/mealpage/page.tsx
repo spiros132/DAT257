@@ -7,12 +7,13 @@ import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import FoodListItem from "@/components/FoodListItem";
 import React, { use, useEffect, useState } from "react"; 
-import { SearchForFoodList,  handleBrandedResult,  handleCommonResult} from "@/app/actions/actions";
+import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMeal, saveMealAction} from "@/app/actions/actions";
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 
 export default function CreateEditMealPage() {
     const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
+    const [mealName, setMealName] = useState<string>("");
     const [activeButton, setActiveButton] = useState<"search" | "favorites">("search");
     const [currentFoods, setCurrentFoods] = useState<SavedFoodData[]>([]);
 
@@ -27,6 +28,41 @@ export default function CreateEditMealPage() {
 
     const onAdd = (foodName: SavedFoodData) => {
         setCurrentFoods([...currentFoods, foodName]);
+    }
+    const calcNutrients = (result: SavedFoodData[]) => {
+        if (!result) return;
+        let totalCalories = 0;
+        let totalCarbohydrates = 0;
+        let totalProtein = 0;
+        let totalFat = 0;
+        result.forEach((food) => {
+            totalCalories += food.nf_calories * food.serving_qty;
+            totalCarbohydrates += food.nf_carbohydrates * food.serving_qty;
+            totalProtein += food.nf_protein * food.serving_qty;
+            totalFat += food.nf_fat * food.serving_qty;
+        });
+        return {
+            totalCalories: totalCalories,
+            totalCarbohydrates: totalCarbohydrates,
+            totalProtein: totalProtein,
+            totalFat: totalFat
+        }
+    }
+    const saveMealButton = () => {
+
+        if (currentFoods.length == 0) return;
+        if (currentFoods.find((food) => food.serving_qty == 0)) return;
+        if (mealName == "") return;        
+        let userId = 1;
+        let nutrients = calcNutrients(currentFoods);
+        let items = currentFoods.map((food) => {
+            return {
+                food: food.food_name,
+                quantity: food.serving_qty,
+            }
+        });
+        if (!nutrients) return;
+        saveMealAction(mealName, "No description", nutrients?.totalCalories, nutrients?.totalProtein, nutrients?.totalCarbohydrates, nutrients?.totalFat, items);
     }
 
     const fetchData = async (searchInput: string) => {
@@ -116,8 +152,9 @@ export default function CreateEditMealPage() {
                         type="text"
                         id="DishName"
                         placeholder="Dish Name"
-                        aria-label="Dish Name">
-                
+                        aria-label="Dish Name"
+                        onChange={(e) => setMealName(e.target.value)}
+                        >
                         </input>
                     <div className="flex flex-col justify-center items-center gap-2">
                         <h2 className="text-lg font-semibold">
@@ -125,6 +162,13 @@ export default function CreateEditMealPage() {
                         </h2>
                         {makeFoodListItems(currentFoods)}
                     </div>
+
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={saveMealButton}
+                    >
+                        Save Meal
+                    </button>
                 </div>
             </div>
             {/* Third column: CalorieCounter */}
