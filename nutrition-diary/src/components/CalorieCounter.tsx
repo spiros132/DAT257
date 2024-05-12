@@ -3,10 +3,9 @@ import React, {useState, useEffect} from "react";
 import { getCalorieCounterInfo } from "@/app/actions/actions";
 
 
-export default function CalorieCounter(nutrients: {consumed: number[], target: number[]}){
+export default function CalorieCounter(nutrients: {target: number[]}){
 
 
-    const [consumedNutrients, setConsumedNutrients] = useState<number[]>([0,0,0,0]);
     const [targetNutrients, setTargetNutrients] = useState<number[]>([0,0,0,0]);
     const [calorieCounterInfo, setCalorieCounterInfo] = useState<number[]>([0,0,0,0]);
     
@@ -21,7 +20,6 @@ export default function CalorieCounter(nutrients: {consumed: number[], target: n
  
     function populateInfo(nutrients: {consumed: number[], target: number[]}){
     
-        setConsumedNutrients(nutrients.consumed);
         setTargetNutrients(nutrients.target);
 
     }

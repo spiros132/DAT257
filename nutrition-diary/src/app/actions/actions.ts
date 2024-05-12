@@ -190,15 +190,24 @@ export async function handleBrandedResult(results: SearchListFoodItemBranded[], 
     return nutrientData;
 }
 
+export async function getUserId() {
+    const session = await verifySession();
+    if (typeof session.userId === 'number') {
+        const userId = session.userId;
+        return userId;
+    }
+    return null;
+}
+
 export async function getCalorieCounterInfo() {
     let calories = 0;
     let carbs = 0;
     let protein = 0;
     let fat = 0;
 
-    const session = await verifySession();
-    if (typeof session.userId === 'number') {
-        const userId = session.userId;
+    let userId = await getUserId();
+
+    if (userId != null) {
         const meals = await getSavedMeals(userId);
 
         if(meals){
@@ -220,6 +229,44 @@ export async function getCalorieCounterInfo() {
 
     return [calories, carbs, protein, fat];
 }
+
+export async function getEatenMeals() {
+    let userId = await getUserId();
+    let data: any[] = [];
+
+    if (userId != null) {
+
+        const meals = await getSavedMeals(userId);
+        if(meals){
+            for (const meal of meals) {
+                let mealNutrient: any[] = [];
+                let calories = 0;
+                let carbs = 0;
+                let protein = 0;
+                let fat = 0;
+
+                const foodItems = await getMealItems(meal.id);
+                if(foodItems){
+                    if(foodItems){
+                        for (const item of foodItems) {
+                            calories += item.calories;
+                            carbs += item.carbohydrates;
+                            protein += item.protein;
+                            fat += item.fat;
+                        }                    
+                    }                    
+                }
+                mealNutrient.push(calories,carbs,protein,fat)
+                data.push(mealNutrient);
+
+            }
+        }
+    }
+    return data;
+    
+}
+
+
 // WIP!!!
 // gives a list of meals with the calories
 // export async function GetMealList(username: string, )
