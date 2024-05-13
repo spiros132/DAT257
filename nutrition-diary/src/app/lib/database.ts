@@ -111,7 +111,7 @@ function createDB(){
             savedMeals INTEGER,
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
-            FOREIGN KEY (savedMeals) REFRENCES savedMeals(userId) ON DELETE CASCADE
+            FOREIGN KEY (savedMeals) REFERENCES savedMeals(userId) ON DELETE CASCADE
         `);
 
         newDB.run(`
