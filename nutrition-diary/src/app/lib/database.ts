@@ -53,7 +53,7 @@ function createDB(){
                 carbohydrates REAL NOT NULL,  
                 date DATETIME NOT NULL,         
                 FOREIGN KEY (user) REFERENCES users(id)
-        )`);
+        );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS savedMealItem(
                 meal INTEGER,
@@ -65,7 +65,7 @@ function createDB(){
                 carbohydrates NOT NULL DEFAULT 0,
                 date DATETIME NOT NULL,
                 FOREIGN KEY (meal) REFERENCES savedMeals(id)
-            )`);
+            );`);
         
         newDB.run(
             `CREATE TABLE IF NOT EXISTS eatenMeals(
@@ -109,7 +109,7 @@ function createDB(){
             targetType TEXT NOT NULL, 
             targetValue REAL NOT NULL,
             FOREIGN KEY (userId) REFERENCES users(id)
-        )`);
+        );`);
 
         // Store deleted fav. food
         newDB.run(`
@@ -136,7 +136,7 @@ function createDB(){
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (savedMeals) REFERENCES savedMeals(userId) ON DELETE CASCADE,
             FOREIGN KEY (mealId) REFERENCES eatenMeals(id)
-        )`);
+        );`);
 
         newDB.run(`
         CREATE TABLE IF NOT EXISTS deletedAccount (
@@ -144,7 +144,7 @@ function createDB(){
             userId INTEGER,
             deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id)
-        )`);
+        );`);
 };
 // Initialize the database and create the tables
 createDB();
