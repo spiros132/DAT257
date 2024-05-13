@@ -1,19 +1,17 @@
 "use client";
+import { startTransition } from "react";
+import { LogoutUser } from "@/app/actions/users";
 
-import { useEffect } from "react";
-import { deleteSession } from "../lib/session";
+export default function Page(){
+    window.onload = () => {
+        startTransition(() => {
+            LogoutUser();
+        });
+    }
 
-
-export default function LogoutPage() {
-
-    useEffect(() => {
-        deleteSession();
-    })
-
-    return (
-        <p
-        className="">
-        Logging out...
-        </p>
-    );
-}
+    return(
+        <>
+        Logging Out...
+        </>
+    )
+} 
