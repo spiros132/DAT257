@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { SavedFoodData } from "@/app/lib/definitions";
 
-import { SearchListFoodItemCommon } from "@/app/lib/definitions";
-
-export default function ResultDisplay(props: { results: SearchListFoodItemCommon[] | undefined }) {
+export default function ResultDisplay(props: { results: SavedFoodData[] | undefined }) {
     useEffect(() => {
         if (props.results) {
             handleResult(props.results);
@@ -11,21 +10,25 @@ export default function ResultDisplay(props: { results: SearchListFoodItemCommon
     
     function handleResult(results: SearchListFoodItemCommon[] | undefined) {
         if (!results) return;
-
+        console.log(results);
         const foodDivs = results.map((food, index) => (
-            <div key={index} className="items-center mb-4">
-                <img src={food.photo.thumb} alt="Food" className="block w-32" />
-                <label className="block p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    Food name: {food.food_name}
+            <div key={index} className="items-center mb-4 border bg-gray-50 border-black">
+                <img src={food.photo} alt="Food" className="block w-32 h-32" />
+                <label className="block p-2.5 text-sm">
+                    Food name: {food.food_name[0].toUpperCase() + food.food_name.slice(1)}
                 </label>
-                <label className="block p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    Calories: {food.serving_qty}
+                <label className="block p-2.5 text-sm">
+                    Calories: {food.nf_calories}
                 </label>
+                <button className="relative left-3 border border-black">
+                    Add
+                </button>
             </div>
         ));
 
         return foodDivs;
     }
+
 
     return (
         <div className="grid grid-flow-col gap-2">

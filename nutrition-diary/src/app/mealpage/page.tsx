@@ -1,3 +1,5 @@
+"use client";
+
 import CalorieCounter from "@/components/CalorieCounter";
 import HamburgerDiv from "@/components/HamburgerDiv";
 import SearchBar from "@/components/SearchBar";
@@ -5,11 +7,11 @@ import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import FoodListItem from "@/components/FoodListItem";
 import React, { useState } from "react"; 
-import { SearchForFoodList } from "@/app/actions/actions";
-import { SearchListFoodItemCommon, SearchListFoodItemData } from "@/app/lib/definitions";
+import { SearchForFoodList,  handleBrandedResult,  handleCommonResult} from "@/app/actions/actions";
+import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 
 export default function CreateEditMealPage() {
-    const [results, setResults] = useState<SearchListFoodItemCommon[] | undefined>(undefined);
+    const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
     const [activeButton, setActiveButton] = useState<"search" | "favorites">("search");
 
@@ -17,15 +19,23 @@ export default function CreateEditMealPage() {
         fetchData(searchInput);
     };
 
-    const fetchData = (searchInput: string) => {
+
+    const fetchData = async (searchInput: string) => {
         setLoading(true);
         SearchForFoodList(searchInput)
-            .then((res: string | undefined) => {
+            .then(async (res: string | undefined) => {
                 if (res != undefined) {
                     const data: SearchListFoodItemData = JSON.parse(res);  
-                    if (data && data.common) {                        
-                        setResults(data.common)         
+                    let nutrientData: SavedFoodData[] = [];
+                    if (data) {
+                        if (data.common) {
+                            nutrientData = await handleCommonResult(data.common, nutrientData);
+                        }
+                        if (data.branded) {
+                            nutrientData = await handleBrandedResult(data.branded, nutrientData);
+                        } 
                     }
+                    setResults(nutrientData);
                 }
             })
             .catch((error: Error) => {

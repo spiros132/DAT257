@@ -1,15 +1,28 @@
 "use client";
 
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { Nutrients } from "@/app/lib/definitions";
 
-interface MealCardProps {
-    className?: string; // Define the className prop
-}
 
-const MealCard: React.FC<MealCardProps> = ({ className }) => {
+export default function MealCard(nutrients: {consumed: number[], target: number[]}){
+
+    const [mealNutrients, setMealNutrients] = useState<number[]>([0,0,0,0]);
+    const [dailyTargetNutrients, setDailyTargetNutrients] = useState<number[]>([0,0,0,0]);
+
+    useEffect(() => {
+        populateInfo(nutrients);
+    }, [nutrients.consumed, nutrients.target]); 
+
+    function populateInfo(nutrients: {consumed: number[], target: number[]}){
+    
+        setMealNutrients(nutrients.consumed);
+        setDailyTargetNutrients(nutrients.target);
+
+    }
+
     return (
-        <div className={`h-[35vh] w-[12vw] bg-white m-10 ${className}`}>
-            <div className="bg-greenTheme h-[20%] w-[100%] rounded-t-[20px] flex">
+        <div className="h-[35vh] w-[12vw] bg-white m-10">
+            <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex">
                 <p className="text-white text-[20px] m-auto">
                   Meal Name  
                 </p>
@@ -20,7 +33,7 @@ const MealCard: React.FC<MealCardProps> = ({ className }) => {
                         Calories
                     </p>
                     <p className="text-[0.8em]">
-                        780 (26%)
+                        {mealNutrients[0]} ({mealNutrients[0]/dailyTargetNutrients[0] * 100}%)
                     </p>                    
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -28,7 +41,7 @@ const MealCard: React.FC<MealCardProps> = ({ className }) => {
                         Carbohydrates
                     </p>   
                     <p className="text-[0.8em]">
-                        780 (26%)
+                        {mealNutrients[1]} ({mealNutrients[1]/dailyTargetNutrients[1] * 100}%)
                     </p>                   
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -36,7 +49,7 @@ const MealCard: React.FC<MealCardProps> = ({ className }) => {
                         Protein
                     </p>   
                     <p className="text-[0.8em]">
-                        780 (26%)
+                        {mealNutrients[2]} ({mealNutrients[2]/dailyTargetNutrients[2] * 100}%)
                     </p>                   
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -44,13 +57,10 @@ const MealCard: React.FC<MealCardProps> = ({ className }) => {
                         Fat
                     </p>   
                     <p className="text-[0.8em]">
-                        780 (26%)
+                        {mealNutrients[3]} ({mealNutrients[3]/dailyTargetNutrients[3] * 100}%)
                     </p>                   
                 </div>
             </div>
         </div>
       )
 }
-
-
-export default MealCard;
