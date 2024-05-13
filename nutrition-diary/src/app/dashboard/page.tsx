@@ -3,6 +3,7 @@ import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
 import HamburgerDiv from "@/components/HamburgerDiv";
+import SideNav from "@/components/SideNav";
 
 
 export default function Page(){

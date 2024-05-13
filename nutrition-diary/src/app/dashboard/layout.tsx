@@ -7,10 +7,9 @@ export default function Layout(
     { readonly children: React.ReactNode }
 ) {
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="">
-        <SideNav />
-      </div>
+    <div className="h-screen">
+      <SideNav />
+      
       <div className="">{children}</div>
     </div>
   );
