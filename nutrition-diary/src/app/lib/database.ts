@@ -1,4 +1,3 @@
-
 import sqlite3, { OPEN_CREATE, OPEN_READWRITE } from 'sqlite3';
 import { createHash} from 'crypto';
 import { database_location } from './config';
@@ -35,8 +34,9 @@ function createDB(){
                 calories INTEGER NOT NULL DEFAULT 0,  
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,
-                carbohydrates REAL NOT NULL,           
-                FOREIGN KEY (user) REFERENCES users(username)
+                carbohydrates REAL NOT NULL,  
+                date DATETIME NOT NULL,         
+                FOREIGN KEY (user) REFERENCES users(id)
         )`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS savedMealItem(
@@ -47,7 +47,8 @@ function createDB(){
                 protein NOT NULL DEFAULT 0,
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
-                FOREIGN KEY (meal) REFERENCES savedMeals(name)
+                date DATETIME NOT NULL,
+                FOREIGN KEY (meal) REFERENCES savedMeals(id)
             )`);
         
         newDB.run(
@@ -128,7 +129,7 @@ createDB();
 let db : Database | null = null;
 
 // Function to open the db connection
-async function openDB(){
+ async function openDB(){
     if (!db) {
         // If the database instance is not initialized, open the database connection
         db = await open({
@@ -139,6 +140,18 @@ async function openDB(){
         });
     }
 }
+
+/*
+export async function openDB(database_location: string): Promise<Database> {
+    return open({
+        filename: database_location,
+        driver: sqlite3.Database,
+    });
+}
+export async function closeDB(db: Database): Promise<void> {
+    await db.close();
+}
+*/
 
 // Function to close the db connection
 function closeDB(){
