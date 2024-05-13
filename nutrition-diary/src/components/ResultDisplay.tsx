@@ -7,8 +7,8 @@ export default function ResultDisplay(props: { results: SavedFoodData[] | undefi
             handleResult(props.results);
         }
     }, [props.results]);
-
-    function handleResult(results: SavedFoodData[] | undefined) {
+    
+    function handleResult(results: SearchListFoodItemCommon[] | undefined) {
         if (!results) return;
         console.log(results);
         const foodDivs = results.map((food, index) => (

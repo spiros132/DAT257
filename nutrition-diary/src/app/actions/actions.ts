@@ -1,8 +1,15 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { databaseReturnType, getTokenData, getUserInfo, loginUser, registerUser } from "../lib/database";
+import { cookies } from "next/headers";
+import { createSession, deleteSession } from "../lib/session";
+import { getProgInterval } from "../lib/database";
+
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { deleteFoodData, getFoodData, saveFoodData, getSavedMeals, getMealItems } from "../lib/database";
 import { verifySession} from "@/app/lib/session";
+
 
 
 
@@ -265,6 +272,32 @@ export async function getEatenMeals() {
     return data;
     
 }
+
+
+export async function fetchUserProgress(userId: number, interval: string) {
+    try {
+     
+        const results = await getProgInterval(userId, interval);
+        if (!results) {
+            console.error('No data returned from getProgInterval');
+            return [];  // Handle the case where results might be undefined
+        }
+        const formattedData = results.map((item, index) => ({
+            day: `Day ${index + 1}`,
+            calories: item.calories,
+            carbohydrates: item.carbohydrates,
+            protein: item.protein,
+            fat: item.fat
+        }));
+
+       
+        return formattedData;
+    } catch (error) {
+        console.error('Error fetching weekly progress:', error);
+        return []; // Return an empty array in case of an error
+    }
+}
+
 
 
 // WIP!!!

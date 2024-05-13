@@ -71,3 +71,9 @@ export async function RegisterUser(username: string, password: string, confirmPa
     registerUser(username, password);
     return "User registered successfully";
 }
+
+export async function LogoutUser() {
+    await deleteSession();
+    
+    redirect("/login");
+}

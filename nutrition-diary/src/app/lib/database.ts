@@ -1,4 +1,3 @@
-
 import sqlite3, { OPEN_CREATE, OPEN_READWRITE } from 'sqlite3';
 import { createHash} from 'crypto';
 import { database_location } from './config';
@@ -38,7 +37,7 @@ function createDB(){
             `CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL, 
+            password TEXT NOT NULL,     
             weight INTEGER NOT NULL,
             height INTEGER NOT NULL
         );`);
@@ -51,9 +50,10 @@ function createDB(){
                 calories INTEGER NOT NULL DEFAULT 0,  
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,
-                carbohydrates REAL NOT NULL,           
+                carbohydrates REAL NOT NULL,  
+                date DATETIME NOT NULL,         
                 FOREIGN KEY (user) REFERENCES users(id)
-        );`);
+        )`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS savedMealItem(
                 meal INTEGER,
@@ -63,8 +63,9 @@ function createDB(){
                 protein NOT NULL DEFAULT 0,
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
+                date DATETIME NOT NULL,
                 FOREIGN KEY (meal) REFERENCES savedMeals(id)
-            );`);
+            )`);
         
         newDB.run(
             `CREATE TABLE IF NOT EXISTS eatenMeals(
@@ -97,7 +98,10 @@ function createDB(){
             );`);
         
       });
-
+      
+      // Table for User's target goal
+      // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
+      // target value: Numeric goal
       newDB.run(`
         CREATE TABLE IF NOT EXISTS targetGoal (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,11 +109,9 @@ function createDB(){
             targetType TEXT NOT NULL, 
             targetValue REAL NOT NULL,
             FOREIGN KEY (userId) REFERENCES users(id)
-        );`);
-        // targettype: how the user wants to track the goal? with daily, weekly or monthly duration?
-        // target value is the numeric goal
+        )`);
 
-        // store deleted fav. food
+        // Store deleted fav. food
         newDB.run(`
             CREATE TABLE IF NOT EXISTS deletedFavoriteFoods (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,15 +121,22 @@ function createDB(){
                 FOREIGN KEY (userId) REFERENCES users(id)
             );`);
 
-        // 
+        // Table for user's progress
         newDB.run(`
         CREATE TABLE IF NOT EXISTS userProgress (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             userId INTEGER,
-            progressValue INTEGER,
+            savedMeals INTEGER,
+            mealId INTEGER,
+            calories INTEGER NOT NULL DEFAULT 0,
+            fat REAL NOT NULL DEFAULT 0,
+            carbohydrates REAL NOT NULL DEFAULT 0,
+            protein REAL NOT NULL DEFAULT 0;
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-        );`);
+            FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (savedMeals) REFERENCES savedMeals(userId) ON DELETE CASCADE,
+            FOREIGN KEY (mealId) REFERENCES eatenMeals(id);
+        `);
 
         newDB.run(`
         CREATE TABLE IF NOT EXISTS deletedAccount (
@@ -143,7 +152,7 @@ createDB();
 let db : Database | null = null;
 
 // Function to open the db connection
-async function openDB(){
+ async function openDB(){
     if (!db) {
         // If the database instance is not initialized, open the database connection
         db = await open({
@@ -154,6 +163,18 @@ async function openDB(){
         });
     }
 }
+
+/*
+export async function openDB(database_location: string): Promise<Database> {
+    return open({
+        filename: database_location,
+        driver: sqlite3.Database,
+    });
+}
+export async function closeDB(db: Database): Promise<void> {
+    await db.close();
+}
+*/
 
 // Function to close the db connection
 function closeDB(){
@@ -415,29 +436,50 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         switch (datetime){
             case 'Today':
             // start- and end-Date are set to the current date 
-                startProgInterval  = new Date();
-                endProgInterval    = new Date();
+                startProgInterval  = new Date().toISOString().split('T')[0];
+                endProgInterval    = startProgInterval;
                 break;
             case 'Weekly':
             // start-Date is set 7 days past the current date, while end-Date is set today
+                const startOfWeek = new Date();
+                // start of the current week
+                startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
                 startProgInterval  = new Date();
                 startProgInterval.setDate(startProgInterval.getDate()-7);
-                endProgInterval    = new Date();
+                endProgInterval    = new Date().toISOString().split('T')[0];
                 break;
             case 'Monthly':
+                const startOfMonth = new Date();
+                startOfMonth.setDate(1);
                 startProgInterval  = new Date();
                 startProgInterval.setMonth(startProgInterval.getMonth()-1);
-                endProgInterval    = new Date();
+                endProgInterval    = new Date().toISOString().split('T')[0];
                 break;
             default:
                 throw new Error(' Unknown time interval')
         }
+
+        // query to sum the nutrients within a specific time intervall
+        const progressData = await executeQuery(
+            `SELECT 
+                SUM(calories) AS totalCalories,
+                SUM(fat) AS totalFat,
+                SUM(carbohydrates) AS totalCarbohydrates,
+                SUM(protein) AS totalProtein
+            FROM userProgress
+            WHERE userId = ? AND date BETWEEN ? AND ?`,
+            [userId, startProgInterval, endProgInterval]
+        );
+        /*
         // query to retrieve data for a specific time 
         const progressData = await executeQuery(
             `SELECT * FROM user_progress
              WHERE user_id = ? AND date BETWEEN ? AND ?`,
             [userId, startProgInterval, endProgInterval]
         );
+        
+        */
+       // return the aggregated nutrients value        
         return progressData;
 
     }
@@ -467,13 +509,13 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     }
 
 // Store user's progress in db
-    export async function storeUserProgress(userId:number, progressValue: number) {
+    export async function storeUserProgress(userId:number, calories: number, fat: number, carbohydrates: number, protein: number) {
     // get current timestamp in ISO string fromate (YYYY-MM-DDTHH:MM:SS.sssZ)
-        const CURRENT_TIMESTAMP = new Date().toISOString();
+        const currentTimestamp = new Date().toISOString();
         // execute the db query to insert user's progress
         await executeQuery(
-            `   INSERT INTO userProgress (userId, progressValue, date) VALUES (?,?,?)`,
-            [userId, progressValue, CURRENT_TIMESTAMP]
+            `   INSERT INTO userProgress (userId, mealId, date, calories, fat, carbohydrates, protein) VALUES (?,?,?,?,?,?,?)`,
+            [userId, calories, fat, carbohydrates, protein, currentTimestamp]
         )
     }
 
@@ -516,10 +558,93 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     
         // Query to retrieve progress of a specified interval
         return await executeQuery(
-            `SELECT * FROM user_progress WHERE user_id = ? AND date BETWEEN ? AND ?`,
+            `SELECT savedMeals.calories, savedMeals.fat, savedMeals.carbohydrates, savedMeals.protein
+            FROM userProgress
+            WHERE userId = ? AND date BETWEEN ? AND ?`,
             [userId, startDateSlope, endDateSlope]
         );
     }
+
+    // Retrieve user progress with meal details
+    export async function getUserProgressWithMeals(userId: number) {
+        try {
+            // Open the database connection
+            await openDB();
+
+            // Check if db is null
+            if (!db) {
+                throw new Error("Database connection is not established.");
+            }
+
+            // Execute the query to retrieve progress along with meal details
+            const progressWithMeals = await db.all(
+                `SELECT userProgress.*, eatenMeals.name AS mealName
+                FROM userProgress
+                INNER JOIN eatenMeals ON userProgress.mealId = eatenMeals.id
+                WHERE userProgress.userId = ?`,
+                [userId]
+            );
+
+            // Close the database connection
+            closeDB();
+
+            // Return the retrieved progress with meal details
+            return progressWithMeals;
+        } catch (error) {
+            // Handle errors
+            console.error("Error retrieving user progress with meals:", error);
+            return undefined;
+        }
+    }
+
+// Function to retrieve user progress with nutrient consumption for a specified time interval
+    export async function getUserProgressWithNutrients(userId: number, interval: string) {
+        // Determine the start and end dates of the specified interval
+        let startDateSlope, endDateSlope;
+        // calculate startDateSlope and endDateSlope based on the interval
+        const currentTimestamp = new Date();
+        switch (interval.toLowerCase()) {
+            case 'today':
+                startDateSlope = new Date(currentTimestamp);
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            case 'weekly':
+                startDateSlope = new Date(currentTimestamp);
+                startDateSlope.setDate(startDateSlope.getDate() - 7); // Set startDate to 7 days ago
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            case 'monthly':
+                startDateSlope = new Date(currentTimestamp);
+                startDateSlope.setMonth(startDateSlope.getMonth() - 1); // Set startDate to 1 month ago
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            default:
+                throw new Error('Invalid interval type');
+        }
+
+
+        // Query to retrieve user progress along with sum of consumed nutrients for the interval
+        const progressWithNutrients = await executeQuery(
+            `SELECT userProgress.date, SUM(eatenMealItem.calories) AS totalCalories,
+                    SUM(eatenMealItem.protein) AS totalProtein,
+                    SUM(eatenMealItem.fat) AS totalFat,
+                    SUM(eatenMealItem.carbohydrates) AS totalCarbohydrates
+            FROM userProgress
+            LEFT JOIN eatenMeals ON userProgress.mealId = eatenMeals.id
+            LEFT JOIN eatenMealItem ON eatenMeals.id = eatenMealItem.meal
+            WHERE userProgress.userId = ? AND userProgress.date BETWEEN ? AND ?
+            GROUP BY userProgress.date`,
+            [userId, startDateSlope, endDateSlope]
+        );
+
+        // Return the retrieved progress with nutrient consumption
+        return progressWithNutrients;
+    }
+
+
+
+
+
 
 // Delete user's progress
     async function deleteProgress(userId:number) {

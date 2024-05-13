@@ -27,7 +27,6 @@ export default function Page(){
 
     return (
         <div className="w-screen flex">
-            <HamburgerDiv/>
             <div className="w-[93%] h-screen">
                 <CalorieCounter target = {[0,0,0,0]}/>
                 <div className="h-screen flex flex-col">
