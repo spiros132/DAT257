@@ -118,8 +118,8 @@ function createDB(){
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (savedMeals) REFERENCES savedMeals(userId) ON DELETE CASCADE,
-            FOREIGN KEY (mealId) REFERENCES eatenMeals(id);
-        `);
+            FOREIGN KEY (mealId) REFERENCES eatenMeals(id)
+        )`);
 
         newDB.run(`
         CREATE TABLE IF NOT EXISTS deletedAccount (
@@ -127,8 +127,7 @@ function createDB(){
             userId INTEGER,
             deletionTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id)
-        )
-        `);
+        )`);
 };
 // Initialize the database and create the tables
 createDB();
