@@ -1,6 +1,7 @@
 "use client";
 
 import React, {useState, useEffect} from "react";
+import { Nutrients } from "@/app/lib/definitions";
 
 
 export default function MealCard(nutrients: {consumed: number[], target: number[]}){

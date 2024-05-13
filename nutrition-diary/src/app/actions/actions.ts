@@ -227,7 +227,7 @@ export async function getCalorieCounterInfo() {
 
     }
 
-    return [calories, carbs, protein, fat];
+    return {calories, carbs, protein, fat};
 }
 
 export async function getEatenMeals() {

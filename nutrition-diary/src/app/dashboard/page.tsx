@@ -22,6 +22,7 @@ export default function Page(){
             }
         }
         fetchData();
+
     }, []);
 
     return (

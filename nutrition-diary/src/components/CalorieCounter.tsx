@@ -1,22 +1,18 @@
 "use client";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useTransition, startTransition} from "react";
 import { getCalorieCounterInfo } from "@/app/actions/actions";
-
+import { Nutrients } from "@/app/lib/definitions";
 
 export default function CalorieCounter(nutrients: {target: number[]}){
 
 
     const [targetNutrients, setTargetNutrients] = useState<number[]>([0,0,0,0]);
-    const [calorieCounterInfo, setCalorieCounterInfo] = useState<number[]>([0,0,0,0]);
+    const [calorieCounterInfo, setCalorieCounterInfo] = useState<Nutrients>({calories: 0, carbs: 0, protein: 0, fat:0});
     
 
-    useEffect(() => {
-        async function fetchData() {
-            const info = await getCalorieCounterInfo();
-            setCalorieCounterInfo(info);
-        }
-        fetchData();
-    }, []); 
+    startTransition(() => {
+        getCalorieCounterInfo().then((info) => {setCalorieCounterInfo(info);})
+    }); 
  
     function populateInfo(nutrients: {consumed: number[], target: number[]}){
     
@@ -35,7 +31,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                     </div>
                 </div>
                 <p className="text-[1.4em]">
-                    {calorieCounterInfo[0]} / {targetNutrients[0]}
+                    {calorieCounterInfo.calories} / {targetNutrients[0]}
                 </p>
             </div>
 
@@ -48,7 +44,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo[1]} / {targetNutrients[1]}
+                    {calorieCounterInfo.carbs} / {targetNutrients[1]}
                 </p>
             </div>
             
@@ -61,7 +57,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo[2]} / {targetNutrients[2]}
+                    {calorieCounterInfo.protein} / {targetNutrients[2]}
                 </p>
             </div>
 
@@ -74,7 +70,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo[3]} / {targetNutrients[3]}
+                    {calorieCounterInfo.fat} / {targetNutrients[3]}
                 </p>
             </div>
 
