@@ -3,19 +3,6 @@ import React from 'react';
 const ProfilePage = () => {
   return (
     <div style={{ backgroundColor: 'white', minHeight: '100vh', padding: '2px', width: '100%', maxWidth: '100vw' }}>
-      <h1 style={{ color: 'grey', fontSize: '14px', marginBottom: '2px' }}>Profile</h1> 
-      
-      {/** The menu button */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div style={{ width: '40px', height: '40px' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </div>
-        </div>
-
       {/** NutritionDiary.png */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" style={{ width: '220px', margin: '0 auto', marginBottom: '10px' }} />
