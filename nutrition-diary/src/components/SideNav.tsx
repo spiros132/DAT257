@@ -13,7 +13,7 @@ export default function SideNav(){
     className="absolute top-0 left-0 right-auto bottom-0"    
     >
       <div
-      className={open ? "h-full border-r border-black" : ""}
+      className={open ? "border-r border-b border-black" : ""}
       >
         {/* The side bar that has the hamburger menu */}
         <div
@@ -28,7 +28,7 @@ export default function SideNav(){
         </div>
         {/* The menu itself that appears and dissapears */}
         { open &&
-        <div className="flex flex-col w-full h-full"> 
+        <div className="flex flex-col w-full"> 
           <div className="mb-4">
             <img 
             src={logoPath} 
