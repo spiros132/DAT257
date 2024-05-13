@@ -10,7 +10,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
     const [calorieCounterInfo, setCalorieCounterInfo] = useState<Nutrients>({calories: 0, carbs: 0, protein: 0, fat:0});
     
 
-    startTransition(() => {
+    useEffect(() => {
         getCalorieCounterInfo().then((info) => {setCalorieCounterInfo(info);})
     }); 
  
@@ -26,8 +26,8 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                 <p className="text-[2em]">
                     Calories
                 </p>
-                <div className="bg-lighterGreen h-[20px] w-[80%] m-2">
-                    <div className="bg-greenTheme h-full w-[50%]">
+                <div className="bg-primary-light h-[20px] w-[80%] m-2">
+                    <div className="bg-primary h-full w-[50%]">
                     </div>
                 </div>
                 <p className="text-[1.4em]">
@@ -39,8 +39,8 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                 <p className="text-[1.4em]">
                     Carbohydrates
                 </p>
-                <div className="bg-lighterGreen h-[15px] w-[60%] m-2">
-                    <div className="bg-greenTheme h-full w-[50%]">
+                <div className="bg-primary-light h-[15px] w-[60%] m-2">
+                    <div className="bg-primary h-full w-[50%]">
                     </div>
                 </div>
                 <p className="text-[1em]">
@@ -52,8 +52,8 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                 <p className="text-[1.4em]">
                     Protein
                 </p>
-                <div className="bg-lighterGreen h-[15px] w-[60%] m-2">
-                    <div className="bg-greenTheme h-full w-[50%]">
+                <div className="bg-primary-light h-[15px] w-[60%] m-2">
+                    <div className="bg-primary h-full w-[50%]">
                     </div>
                 </div>
                 <p className="text-[1em]">
@@ -65,8 +65,8 @@ export default function CalorieCounter(nutrients: {target: number[]}){
                 <p className="text-[1.4em]">
                     Fat
                 </p>
-                <div className="bg-lighterGreen h-[15px] w-[60%] m-2">
-                    <div className="bg-greenTheme h-full w-[50%]">
+                <div className="bg-primary-light h-[15px] w-[60%] m-2">
+                    <div className="bg-primary h-full w-[50%]">
                     </div>
                 </div>
                 <p className="text-[1em]">

@@ -21,7 +21,7 @@ const ProfilePage = () => {
     <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', position: 'relative', marginLeft: '10px' }}>
         <input type="text" placeholder="Ex. Spiros" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
     </div>            
-    <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+    <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
         </svg>
@@ -34,7 +34,7 @@ const ProfilePage = () => {
         <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', position: 'relative', marginLeft: '10px' }}>
             <input type="password" placeholder='EX. 1./234 Rbhjdfbj' style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
         </div>            
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
                 <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -47,7 +47,7 @@ const ProfilePage = () => {
         <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', position: 'relative', marginLeft: '10px' }}>
             <input type="number" placeholder="Ex. 189 m" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
         </div>            
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
                 <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -60,7 +60,7 @@ const ProfilePage = () => {
         <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', position: 'relative', marginLeft: '10px' }}>
             <input type="number" placeholder="Ex. 70 Kg" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
         </div>            
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
                 <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -73,7 +73,7 @@ const ProfilePage = () => {
         <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', position: 'relative', marginLeft: '10px' }}>
             <input type="number" placeholder="Ex. 30" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
         </div>            
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
                 <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -96,7 +96,7 @@ const ProfilePage = () => {
             <span style={{ width: '350px', position: 'absolute', top: '50%', left: '-85%', transform: 'translateY(-50%)' }}>GENDER</span>
         </div>
     </div>
-    <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
+    <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '10px' }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
         </svg>
@@ -117,7 +117,7 @@ const ProfilePage = () => {
         <div style={{ position: 'relative', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
         <span style={{ width: '130px', marginRight: '20px' }}>Calories</span>
         <input type="number" placeholder="kcal" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginRight: '10px' }}/> {/* TDEE= BMR X PAL = total daily calorie requirement */}
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -128,7 +128,7 @@ const ProfilePage = () => {
         <div style={{ position: 'relative', marginBottom: '20px', display: 'flex', alignItems: 'center' }}> 
         <span style={{ width: '130px', marginRight: '20px' }}>Carbohydrates</span>
         <input type="number" placeholder="gram" style={{ border: '2px solid black', borderRadius: '5px', backgroundColor: 'transparent', width: '130px', padding: '8px', marginRight: '10px' }}/>
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -139,7 +139,7 @@ const ProfilePage = () => {
         <div style={{ position: 'relative', marginBottom: '20px', display: 'flex', alignItems: 'center' }}> 
         <span style={{ width: '130px', marginRight: '20px' }}>Protein</span>
         <input type="number" placeholder="gram" style={{ border: '2px solid black', borderRadius: '5px', backgroundColor: 'transparent', width: '130px', padding: '8px', marginRight: '10px' }}/>
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>
@@ -150,7 +150,7 @@ const ProfilePage = () => {
         <div style={{ position: 'relative', marginBottom: '20px', display: 'flex', alignItems: 'center' }}> 
         <span style={{ width: '130px', marginRight: '20px' }}>Fat</span>
         <input type="number" placeholder="gram" style={{ border: '2px solid black', borderRadius: '5px', backgroundColor: 'transparent', width: '130px', padding: '8px', marginRight: '10px' }}/>
-        <button style={{ backgroundColor: 'bg-greenTheme h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button style={{ backgroundColor: 'bg-primary h-full w-[50%]', border: 'none', cursor: 'pointer', width: '30px', height: '30px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '70%', height: '70%', fill: 'white' }}>
             <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
             </svg>

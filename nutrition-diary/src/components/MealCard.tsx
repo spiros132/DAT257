@@ -22,7 +22,7 @@ export default function MealCard(nutrients: {consumed: number[], target: number[
 
     return (
         <div className="h-[35vh] w-[12vw] bg-white m-10">
-            <div className="bg-greenTheme h-[20%] w-[100%] rounded-t-[20px] flex">
+            <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex">
                 <p className="text-white text-[20px] m-auto">
                   Meal Name  
                 </p>

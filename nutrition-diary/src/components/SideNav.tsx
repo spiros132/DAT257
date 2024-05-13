@@ -39,17 +39,17 @@ export default function SideNav(){
           <div className="flex flex-col gap-4 items-center w-full">
             <Link
             href={"/dashboard"}
-            className="bg-greenTheme text-white w-full font-bold text-center p-4">
+            className="bg-primary text-white w-full font-bold text-center p-4">
               Home
             </Link>
             <Link
             href={"/dashboard/profile"}
-            className="bg-greenTheme text-white w-full font-bold text-center p-4">
+            className="bg-primary text-white w-full font-bold text-center p-4">
               Profile
             </Link>
             <Link
             href={"/logout"}
-            className="bg-greenTheme text-white w-full font-bold text-center p-4">
+            className="bg-primary text-white w-full font-bold text-center p-4">
               Logout
             </Link>
           </div>
