@@ -576,7 +576,55 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             console.error("Error retrieving user progress with meals:", error);
             return undefined;
         }
-}
+    }
+
+// Function to retrieve user progress with nutrient consumption for a specified time interval
+    export async function getUserProgressWithNutrients(userId: number, interval: string) {
+        // Determine the start and end dates of the specified interval
+        let startDateSlope, endDateSlope;
+        // calculate startDateSlope and endDateSlope based on the interval
+        const currentTimestamp = new Date();
+        switch (interval.toLowerCase()) {
+            case 'today':
+                startDateSlope = new Date(currentTimestamp);
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            case 'weekly':
+                startDateSlope = new Date(currentTimestamp);
+                startDateSlope.setDate(startDateSlope.getDate() - 7); // Set startDate to 7 days ago
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            case 'monthly':
+                startDateSlope = new Date(currentTimestamp);
+                startDateSlope.setMonth(startDateSlope.getMonth() - 1); // Set startDate to 1 month ago
+                endDateSlope = new Date(currentTimestamp);
+                break;
+            default:
+                throw new Error('Invalid interval type');
+        }
+
+
+        // Query to retrieve user progress along with sum of consumed nutrients for the interval
+        const progressWithNutrients = await executeQuery(
+            `SELECT userProgress.date, SUM(eatenMealItem.calories) AS totalCalories,
+                    SUM(eatenMealItem.protein) AS totalProtein,
+                    SUM(eatenMealItem.fat) AS totalFat,
+                    SUM(eatenMealItem.carbohydrates) AS totalCarbohydrates
+            FROM userProgress
+            LEFT JOIN eatenMeals ON userProgress.mealId = eatenMeals.id
+            LEFT JOIN eatenMealItem ON eatenMeals.id = eatenMealItem.meal
+            WHERE userProgress.userId = ? AND userProgress.date BETWEEN ? AND ?
+            GROUP BY userProgress.date`,
+            [userId, startDateSlope, endDateSlope]
+        );
+
+        // Return the retrieved progress with nutrient consumption
+        return progressWithNutrients;
+    }
+
+
+
+
 
 
 // Delete user's progress
