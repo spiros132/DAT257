@@ -9,6 +9,7 @@ import FoodListItem from "@/components/FoodListItem";
 import React, { use, useEffect, useState } from "react"; 
 import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMeal, saveMealAction} from "@/app/actions/actions";
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
+import CalorieCounterCreateMeal from "@/components/CalorieCounterCreateMeal";
 
 export default function CreateEditMealPage() {
     const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
@@ -173,7 +174,7 @@ export default function CreateEditMealPage() {
             </div>
             {/* Third column: CalorieCounter */}
             <div>
-                <CalorieCounter result={currentFoods}/>
+                <CalorieCounterCreateMeal result={currentFoods}/>
             </div>
         </div>
     );
