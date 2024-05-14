@@ -217,7 +217,9 @@ export async function getCalorieCounterInfo() {
     let userId = await getUserId();
 
     if (userId != null) {
-        const meals = await getSavedMeals(userId);
+        const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
+        const meals = await getSavedMeals(userId, currentDate);
 
         if(meals){
             for (const meal of meals) {
