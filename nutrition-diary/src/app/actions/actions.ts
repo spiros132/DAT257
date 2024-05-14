@@ -1,17 +1,11 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { databaseReturnType, getMealItems, getSavedMeals, getTokenData, getUserInfo, loginUser, registerUser } from "../lib/database";
-import { cookies } from "next/headers";
-import { createSession, deleteSession } from "../lib/session";
+import { getMealItems, getSavedMeals} from "../lib/database";
 import { getProgInterval } from "../lib/database";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
-import { GetUserID } from "./users";
-import { cookies } from "next/headers";
-import { decrypt, verifySession } from "../lib/session";
-import { verify } from "crypto";
+import { verifySession } from "../lib/session";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
