@@ -1,6 +1,6 @@
 "use server";
 
-import { getMealItems, getSavedMeals, testInsert} from "../lib/database";
+import { getMealItems, getSavedMeals, testMealItems} from "../lib/database";
 import { getProgInterval } from "../lib/database";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
@@ -188,7 +188,7 @@ export async function handleBrandedResult(results: SearchListFoodItemBranded[], 
 }
 
 export async function testMealDB() {
-    testInsert();
+    testMealItems();
 }
 
 export async function saveMealAction(mealName: string, description: string, totalCalories: number, totalProtein: number, totalCarbohydrates: number, totalFat: number, items: {food: string, quantity: number}[]) {
@@ -244,8 +244,8 @@ export async function getEatenMeals() {
     let data: any[] = [];
 
     if (userId != null) {
-
         const meals = await getSavedMeals(userId);
+        
         if(meals){
             for (const meal of meals) {
                 let mealNutrient: any[] = [];
@@ -265,7 +265,7 @@ export async function getEatenMeals() {
                         }                    
                     }                    
                 }
-                mealNutrient.push(calories,carbs,protein,fat)
+                mealNutrient.push(calories,carbs,protein,fat, meal.name);
                 data.push(mealNutrient);
 
             }

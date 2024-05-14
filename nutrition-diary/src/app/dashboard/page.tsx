@@ -12,17 +12,20 @@ export default function Page(){
 
     const [meals, setMeals] = useState<any[]>([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const eatenMeals = await getEatenMeals();
-                setMeals(eatenMeals);
-            } catch (error) {
-                console.error("Error fetching eaten meals:", error);
-            }
+    async function fetchData() {
+        try {
+            console.log("Fetching eaten meals")
+            const eatenMeals = await getEatenMeals();
+            console.log("Eaten meals:", eatenMeals)
+            setMeals(eatenMeals);
+            return eatenMeals;
+        } catch (error) {
+            console.error("Error fetching eaten meals:", error);
         }
-        fetchData();
+    }
 
+    useEffect(() => {
+        fetchData();
     }, []);
 
     return (
@@ -51,14 +54,14 @@ export default function Page(){
                         <div className="flex justify-center items-center">
                             {meals.map((meal, index) => (
                                 <MealCard
+                                    mealName={meal[4]}
                                     key={index}
-                                    consumed={[
+                                    nutrients={{consumed: [
                                         meal[0], // calories
                                         meal[1], // carbs
                                         meal[2], // protein
                                         meal[3], // fat
-                                    ]}
-                                    target={[0, 0, 0, 0]} // Need to sort some stuff out in the db
+                                    ], target: [0, 0, 0, 0]}} // Need to sort some stuff out in the db
                                 />
                             ))}
                             <AddMealButton/>

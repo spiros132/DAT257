@@ -344,7 +344,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         );
         // Check if the result isn't empty & then get lastId
         if (mealInsertResult && mealInsertResult.length > 0) {
-            const mealId = mealInsertResult[0].lastID; 
+            const mealId = mealInsertResult[0].id; 
         // Insert the meal into savedMealItem table
         for (const item of items) { // meal items
             await executeQuery(
@@ -353,6 +353,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             );
         }
         console.log("Meal saved successfully.");
+        return mealId;
     } else {
         throw new Error("Failed to insert the meal into the database.");
     }
@@ -372,6 +373,14 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             `SELECT * FROM savedMealItem WHERE meal = ?`,
             [mealId]
         );
+    }
+    
+    export async function testMealItems() {
+        let res =  await executeQuery(
+            `DELETE FROM savedMealItem WHERE 1=1`,
+            []
+        );
+        console.log(res);
     }
 
 // Add user's fav. food
