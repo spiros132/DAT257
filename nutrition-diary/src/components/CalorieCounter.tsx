@@ -50,7 +50,7 @@ export default function CalorieCounter(nutrients: {target: number[]}){
             
             <div className="h-[20%] flex justify-center items-center flex-col">
                 <p className="text-[1.4em]">
-                    Protein
+                    Protein 
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
                     <div className="bg-primary h-full w-[50%]">

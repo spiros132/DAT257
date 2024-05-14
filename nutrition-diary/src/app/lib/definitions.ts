@@ -133,8 +133,8 @@ export interface SavedFoodData {
     upc: string | null | undefined;
     nf_calories: number;
     nf_protein: number;
-    nf_total_fat: number;
-    nf_total_carbohydrate: number;
+    nf_fat: number;
+    nf_carbohydrates: number;
 }
 
 export interface Nutrients{

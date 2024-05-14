@@ -47,6 +47,7 @@ function createDB(){
                 user INTEGER,
                 name TEXT NOT NULL,
                 description TEXT NOT NULL,   
+                saveTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 calories INTEGER NOT NULL DEFAULT 0,  
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,
@@ -320,18 +321,15 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     });
 }
 
-{/** Function to: */}
 // Save a meal starting with inserting the meal into the savedMeael table
-    async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number ,items: { food: string, quantity: number }[]) {
+    export async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number , items: { food: string, quantity: number }[]) {
         const mealInsertResult = await executeQuery(
-            `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`,
             [userId, name, description, calories, protein, fat, carbohydrates]
         );
-
         // Check if the result isn't empty & then get lastId
         if (mealInsertResult && mealInsertResult.length > 0) {
             const mealId = mealInsertResult[0].lastID; 
-
         // Insert the meal into savedMealItem table
         for (const item of items) { // meal items
             await executeQuery(
@@ -339,6 +337,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
                 [mealId, item.food, item.quantity, calories, protein, fat, carbohydrates]
             );
         }
+        console.log("Meal saved successfully.");
     } else {
         throw new Error("Failed to insert the meal into the database.");
     }

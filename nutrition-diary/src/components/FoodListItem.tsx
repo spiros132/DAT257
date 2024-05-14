@@ -1,14 +1,14 @@
 "use client";
 import React, {useState, useEffect} from "react";
 
-function FoodListItem(props: {name: string, amount: number, unit: string}){
+function FoodListItem(props: {name: string, amount: number, unit: string, valueChanged: (name: string, amount: number, unit: string) => void}){
     const [foodName, setFoodName] = useState<string>('');
     const [foodAmount, setFoodAmount] = useState<number>(-1);
     const [foodUnit, setFoodUnit] = useState<string>('');
 
     useEffect(() => {
         populateInfo(props);
-    }, [props.name]); 
+    }, [props]); 
 
     function populateInfo(props: {name: string, amount: number, unit: string}){
         setFoodName(props.name);
@@ -18,6 +18,7 @@ function FoodListItem(props: {name: string, amount: number, unit: string}){
 
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFoodAmount(parseInt(e.target.value));
+        props.valueChanged(foodName, parseInt(e.target.value), foodUnit);
     };
 
     const handleUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,15 +26,15 @@ function FoodListItem(props: {name: string, amount: number, unit: string}){
     };
 
     return (
-        <div>
+        <div className="">
             <div className="flex h-20  rounded-lg border border-black bg-green-300">
                 <div className="grid h-20 grid-cols-2">
                     <div className="m-auto w-screen">
                         <h5 className="ml-20 text-xl">{foodName}</h5>
                     </div>
                     <div className="m-auto flex space-x-2">
-                        <input type="text" id="foodAmount" className="text-md block w-20" placeholder="0" value={foodAmount} onChange={handleAmountChange}/>
-                        <input type="text" id="foodUnit" className="text-md block w-14" placeholder="g" value={foodUnit} onChange={handleUnitChange}/>
+                        <input type="text" id="foodAmount" className="text-md block w-20 " placeholder={foodAmount.toString()}  onChange={handleAmountChange}/>
+                        <input type="text" id="foodUnit" className="text-md block  bg-green-300" placeholder="g" value={foodUnit} onChange={handleUnitChange}/>
                         <div></div>
                         <button id="infoButton" className="inline-flex items-center border border-gray-400 bg-gray-200 px-2">
                             More info
