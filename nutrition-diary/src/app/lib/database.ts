@@ -360,10 +360,10 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 }
 
 // Fetch user's saved meals 
-  export async function getSavedMeals(userId: number) {
+  export async function getSavedMeals(userId: number, date: string) {
         return await executeQuery(
-            `SELECT id, name, description FROM savedMeals WHERE user = ?`,
-            [userId]
+            `SELECT id, name, description FROM savedMeals WHERE user = ? AND saveTime = ?`,
+            [userId, date]
         );
     }
 
