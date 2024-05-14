@@ -14,9 +14,8 @@ export default function MealCard(nutrients: {consumed: number[], target: number[
     }, [nutrients.consumed, nutrients.target]); 
 
     function populateInfo(nutrients: {consumed: number[], target: number[]}){
-    
-        setMealNutrients(nutrients.consumed);
-        setDailyTargetNutrients(nutrients.target);
+        if (nutrients.consumed){setMealNutrients(nutrients.consumed);}
+        if (nutrients.target){setDailyTargetNutrients(nutrients.target);}
 
     }
 

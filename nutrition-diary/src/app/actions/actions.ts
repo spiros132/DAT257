@@ -1,6 +1,6 @@
 "use server";
 
-import { getMealItems, getSavedMeals} from "../lib/database";
+import { getMealItems, getSavedMeals, testInsert} from "../lib/database";
 import { getProgInterval } from "../lib/database";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
@@ -138,6 +138,7 @@ export async function handleCommonResult(results: SearchListFoodItemCommon[], nu
             if (res != undefined ) {
                 const data_list = JSON.parse(res);
                 const data = data_list.foods[0];
+                if(data == undefined){continue;}
                 let p = data.photo;
                 let t = "";
                 if(p != undefined){t = p.thumb;}
@@ -184,6 +185,10 @@ export async function handleBrandedResult(results: SearchListFoodItemBranded[], 
         }
     }
     return nutrientData;
+}
+
+export async function testMealDB() {
+    testInsert();
 }
 
 export async function saveMealAction(mealName: string, description: string, totalCalories: number, totalProtein: number, totalCarbohydrates: number, totalFat: number, items: {food: string, quantity: number}[]) {
@@ -294,6 +299,8 @@ export async function fetchUserProgress(userId: number, interval: string) {
         return []; // Return an empty array in case of an error
     }
 }
+
+
 
 
 

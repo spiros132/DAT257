@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useEffect, useTransition, startTransition} from "react";
+import React, {useState, useEffect} from "react";
 import { getCalorieCounterInfo } from "@/app/actions/actions";
 import { Nutrients } from "@/app/lib/definitions";
 

@@ -1,13 +1,12 @@
 "use client";
 
-import CalorieCounter from "@/components/CalorieCounter";
 import HamburgerDiv from "@/components/HamburgerDiv";
 import SearchBar from "@/components/SearchBar";
 import ResultDisplay from "@/components/ResultDisplay";
 import ScrollPanel from "@/components/ResultScrollBar";
 import FoodListItem from "@/components/FoodListItem";
 import React, { useState } from "react"; 
-import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMealAction} from "@/app/actions/actions";
+import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMealAction, testMealDB} from "@/app/actions/actions";
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 import CalorieCounterCreateMeal from "@/components/CalorieCounterCreateMeal";
 

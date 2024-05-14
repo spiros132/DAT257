@@ -13,11 +13,26 @@ function createDB(){
         if (err) {        
             console.error(err.message);     
         }     
-    });
+    })
 
     // Serialize db operations to make sure they execute in sequence
     newDB.serialize(() => {
         // Create the tables if they don't exist
+        newDB.run(`
+            CREATE TABLE IF NOT EXISTS foodNutrients (
+                food_name TEXT PRIMARY KEY NOT NULL,
+                serving_unit TEXT ,
+                serving_qty INTEGER ,
+                nix_brand_name TEXT,
+                nix_item_name TEXT,
+                photo TEXT,
+                nix_item_id TEXT,
+                upc TEXT,
+                nf_calories INTEGER,
+                nf_protein REAL,
+                nf_fat REAL,
+                nf_carbohydrates REAL
+            );`);
         newDB.run(`
             CREATE TABLE IF NOT EXISTS foodNutrients (
                 food_name TEXT PRIMARY KEY NOT NULL,
@@ -132,7 +147,7 @@ function createDB(){
             calories INTEGER NOT NULL DEFAULT 0,
             fat REAL NOT NULL DEFAULT 0,
             carbohydrates REAL NOT NULL DEFAULT 0,
-            protein REAL NOT NULL DEFAULT 0;
+            protein REAL NOT NULL DEFAULT 0,
             date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (savedMeals) REFERENCES savedMeals(userId) ON DELETE CASCADE,
@@ -732,17 +747,12 @@ async function errorHandler(fn: errorHandlerFunction): Promise<databaseReturnTyp
 
 // Save food data in db
 export async function saveFoodData(foodName: string, servingUnit: string, servingQty: number, nixBrandName: string | null | undefined, nixItemName: string | null | undefined, photoThumb: string, nixItemId: string | null | undefined, upc: string | null | undefined, calories: number, protein: number, fat: number, carbohydrates: number) {
-    foodName = foodName[0].toUpperCase  + foodName.slice(1).toLowerCase();
     await executeQuery(
         `INSERT INTO foodNutrients(food_name, serving_unit, serving_qty, nix_brand_name, nix_item_name, photo, nix_item_id, upc, nf_calories, nf_protein, nf_fat, nf_carbohydrates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);`,
         [foodName, servingUnit, servingQty, nixBrandName, nixItemName, photoThumb, nixItemId, upc, calories, protein, fat, carbohydrates]);
     //testInsert();
 }
 
-async function testInsert(){
-    let res = await executeQuery(`SELECT * FROM foodNutrients;`, []);
-    console.log(res);
-}
 
 // Get food data from db
 export async function getFoodData(foodName: string) {
