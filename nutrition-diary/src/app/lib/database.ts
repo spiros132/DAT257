@@ -338,9 +338,12 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 // Save a meal starting with inserting the meal into the savedMeael table
     export async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number , items: { food: string, quantity: number }[]) {
+        let entireDate = new Date().toISOString();
+        let date = entireDate.split('T')[0];
+        let time = entireDate.split('T')[1].split('.')[0];
         const mealInsertResult = await executeQuery(
-            `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat ) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`,
-            [userId, name, description, calories, protein, fat, carbohydrates]
+            `INSERT INTO savedMeals(user, name, description, calories, protein, carbohydrates, fat, date, saveTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+            [userId, name, description, calories, protein, fat, carbohydrates, date, time]
         );
         // Check if the result isn't empty & then get lastId
         if (mealInsertResult && mealInsertResult.length > 0) {
@@ -362,7 +365,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 // Fetch user's saved meals 
   export async function getSavedMeals(userId: number, date: string) {
         return await executeQuery(
-            `SELECT id, name, description FROM savedMeals WHERE user = ? AND saveTime = ?`,
+            `SELECT id, name, description FROM savedMeals WHERE user = ? AND date = ?`,
             [userId, date]
         );
     }
@@ -377,7 +380,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     
     export async function testMealItems() {
         let res =  await executeQuery(
-            `DELETE FROM savedMealItem WHERE 1=1`,
+            `SELECT * FROM savedMeals`,
             []
         );
         console.log(res);

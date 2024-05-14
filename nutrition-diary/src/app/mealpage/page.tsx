@@ -23,8 +23,8 @@ export default function CreateEditMealPage() {
     }    
 
     const onSearch = (searchInput: string) => {
-        fetchData(searchInput);
-        //testMealDB();
+        //fetchData(searchInput);
+        testMealDB();
     };
 
     const onAdd = (foodName: SavedFoodData) => {
