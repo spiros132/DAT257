@@ -337,7 +337,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 }
 
 // Save a meal starting with inserting the meal into the savedMeael table
-    export async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number , items: { food: string, quantity: number }[]) {
+    export async function saveMeal(userId: number, name: string, description: string, calories: number, protein: number, carbohydrates: number, fat:number , items: { food: string, quantity: number }[]): Promise<boolean> {
         let entireDate = new Date().toISOString();
         let date = entireDate.split('T')[0];
         let time = entireDate.split('T')[1].split('.')[0];
@@ -356,7 +356,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
             );
         }
         console.log("Meal saved successfully.");
-        return mealId;
+        return true;
     } else {
         throw new Error("Failed to insert the meal into the database.");
     }

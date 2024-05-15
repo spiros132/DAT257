@@ -5,7 +5,7 @@ import { Nutrients } from "@/app/lib/definitions";
 
 
 export default function MealCard(props: {mealName: string, nutrients: {consumed: number[], target: number[]}}){
-
+    if(!props.nutrients){return}
     const [mealNutrients, setMealNutrients] = useState<number[]>([0,0,0,0]);
     const [dailyTargetNutrients, setDailyTargetNutrients] = useState<number[]>([0,0,0,0]);
 

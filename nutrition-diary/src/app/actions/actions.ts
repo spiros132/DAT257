@@ -6,6 +6,7 @@ import { getProgInterval } from "../lib/database";
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
 import { verifySession } from "../lib/session";
+import { redirect } from 'next/navigation'
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -195,8 +196,9 @@ export async function saveMealAction(mealName: string, description: string, tota
     const session = await verifySession();
     if(session.isAuth == false ) return;
     const userId: number = session.userId as number;
-    saveMeal(userId, mealName, "No description", totalCalories, totalProtein, totalCarbohydrates, totalFat, items);
-    
+    let res = await saveMeal(userId, mealName, "No description", totalCalories, totalProtein, totalCarbohydrates, totalFat, items);
+    if(res) redirect('/dashboard');
+
 }
 
 export async function getUserId() {

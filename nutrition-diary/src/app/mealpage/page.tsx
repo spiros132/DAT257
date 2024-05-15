@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMealAction, testMealDB} from "@/app/actions/actions";
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 import CalorieCounterCreateMeal from "@/components/CalorieCounterCreateMeal";
+import { useRouter } from "next/router";
 
 export default function CreateEditMealPage() {
     const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
@@ -49,7 +50,7 @@ export default function CreateEditMealPage() {
             totalFat: totalFat
         }
     }
-    const saveMealButton = () => {
+    const saveMealButton = async () => {
 
         if (currentFoods.length == 0) return;
         if (currentFoods.find((food) => food.serving_qty == 0)) return;
@@ -63,7 +64,8 @@ export default function CreateEditMealPage() {
             }
         });
         if (!nutrients) return;
-        saveMealAction(mealName, "No description", nutrients?.totalCalories, nutrients?.totalProtein, nutrients?.totalCarbohydrates, nutrients?.totalFat, items);
+        await saveMealAction(mealName, "No description", nutrients?.totalCalories, nutrients?.totalProtein, nutrients?.totalCarbohydrates, nutrients?.totalFat, items);
+
     }
 
     const fetchData = async (searchInput: string) => {
