@@ -9,16 +9,15 @@ import { getEatenMeals } from "@/app/actions/actions";
 
 
 export default function Page(){
-
+    const [days, setDays] = useState<number>(1);
     const [meals, setMeals] = useState<any[]>([]);
 
     async function fetchData() {
         try {
             console.log("Fetching eaten meals")
-            const eatenMeals = await getEatenMeals();
+            const eatenMeals = await getEatenMeals(days);
             console.log("Eaten meals:", eatenMeals)
             setMeals(eatenMeals);
-            return eatenMeals;
         } catch (error) {
             console.error("Error fetching eaten meals:", error);
         }
@@ -26,7 +25,9 @@ export default function Page(){
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [days]);
+
+    
 
     return (
         <div className="w-screen flex">
@@ -36,13 +37,13 @@ export default function Page(){
                     <div className="h-[50%] w-[75vw] flex">
                         <nav className="w-full h-[15vh] flex justify-around">
                             <div className="w-[20%]"></div>
-                            <button className="text-[2.5rem]">
+                            <button className={`text-[2.5rem] ${days == 1 ? ' underline' : ''}`} onClick={() => setDays(1)}>
                                 Today
                             </button>
-                            <button className="text-[2.5rem]">
+                            <button className={`text-[2.5rem] ${days == 7 ? ' underline' : ''}`} onClick={() => setDays(7)}>
                                 Weekly
                             </button>
-                            <button className="text-[2.5rem]">
+                            <button className={`text-[2.5rem] ${days == 30 ? ' underline' : ''}`} onClick={() => setDays(30)}>
                                 Monthly
                             </button>
                             <div className="w-[20%]"></div>

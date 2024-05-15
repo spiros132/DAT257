@@ -243,13 +243,13 @@ export async function getCalorieCounterInfo() {
     return {calories, carbs, protein, fat};
 }
 
-export async function getEatenMeals() {
+export async function getEatenMeals(days: number = 1) {
     let userId = await getUserId();
     let data: any[] = [];
-
+    console.log(days)
     if (userId != null) {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-        const meals = await getSavedMeals(userId, currentDate);
+        const meals = await getSavedMeals(userId, currentDate, days);
         if(meals){
             for (const meal of meals) {
                 let mealNutrient: any[] = [];
