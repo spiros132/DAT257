@@ -10,9 +10,11 @@ export default function CalorieCounter(nutrients: {target: number[]}){
     const [calorieCounterInfo, setCalorieCounterInfo] = useState<Nutrients>({calories: 0, carbs: 0, protein: 0, fat:0});
     
 
-    useEffect(() => {
-        getCalorieCounterInfo().then((info) => {setCalorieCounterInfo(info);})
-    }); 
+useEffect(() => {
+    getCalorieCounterInfo().then((info) => {
+        setCalorieCounterInfo(info);
+    });
+}, []);
  
     function populateInfo(nutrients: {consumed: number[], target: number[]}){
     
