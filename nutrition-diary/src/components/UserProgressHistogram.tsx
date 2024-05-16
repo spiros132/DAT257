@@ -1,26 +1,24 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { fetchUserProgress} from "@/app/actions/actions"; 
-import { verifySession } from "@/app/lib/session";
-
+import { getUserId } from "@/app/actions/actions";
 interface UserProgressProps {
   interval: string;
 }
 
 const UserProgress: React.FC<UserProgressProps> = ({ interval }) => {
   const [data, setData] = useState<{ day: string; calories: number; carbohydrates: number; protein: number; fat: number; }[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
-
+ 
   useEffect(() => {
     const checkSessionAndGetProgress = async () => {
-      const session = await verifySession();
-      if (typeof session.userId === 'number') {
-        setUserId(session.userId);
-        const progressData = await fetchUserProgress(session.userId, interval);
+      const userId = await getUserId();
+      
+      if (userId != null){
+        const progressData = await fetchUserProgress(userId, interval);
         setData(progressData);
-      } else {
-        console.error('No valid session found');
-        setData([]); 
       }
+
+      else { throw new Error('User ID is null');}
     };
 
     checkSessionAndGetProgress();

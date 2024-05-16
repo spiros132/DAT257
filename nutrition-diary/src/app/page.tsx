@@ -5,7 +5,6 @@ import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
 import HamburgerDiv from "@/components/HamburgerDiv";
 import UserProgress from "@/components/UserProgressHistogram";
-import { verifySession } from "./lib/session";
 
 export default function Home() {
   const [activeButton, setActiveButton] = useState("Today");
