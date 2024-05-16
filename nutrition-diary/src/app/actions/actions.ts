@@ -269,7 +269,7 @@ export async function getEatenMeals(days: number = 1) {
                         }                    
                     }                    
                 }
-                mealNutrient.push(calories,carbs,protein,fat, meal.name);
+                mealNutrient.push(calories,carbs,protein,fat, meal.name, meal.date);
                 data.push(mealNutrient);
 
             }

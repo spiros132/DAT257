@@ -56,6 +56,7 @@ export default function Page(){
                             {meals.map((meal, index) => (
                                 <MealCard
                                     mealName={meal[4]}
+                                    eatenDay={meal[5]}
                                     key={index}
                                     nutrients={{consumed: [
                                         meal[0], // calories
