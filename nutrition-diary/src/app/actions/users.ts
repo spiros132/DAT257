@@ -44,7 +44,7 @@ export async function Login(username: string, password: string): Promise<string>
         return returnError("Username or password is incorrect!");
 
     createSession(user.id);
-
+    
     redirect('/dashboard');
 }
 
