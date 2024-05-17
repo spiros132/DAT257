@@ -17,7 +17,8 @@
     "react-dom": "^18",
     "react-router-dom": "^6.23.0",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "styled-components": "^6.1.11"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
