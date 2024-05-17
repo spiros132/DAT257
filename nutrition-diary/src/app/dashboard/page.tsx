@@ -63,7 +63,7 @@ export default function Page(){
                                         meal[1], // carbs
                                         meal[2], // protein
                                         meal[3], // fat
-                                    ], target: [0, 0, 0, 0]}} // Need to sort some stuff out in the db
+                                    ], target: [1000, 200, 300, 100]}} // Need to sort some stuff out in the db
                                 />
                             ))}
                             <AddMealButton/>
