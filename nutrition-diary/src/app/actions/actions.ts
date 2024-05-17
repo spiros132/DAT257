@@ -196,9 +196,9 @@ export async function saveMealAction(mealName: string, description: string, tota
     const session = await verifySession();
     if(session.isAuth == false ) return;
     const userId: number = session.userId as number;
-    let res = await saveMeal(userId, mealName, "No description", totalCalories, totalProtein, totalCarbohydrates, totalFat, items);
+    if(description == "" || description == undefined) description = "No description";
+    let res = await saveMeal(userId, mealName, description, totalCalories, totalProtein, totalCarbohydrates, totalFat, items);
     if(res) redirect('/dashboard');
-
 }
 
 export async function getUserId() {
@@ -243,16 +243,16 @@ export async function getCalorieCounterInfo() {
     return {calories, carbs, protein, fat};
 }
 
-export async function getEatenMeals(days: number = 1) {
+export async function getEatenMeals(days: number = 1): Promise<{calories:number,carbs:number,protein:number,fat:number, name:string}[]> {
     let userId = await getUserId();
-    let data: any[] = [];
+    let data: {calories:number,carbs:number,protein:number,fat:number, name:string}[] = [];
     console.log(days)
     if (userId != null) {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
         const meals = await getSavedMeals(userId, currentDate, days);
         if(meals){
             for (const meal of meals) {
-                let mealNutrient: any[] = [];
+                let mealNutrient: {calories:number,carbs:number,protein:number,fat:number, name:string};
                 let calories = 0;
                 let carbs = 0;
                 let protein = 0;
@@ -269,9 +269,8 @@ export async function getEatenMeals(days: number = 1) {
                         }                    
                     }                    
                 }
-                mealNutrient.push(calories,carbs,protein,fat, meal.name);
+                mealNutrient = {calories, carbs, protein, fat, name: meal.name};
                 data.push(mealNutrient);
-
             }
         }
     }
