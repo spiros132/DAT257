@@ -1,7 +1,5 @@
 "use client"
 import React, { useState, useEffect } from "react";
-
-import React, { useState, useEffect } from "react";
 import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
