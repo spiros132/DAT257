@@ -5,7 +5,7 @@ import { Nutrients } from "@/app/lib/definitions";
 
 export default function CalorieCounter(nutrients: {target: number[]}){
 
-
+    
     const [targetNutrients, setTargetNutrients] = useState<number[]>([0,0,0,0]);
     const [calorieCounterInfo, setCalorieCounterInfo] = useState<Nutrients>({calories: 0, carbs: 0, protein: 0, fat:0});
     
@@ -15,8 +15,12 @@ useEffect(() => {
         setCalorieCounterInfo(info);
     });
 }, []);
+
+useEffect(() => {
+    populateInfo(nutrients);
+}, [nutrients]);
  
-    function populateInfo(nutrients: {consumed: number[], target: number[]}){
+    function populateInfo(nutrients: {target: number[]}){
     
         setTargetNutrients(nutrients.target);
 
@@ -29,7 +33,7 @@ useEffect(() => {
                     Calories
                 </p>
                 <div className="bg-primary-light h-[20px] w-[80%] m-2">
-                    <div className="bg-primary h-full w-[50%]">
+                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.calories/targetNutrients[0]*100)}%` }}>
                     </div>
                 </div>
                 <p className="text-[1.4em]">
@@ -42,7 +46,7 @@ useEffect(() => {
                     Carbohydrates
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full w-[50%]">
+                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.carbs/targetNutrients[1]*100)}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">
@@ -55,7 +59,7 @@ useEffect(() => {
                     Protein 
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full w-[50%]">
+                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.protein/targetNutrients[2]*100)}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">
@@ -68,7 +72,7 @@ useEffect(() => {
                     Fat
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full w-[50%]">
+                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.fat/targetNutrients[3]*100)}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">

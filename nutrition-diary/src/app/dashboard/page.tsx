@@ -32,7 +32,7 @@ export default function Page(){
     return (
         <div className="w-screen flex">
             <div className="w-[93%] h-screen">
-                <CalorieCounter target = {[0,0,0,0]}/>
+                <CalorieCounter target = {[100,100,20,50]}/>
                 <div className="h-screen flex flex-col">
                     <div className="h-[50%] w-[75vw] flex">
                         <nav className="w-full h-[15vh] flex justify-around">
