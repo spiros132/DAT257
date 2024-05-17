@@ -48,15 +48,15 @@ export default function Page() {
                                     className={`text-[2.5rem] ${
                                         days === 1 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(1, "")}
+                                    onClick={() => handleButtonClick(1, "today")}
                                 >
                                     Today
                                 </button>
                                 <button
-                                    className={`text-[2.5rem] ${
+                                    className={`text-[2.5rem] ${    
                                         days === 7 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(7, "Weekly")}
+                                    onClick={() => handleButtonClick(7, "weekly")}
                                 >
                                     Weekly
                                 </button>
@@ -64,7 +64,7 @@ export default function Page() {
                                     className={`text-[2.5rem] ${
                                         days === 30 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(30, "Monthly")}
+                                    onClick={() => handleButtonClick(30, "monthly")}
                                 >
                                     Monthly
                                 </button>
@@ -83,6 +83,7 @@ export default function Page() {
                                 {meals.map((meal, index) => (
                                     <MealCard
                                         mealName={meal[4]}
+                                        eatenDay={meal[5]}
                                         key={index}
                                         nutrients={{
                                             consumed: [
@@ -92,7 +93,7 @@ export default function Page() {
                                                 meal[3], // fat
                                             ],
                                             target: [0, 0, 0, 0],
-                                        }} eatenDay={""}                                    />
+                                        }}                                   />
                                 ))}
                                 <AddMealButton />
                             </div>

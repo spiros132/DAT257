@@ -557,7 +557,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
                 startDateSlope = new Date().toISOString().split('T')[0];
                 endDateSlope = startDateSlope;
                 break;
-            case 'this_week':
+            case 'weekly':
             // For the week's intervall, the start- and end-dates are calculated based on the current day
                 startDateSlope = new Date();
                 startDateSlope.setDate(startDateSlope.getDate() - startDateSlope.getDay()); // ex. start on sunday
@@ -567,7 +567,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
                 startDateSlope = startDateSlope.toISOString().split('T')[0];
                 endDateSlope = endDateSlope.toISOString().split('T')[0];
                 break;
-            case 'this_month':
+            case 'monthly':
             // For the month's interval, the star- & end-date are set based on the last day of the current month
                 startDateSlope = new Date();
                 startDateSlope.setDate(1); // Start of the month
@@ -585,9 +585,9 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     
         // Query to retrieve progress of a specified interval
         return await executeQuery(
-            `SELECT savedMeals.calories, savedMeals.fat, savedMeals.carbohydrates, savedMeals.protein
-            FROM userProgress
-            WHERE userId = ? AND date BETWEEN ? AND ?`,
+            `SELECT calories, fat, carbohydrates, protein
+            FROM savedMeals
+            WHERE user = ? AND date BETWEEN ? AND ?`,
             [userId, startDateSlope, endDateSlope]
         );
     }
@@ -670,8 +670,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 
 
-
-
+ 
 
 // Delete user's progress
     async function deleteProgress(userId:number) {

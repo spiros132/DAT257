@@ -10,7 +10,7 @@ export default function SideNav(){
 
   return (
     <div 
-    className="absolute top-0 left-0 right-auto bottom-0"    
+    className="absolute top-0 left-0 right-auto bottom-0 z-50"    
     >
       <div
       className={open ? "border-r border-b border-black" : ""}
@@ -28,7 +28,7 @@ export default function SideNav(){
         </div>
         {/* The menu itself that appears and dissapears */}
         { open &&
-        <div className="flex flex-col w-full"> 
+        <div className="flex flex-col w-full bg-white"> 
           <div className="mb-4">
             <img 
             src={logoPath} 

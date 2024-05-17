@@ -9,6 +9,9 @@ export default function CalorieCounter(nutrients: {target: number[]}){
     const [targetNutrients, setTargetNutrients] = useState<number[]>([0,0,0,0]);
     const [calorieCounterInfo, setCalorieCounterInfo] = useState<Nutrients>({calories: 0, carbs: 0, protein: 0, fat:0});
     
+    function round(number: number){
+        return Math.round(number*100)/100;
+    }
 
 useEffect(() => {
     getCalorieCounterInfo().then((info) => {
@@ -37,7 +40,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1.4em]">
-                    {calorieCounterInfo.calories} / {targetNutrients[0]}
+                    {round(calorieCounterInfo.calories)} / {targetNutrients[0]}
                 </p>
             </div>
 
@@ -50,7 +53,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo.carbs} / {targetNutrients[1]}
+                    {round(calorieCounterInfo.carbs)} / {targetNutrients[1]}
                 </p>
             </div>
             
@@ -63,7 +66,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo.protein} / {targetNutrients[2]}
+                    {round(calorieCounterInfo.protein)} / {targetNutrients[2]}
                 </p>
             </div>
 
@@ -76,7 +79,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {calorieCounterInfo.fat} / {targetNutrients[3]}
+                    {round(calorieCounterInfo.fat)} / {targetNutrients[3]}
                 </p>
             </div>
 

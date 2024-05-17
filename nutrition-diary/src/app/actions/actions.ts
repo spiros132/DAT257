@@ -304,7 +304,9 @@ export async function fetchUserProgress(userId: number, interval: string) {
 }
 
 
-
+export async function addTarget(number: number, type: string){
+    
+}
 
 
 // WIP!!!
