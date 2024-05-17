@@ -6,7 +6,7 @@ interface UserProgressProps {
   interval: string;
 }
 
-const UserProgress: React.FC<UserProgressProps> = ({ interval }) => {
+const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
   const [data, setData] = useState<{ day: string; calories: number; carbohydrates: number; protein: number; fat: number; }[]>([]);
  
   useEffect(() => {
@@ -15,6 +15,7 @@ const UserProgress: React.FC<UserProgressProps> = ({ interval }) => {
       
       if (userId != null){
         const progressData = await fetchUserProgress(userId, interval);
+        console.log(progressData)
         setData(progressData);
       }
 
@@ -61,4 +62,4 @@ const UserProgress: React.FC<UserProgressProps> = ({ interval }) => {
   );
 };
 
-export default UserProgress;
+export default UserProgressHistogram;

@@ -10,6 +10,7 @@ import { SearchForFoodList,  handleBrandedResult,  handleCommonResult, saveMealA
 import { SavedFoodData, SearchListFoodItemData } from "@/app/lib/definitions";
 import CalorieCounterCreateMeal from "@/components/CalorieCounterCreateMeal";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function CreateEditMealPage() {
     const [results, setResults] = useState<SavedFoodData[] | undefined>(undefined);
@@ -119,7 +120,9 @@ export default function CreateEditMealPage() {
     return (
         <div className="grid grid-cols-3 p-4 min-h-screen">
             <div className="absolute left-0 top-0 border-t-0" style={{ width: '10%', borderTop: 'none' }}>
-                HamburgerDiv
+                <HamburgerDiv onClick={function (): void {
+                    throw new Error("Function not implemented.");
+                } }></HamburgerDiv>
             </div>
             {/* Second column: SearchBar and ResultDisplay */}
             <div className="absolute top-0 left-0 right-0 flex flex-col justify-center items-center gap-5 p-4">
@@ -165,13 +168,14 @@ export default function CreateEditMealPage() {
                         </h2>
                         {makeFoodListItems(currentFoods)}
                     </div>
-
+                    <Link href={"/dashboard"}>
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         onClick={saveMealButton}
                     >
                         Save Meal
                     </button>
+                    </Link>
                 </div>
             </div>
             {/* Third column: CalorieCounter */}
