@@ -243,9 +243,9 @@ export async function getCalorieCounterInfo() {
     return {calories, carbs, protein, fat};
 }
 
-export async function getEatenMeals(days: number = 1): Promise<{calories:number,carbs:number,protein:number,fat:number, name:string}[]> {
+export async function getEatenMeals(days: number = 1): Promise<{calories:number,carbs:number,protein:number,fat:number, name:string, date:string}[]> {
     let userId = await getUserId();
-    let data: {calories:number,carbs:number,protein:number,fat:number, name:string}[] = [];
+    let data: {calories:number,carbs:number,protein:number,fat:number, name:string, date:string}[] = [];
     console.log(days)
     if (userId != null) {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
