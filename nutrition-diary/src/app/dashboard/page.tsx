@@ -92,8 +92,7 @@ export default function Page() {
                                                 meal[3], // fat
                                             ],
                                             target: [0, 0, 0, 0],
-                                        }}
-                                    />
+                                        }} eatenDay={""}                                    />
                                 ))}
                                 <AddMealButton />
                             </div>

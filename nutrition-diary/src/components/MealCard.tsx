@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react";
 import { Nutrients } from "@/app/lib/definitions";
 
 
-export default function MealCard(props: {mealName: string, nutrients: {consumed: number[], target: number[]}}){
+export default function MealCard(props: {mealName: string, eatenDay : string, nutrients: {consumed: number[], target: number[]}}){
     if(!props.nutrients){return}
     const [mealNutrients, setMealNutrients] = useState<number[]>([0,0,0,0]);
     const [dailyTargetNutrients, setDailyTargetNutrients] = useState<number[]>([0,0,0,0]);
@@ -20,9 +20,12 @@ export default function MealCard(props: {mealName: string, nutrients: {consumed:
 
     return (
         <div className="h-[35vh] w-[12vw] bg-white m-10">
-            <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex">
+            <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex flex-col">
                 <p className="text-white text-[20px] m-auto">
                   {props.mealName}
+                </p>
+                <p className="text-sm text-white m-auto">
+                    {props.eatenDay}
                 </p>
             </div>
             <div className="h-[80%] border border-gray-500 border-t-0 flex-col justify-between p-4 rounded-b-[20px]">
@@ -31,7 +34,7 @@ export default function MealCard(props: {mealName: string, nutrients: {consumed:
                         Calories
                     </p>
                     <p className="text-[0.8em]">
-                        {mealNutrients[0]} ({mealNutrients[0]/dailyTargetNutrients[0] * 100}%)
+                        {mealNutrients[0]} ({Math.floor(mealNutrients[0]/dailyTargetNutrients[0] * 100)}%)
                     </p>                    
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -39,7 +42,7 @@ export default function MealCard(props: {mealName: string, nutrients: {consumed:
                         Carbohydrates
                     </p>   
                     <p className="text-[0.8em]">
-                        {mealNutrients[1]} ({mealNutrients[1]/dailyTargetNutrients[1] * 100}%)
+                        {mealNutrients[1]} ({Math.floor(mealNutrients[1]/dailyTargetNutrients[1] * 100)}%)
                     </p>                   
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -47,7 +50,7 @@ export default function MealCard(props: {mealName: string, nutrients: {consumed:
                         Protein
                     </p>   
                     <p className="text-[0.8em]">
-                        {mealNutrients[2]} ({mealNutrients[2]/dailyTargetNutrients[2] * 100}%)
+                        {mealNutrients[2]} ({Math.floor(mealNutrients[2]/dailyTargetNutrients[2] * 100)}%)
                     </p>                   
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -55,7 +58,7 @@ export default function MealCard(props: {mealName: string, nutrients: {consumed:
                         Fat
                     </p>   
                     <p className="text-[0.8em]">
-                        {mealNutrients[3]} ({mealNutrients[3]/dailyTargetNutrients[3] * 100}%)
+                        {mealNutrients[3]} ({Math.floor(mealNutrients[3]/dailyTargetNutrients[3] * 100)}%)
                     </p>                   
                 </div>
             </div>
