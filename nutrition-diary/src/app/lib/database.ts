@@ -367,7 +367,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         let d = new Date(date);
         d.setDate(d.getDate() - days);
         return await executeQuery(
-            `SELECT id, name, description FROM savedMeals WHERE user = ? AND date BETWEEN ? AND ?`,
+            `SELECT id, name, description, date FROM savedMeals WHERE user = ? AND date BETWEEN ? AND ?`,
             [userId, d.toISOString().split('T')[0], date ]
         );
     }

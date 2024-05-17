@@ -32,7 +32,7 @@ export default function Page(){
     return (
         <div className="w-screen flex">
             <div className="w-[93%] h-screen">
-                <CalorieCounter target = {[0,0,0,0]}/>
+                <CalorieCounter target = {[100,100,20,50]}/>
                 <div className="h-screen flex flex-col">
                     <div className="h-[50%] w-[75vw] flex">
                         <nav className="w-full h-[15vh] flex justify-around">
@@ -56,13 +56,14 @@ export default function Page(){
                             {meals.map((meal, index) => (
                                 <MealCard
                                     mealName={meal[4]}
+                                    eatenDay={meal[5]}
                                     key={index}
                                     nutrients={{consumed: [
                                         meal[0], // calories
                                         meal[1], // carbs
                                         meal[2], // protein
                                         meal[3], // fat
-                                    ], target: [0, 0, 0, 0]}} // Need to sort some stuff out in the db
+                                    ], target: [1000, 200, 300, 100]}} // Need to sort some stuff out in the db
                                 />
                             ))}
                             <AddMealButton/>
