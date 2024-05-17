@@ -1,22 +1,19 @@
 "use client";
-import React, {useState, useEffect} from "react";
 
+import React, { useState, useEffect } from "react";
 import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
-import HamburgerDiv from "@/components/HamburgerDiv";
 import { getEatenMeals } from "@/app/actions/actions";
 
-
-export default function Page(){
+export default function Page() {
     const [days, setDays] = useState<number>(1);
     const [meals, setMeals] = useState<any[]>([]);
+    const [selectedMealIndex, setSelectedMealIndex] = useState<number | null>(null);
 
     async function fetchData() {
         try {
-            console.log("Fetching eaten meals")
             const eatenMeals = await getEatenMeals(days);
-            console.log("Eaten meals:", eatenMeals)
             setMeals(eatenMeals);
         } catch (error) {
             console.error("Error fetching eaten meals:", error);
@@ -27,12 +24,10 @@ export default function Page(){
         fetchData();
     }, [days]);
 
-    
-
     return (
         <div className="w-screen flex">
             <div className="w-[93%] h-screen">
-                <CalorieCounter target = {[100,100,20,50]}/>
+                <CalorieCounter target={[100, 100, 20, 50]} />
                 <div className="h-screen flex flex-col">
                     <div className="h-[50%] w-[75vw] flex">
                         <nav className="w-full h-[15vh] flex justify-around">
@@ -49,28 +44,33 @@ export default function Page(){
                             <div className="w-[20%]"></div>
                         </nav>
                         <div></div>
-                    </div> 
+                    </div>
 
                     <div className="h-[50%] w-full">
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center items-center flex-wrap">
                             {meals.map((meal, index) => (
                                 <MealCard
                                     mealName={meal[4]}
                                     eatenDay={meal[5]}
                                     key={index}
-                                    nutrients={{consumed: [
-                                        meal[0], // calories
-                                        meal[1], // carbs
-                                        meal[2], // protein
-                                        meal[3], // fat
-                                    ], target: [1000, 200, 300, 100]}} // Need to sort some stuff out in the db
+                                    nutrients={{
+                                        consumed: [
+                                            meal[0], // calories
+                                            meal[1], // carbs
+                                            meal[2], // protein
+                                            meal[3], // fat
+                                        ],
+                                        target: [1000, 200, 300, 100] // Adjust targets as needed
+                                    }}
+                                    isSelected={index === selectedMealIndex}
+                                    onClick={() => setSelectedMealIndex(index)}
                                 />
                             ))}
-                            <AddMealButton/>
-                        </div>                
-                    </div>                
+                            <AddMealButton />
+                        </div>
+                    </div>
                 </div>
-            </div>            
+            </div>
         </div>
-      )
-} 
+    )
+}
