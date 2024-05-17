@@ -252,7 +252,7 @@ export async function getEatenMeals(days: number = 1): Promise<{calories:number,
         const meals = await getSavedMeals(userId, currentDate, days);
         if(meals){
             for (const meal of meals) {
-                let mealNutrient: {calories:number,carbs:number,protein:number,fat:number, name:string};
+                let mealNutrient: {calories:number,carbs:number,protein:number,fat:number, name:string, date:string};
                 let calories = 0;
                 let carbs = 0;
                 let protein = 0;
@@ -269,7 +269,7 @@ export async function getEatenMeals(days: number = 1): Promise<{calories:number,
                         }                    
                     }                    
                 }
-                mealNutrient = {calories, carbs, protein, fat, name: meal.name};
+                mealNutrient = {calories, carbs, protein, fat, name: meal.name, date: meal.date};
                 data.push(mealNutrient);
             }
         }
