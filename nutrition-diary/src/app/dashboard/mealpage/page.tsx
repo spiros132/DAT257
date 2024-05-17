@@ -119,11 +119,6 @@ export default function CreateEditMealPage() {
 
     return (
         <div className="grid grid-cols-3 p-4 min-h-screen">
-            <div className="absolute left-0 top-0 border-t-0" style={{ width: '10%', borderTop: 'none' }}>
-                <HamburgerDiv onClick={function (): void {
-                    throw new Error("Function not implemented.");
-                } }></HamburgerDiv>
-            </div>
             {/* Second column: SearchBar and ResultDisplay */}
             <div className="absolute top-0 left-0 right-0 flex flex-col justify-center items-center gap-5 p-4">
                 <div className="w-1000" style={{ width: '60%', borderTop: 'none' }}> 

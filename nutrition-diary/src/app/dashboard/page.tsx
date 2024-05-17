@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
+
 import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
@@ -7,17 +8,28 @@ import { getEatenMeals } from "@/app/actions/actions";
 import UserProgressHistogram from "@/components/UserProgressHistogram";
 
 export default function Page() {
+    const [loading, setLoading] = useState<boolean>(false);
     const [days, setDays] = useState<number>(1);
-    const [meals, setMeals] = useState<any[]>([]);
+    const [meals, setMeals] = useState<{
+        calories: number;
+        carbs: number;
+        protein: number;
+        fat: number;
+        name: string;
+        date: string;
+    }[]>([]);
     const [showHistogram, setShowHistogram] = useState<boolean>(false);
     const [histogramInterval, setHistogramInterval] = useState<string>("");
 
     async function fetchData() {
         try {
+            setLoading(true);
             console.log("Fetching eaten meals");
             const eatenMeals = await getEatenMeals(days);
             console.log("Eaten meals:", eatenMeals);
             setMeals(eatenMeals);
+            setLoading(false);
+            console.log(meals)
         } catch (error) {
             console.error("Error fetching eaten meals:", error);
         }
@@ -47,15 +59,15 @@ export default function Page() {
                                     className={`text-[2.5rem] ${
                                         days === 1 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(1, "")}
+                                    onClick={() => handleButtonClick(1, "today")}
                                 >
                                     Today
                                 </button>
                                 <button
-                                    className={`text-[2.5rem] ${
+                                    className={`text-[2.5rem] ${    
                                         days === 7 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(7, "Weekly")}
+                                    onClick={() => handleButtonClick(7, "weekly")}
                                 >
                                     Weekly
                                 </button>
@@ -63,7 +75,7 @@ export default function Page() {
                                     className={`text-[2.5rem] ${
                                         days === 30 ? " underline" : ""
                                     }`}
-                                    onClick={() => handleButtonClick(30, "Monthly")}
+                                    onClick={() => handleButtonClick(30, "monthly")}
                                 >
                                     Monthly
                                 </button>
@@ -79,21 +91,26 @@ export default function Page() {
                         )}
                         {!showHistogram && (
                             <div className="flex justify-center items-center">
-                                {meals.map((meal, index) => (
+                                {loading && <p>Loading...</p>} 
+                                {!loading && meals.length === 0 && <p>No meals found</p>}
+                                {!loading && meals.length > 0 && meals.map((meal, index) => (
                                     <MealCard
-                                        mealName={meal[4]}
+                                        mealName={meal.name}
+                                        eatenDay={meal.date}
+                                        isSelected={false}
+                                        onClick={() => {}}
                                         key={index}
                                         nutrients={{
                                             consumed: [
-                                                meal[0], // calories
-                                                meal[1], // carbs
-                                                meal[2], // protein
-                                                meal[3], // fat
+                                                meal.calories, // calories
+                                                meal.carbs, // carbs
+                                                meal.protein, // protein
+                                                meal.fat, // fat
                                             ],
                                             target: [0, 0, 0, 0],
-                                        }} eatenDay={""}                                    />
+                                        }}                                   />
                                 ))}
-                                <AddMealButton />
+                                {!loading && <AddMealButton />}
                             </div>
                         )}
                     </div>
