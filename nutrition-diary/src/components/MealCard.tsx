@@ -10,6 +10,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
     const [dailyTargetNutrients, setDailyTargetNutrients] = useState<number[]>([0, 0, 0, 0]);
 
     useEffect(() => {
+        console.log(props.nutrients);
         populateInfo(props.nutrients);
     }, [props.nutrients.consumed, props.nutrients.target]);
 
