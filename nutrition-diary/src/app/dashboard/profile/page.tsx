@@ -5,8 +5,8 @@ const ProfilePage = () => {
     <div style={{ backgroundColor: 'white', minHeight: '100vh', padding: '2px', width: '100%', maxWidth: '100vw' }}>
       {/** NutritionDiary.png */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" style={{ width: '220px', margin: '0 auto', marginBottom: '10px' }} />
-        <div style={{ position: 'absolute', top: '140px', left: '41%', transform: 'translateX(-40%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}> {/** Increased space */}
+        <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" style={{ width: '250px', margin: '0 auto', marginBottom: '10px' }} />
+        <div style={{ position: 'absolute', top: '60px', left: '41%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}> {/** Increased space */}
          
     {/** Left side of the vertical line */}
     <div style={{ marginBottom: '130px' }}></div> {/** add an empty line */}
@@ -108,8 +108,8 @@ const ProfilePage = () => {
 </div>         
 
  {/** ////////////////////RIGHT SECTION////MIRROR//////////////// */}         
-        </div>
-        <div style={{ position: 'absolute', top: '120px', left: '63%', transform: 'translateX(-40%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
+    </div>
+        <div style={{ position: 'absolute', top: '50px', left: '63%', transform: 'translateX(-40%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
         <div style={{ position: 'relative',marginBottom: '150px', marginLeft: '-90px' }}></div>
         <h2 style={{ color: 'black', fontSize: '24px', marginBottom: '10px' }}>Target</h2> 
         
@@ -157,10 +157,54 @@ const ProfilePage = () => {
         </button>
         </div>
 
-        </div> 
+        <div style={{position: 'relative', marginBottom: '20px', display: 'flex', alignItems: 'center'}}>
+            <span style={{  width: '130px', marginRight: '20px'}}>Duration</span>
+            <select
+            style={{
+                backgroundColor: 'white',
+                color: 'black',
+                padding: '5px',
+                borderRadius: '5px',
+                border: '2px solid black',
+                position: 'relative'
+            }}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+
+            </select>
+            <button
+                style={{
+                    backgroundColor: 'bg-primary h-full w-[50%]',
+                    border: 'none',
+                    cursor: 'pointer',
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    //right:  '-60',
+                    right: '-40px', 
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                }}
+                >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                    style={{ width: '70%', height: '70%', fill: 'white' }}
+                >
+                    <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+                </svg>
+            </button>
+
+        </div>
+    </div> 
 
         {/** vertical line */}
-        <div style={{ position: 'absolute', top: '290px', left: '50%', width: '1px', height: '50%', backgroundColor: 'grey' }}></div> 
+        <div style={{ position: 'absolute', top: '190px', left: '50%', width: '1px', height: '50%', backgroundColor: 'grey' }}></div> 
       </div>
     </div>
   );
