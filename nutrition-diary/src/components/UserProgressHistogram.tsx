@@ -1,4 +1,3 @@
-"use client"
 import React, { useState, useEffect } from "react";
 import { fetchUserProgress } from "@/app/actions/actions";
 import { getUserId } from "@/app/actions/actions";
@@ -8,9 +7,13 @@ interface UserProgressProps {
 }
 
 const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
-  const [data, setData] = useState<
-    { calories: number; carbohydrates: number; protein: number; fat: number }[]
-  >([]);
+  const [data, setData] = useState<{
+    calories: number;
+    carbohydrates: number;
+    protein: number;
+    fat: number;  
+    
+  }[]>([]);
 
   useEffect(() => {
     const checkSessionAndGetProgress = async () => {
@@ -18,7 +21,17 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
 
       if (userId != null) {
         const progressData = await fetchUserProgress(userId, interval);
-        setData(progressData);
+
+        // Combine nutrients of all meals for each day
+        const aggregatedData = progressData.reduce((accumulator, currentValue) => {
+          accumulator.calories += currentValue.calories;
+          accumulator.carbohydrates += currentValue.carbohydrates;
+          accumulator.protein += currentValue.protein;
+          accumulator.fat += currentValue.fat;
+          return accumulator; 
+        }, { calories: 0, carbohydrates: 0, protein: 0, fat: 0 });
+
+        setData([aggregatedData]);
       } else {
         throw new Error("User ID is null");
       }
@@ -73,13 +86,13 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
         }
 
         .histogram-bar {
-          width: 100px; /* Adjust width as needed */
-          margin-right: 10px; /* Adjust margin between bars */
-          margin-bottom: 20px; /* Adjust margin between rows */
+          width: 100px; 
+          margin-right: 10px;
+          margin-bottom: 20px;
         }
 
         .bar {
-          background-color: #007bff; /* Adjust bar color */
+          background-color: #007bff;  
           width: 100%;
           text-align: center;
           color: #fff;
@@ -94,8 +107,6 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
           left: 50%;
           transform: translateX(-50%);
         }
-
-        /* Optionally, you can style different bars differently */
         .bar.calories { background-color: #007bff; }
         .bar.carbohydrates { background-color: #28a745; }
         .bar.protein { background-color: #ffc107; }

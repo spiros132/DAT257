@@ -585,7 +585,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     
         // Query to retrieve progress of a specified interval
         return await executeQuery(
-            `SELECT calories, fat, carbohydrates, protein
+            `SELECT calories, fat, carbohydrates, protein, date
             FROM savedMeals
             WHERE user = ? AND date BETWEEN ? AND ?`,
             [userId, startDateSlope, endDateSlope]
