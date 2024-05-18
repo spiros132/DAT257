@@ -2,11 +2,13 @@
 
 import { getMealItems, getSavedMeals, testMealItems} from "../lib/database";
 import { fetchgetUserProgress } from "../lib/database";
-
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
 import { verifySession } from "../lib/session";
 import { redirect } from 'next/navigation'
+import { setTargetGoal } from "../lib/database";
+import { getTargetGoal } from "../lib/database";
+import { updateTargetGoal } from "../lib/database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -320,10 +322,44 @@ export async function fetchUserProgress(userId: number, interval: string) {
     }
   }
   
+export async function addTarget(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
+    await setTargetGoal(userId, calories, carbohydrates, protein, fat);
+}
+
+export async function fetchTargetGoal(userId: number) {
+    try {
+        const result = await getTargetGoal(userId);
+        if (!result || result.length === 0) {
+            console.error('No data returned from fetchTargetGoal');
+            return {
+                calories: 0,
+                carbohydrates: 0,
+                protein: 0,
+                fat: 0
+            };
+        }
+        const { calories, carbohydrates, protein, fat } = result[0];
+        return {
+            calories: Math.round(calories),
+            carbohydrates: Math.round(carbohydrates),
+            protein: Math.round(protein),
+            fat: Math.round(fat)
+        };
+    } catch (error) {
+        console.error('Error fetching target goal:', error);
+        return {
+            calories: 0,
+            carbohydrates: 0,
+            protein: 0,
+            fat: 0
+        };
+    }
+}
 
 
-export async function addTarget(number: number, type: string){
-    
+
+export async function updateTarget(userId: number, calories:number, carbohydrates: number, protein: number, fat:number) {
+    await updateTargetGoal(userId, calories, carbohydrates, protein, fat);
 }
 
 

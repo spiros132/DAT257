@@ -122,9 +122,11 @@ function createDB(){
       newDB.run(`
         CREATE TABLE IF NOT EXISTS targetGoal (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            targetType TEXT NOT NULL, 
-            targetValue REAL NOT NULL,
+            userId INTEGER, 
+            calories INTEGER NOT NULL,
+            carbohydrates INTEGER NOT NULL,
+            protein INTEGER NOT NULL,
+            fat INTEGER NOT NULL,
             FOREIGN KEY (userId) REFERENCES users(id)
         );`);
 
@@ -513,26 +515,26 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     }
 
 // Set user's target value for a specific time slope
-    export async function setTargetGoal(userId: number, targetType: string, targetValue: number){
+    export async function setTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
         return await executeQuery(
-            `INSERT INTO targetGoal (userId, targetType, targetValue) VALUES (?, ?, ?)`,
-            [userId, targetType, targetValue]
+            `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?)`,
+            [userId, calories, carbohydrates, protein, fat]
         );
     }
 
 // Get user's target value for a specific time slope
-    export async function getTargetGoal(userId: number, targetType: string, targetValue: number){
-        return await executeQuery(
-            `SELECT targetValue FROM targetGoal WHERE userId=? AND targetType=?`,
-            [userId, targetType]
+export async function getTargetGoal(userId: number){
+    return await executeQuery(
+            `SELECT calories, carbohydrates, protein, fat FROM targetGoal WHERE userId=?`,
+            [userId]
         );
     }
 
 // Update user's target goal
-    export async function updateTargetGoal(userId: number, targetType: string, targetValue: number) {
+    export async function updateTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number) {
         return await executeQuery(
-            `UPDATE targetGoal SET targetValue = ? WHERE userId = ? AND targetType = ?`,
-            [targetValue, userId, targetType]
+            `UPDATE targetGoal SET calories = ?, carbohydrates = ?, protein = ?, fat = ? WHERE userId = ?`,
+            [calories, carbohydrates, protein, fat, userId]
         );
     }
 
@@ -547,7 +549,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         )
     }
 
-    
+
     // Retrieve user progress with meal details
     export async function getUserProgressWithMeals(userId: number) {
         try {
