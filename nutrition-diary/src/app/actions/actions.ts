@@ -1,7 +1,7 @@
 "use server";
 
 import { getMealItems, getSavedMeals, testMealItems} from "../lib/database";
-import { getProgInterval } from "../lib/database";
+import { fetchgetUserProgress } from "../lib/database";
 
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
@@ -278,30 +278,48 @@ export async function getEatenMeals(days: number = 1): Promise<{calories:number,
     
 }
 
-
 export async function fetchUserProgress(userId: number, interval: string) {
     try {
-     
-        const results = await getProgInterval(userId, interval);
-        if (!results) {
-            console.error('No data returned from getProgInterval');
-            return [];  // Handle the case where results might be undefined
+      const results = await fetchgetUserProgress(userId, interval);
+      if (!results) {
+        console.error('No data returned from fetchgetUserProgress');
+        return [];
+      }
+  
+      const aggregatedData: { [date: string]: { calories: number; carbohydrates: number; protein: number; fat: number; date: string } } = {};
+  
+      results.forEach((item: any) => {
+        const date = item.date;
+        if (!aggregatedData[date]) {
+          aggregatedData[date] = {
+            calories: 0,
+            carbohydrates: 0,
+            protein: 0,
+            fat: 0,
+            date: date
+          };
         }
-        const formattedData = results.map((item, index) => ({
-            day: `Day ${index + 1}`,
-            calories: item.calories,
-            carbohydrates: item.carbohydrates,
-            protein: item.protein,
-            fat: item.fat
-        }));
-
-       
-        return formattedData;
+        aggregatedData[date].calories += item.calories;
+        aggregatedData[date].carbohydrates += item.carbohydrates;
+        aggregatedData[date].protein += item.protein;
+        aggregatedData[date].fat += item.fat;
+      });
+  
+      const formattedData = Object.values(aggregatedData).map(item => ({
+        calories: Math.round(item.calories),
+        carbohydrates: Math.round(item.carbohydrates),
+        protein: Math.round(item.protein),
+        fat: Math.round(item.fat),
+        date: item.date
+      }));
+  
+      return formattedData;
     } catch (error) {
-        console.error('Error fetching weekly progress:', error);
-        return []; // Return an empty array in case of an error
+      console.error('Error fetching user progress:', error);
+      return []; // Return an empty array in case of an error
     }
-}
+  }
+  
 
 
 export async function addTarget(number: number, type: string){

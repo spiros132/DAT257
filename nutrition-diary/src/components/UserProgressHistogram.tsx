@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { fetchUserProgress } from "@/app/actions/actions";
 import { getUserId } from "@/app/actions/actions";
@@ -11,8 +12,8 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
     calories: number;
     carbohydrates: number;
     protein: number;
-    fat: number;  
-    
+    fat: number;
+    date: string;
   }[]>([]);
 
   useEffect(() => {
@@ -21,17 +22,7 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
 
       if (userId != null) {
         const progressData = await fetchUserProgress(userId, interval);
-
-        // Combine nutrients of all meals for each day
-        const aggregatedData = progressData.reduce((accumulator, currentValue) => {
-          accumulator.calories += currentValue.calories;
-          accumulator.carbohydrates += currentValue.carbohydrates;
-          accumulator.protein += currentValue.protein;
-          accumulator.fat += currentValue.fat;
-          return accumulator; 
-        }, { calories: 0, carbohydrates: 0, protein: 0, fat: 0 });
-
-        setData([aggregatedData]);
+        setData(progressData);
       } else {
         throw new Error("User ID is null");
       }
@@ -58,18 +49,24 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
         {data.length > 0 ? (
           data.map((dayData, index) => (
             <div key={index} className="histogram-bar">
-              <div className="bar calories" style={{ height: `${dayData.calories}px` }}>
-                <span>{dayData.calories}</span>
+              <div className="bar-container">
+              <span>{dayData.calories}g Cal </span>
+                <div className="bar calories" style={{ height: `${dayData.calories / 10}px` }}>
+                </div>
+                <span>{dayData.carbohydrates}g Carbs</span>
+                <div className="bar carbohydrates" style={{ height: `${dayData.carbohydrates / 10}px` }}>
+                  
+                </div>
+                <span>{dayData.protein}g Protein</span>
+                <div className="bar protein" style={{ height: `${dayData.protein /10}px` }}>
+                  
+                </div>
+                <span>{dayData.fat }g fat </span>
+                <div className="bar fat" style={{ height: `${dayData.fat / 10}px` }}>
+                  
+                </div>
               </div>
-              <div className="bar carbohydrates" style={{ height: `${dayData.carbohydrates}px` }}>
-                <span>{dayData.carbohydrates}</span>
-              </div>
-              <div className="bar protein" style={{ height: `${dayData.protein}px` }}>
-                <span>{dayData.protein}</span>
-              </div>
-              <div className="bar fat" style={{ height: `${dayData.fat}px` }}>
-                <span>{dayData.fat}</span>
-              </div>
+              <div className="bar-date">{new Date(dayData.date).toLocaleDateString()}</div>
             </div>
           ))
         ) : (
@@ -83,22 +80,35 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
         .histogram {
           display: flex;
           flex-wrap: wrap;
+          justify-content: space-between;
         }
 
         .histogram-bar {
-          width: 100px; 
-          margin-right: 10px;
+          width: calc(100% / 7 - 10px); 
           margin-bottom: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .bar-container {
+          display: flex;
+          flex-direction: column;
+          align-items: left;
+          justify-content: flex-end;
+          height: 500px; 
         }
 
         .bar {
-          background-color: #007bff;  
-          width: 100%;
+          width: 70px;
+          margin: 2px 0;
           text-align: center;
           color: #fff;
           border-radius: 5px;
-          margin-bottom: 5px;
           position: relative;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
         }
 
         .bar span {
@@ -107,10 +117,24 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
           left: 50%;
           transform: translateX(-50%);
         }
+
         .bar.calories { background-color: #007bff; }
         .bar.carbohydrates { background-color: #28a745; }
         .bar.protein { background-color: #ffc107; }
         .bar.fat { background-color: #dc3545; }
+
+        .bar-date {
+          text-align: center;
+          margin-top: 5px;
+          font-size: 0.9em;
+        }
+
+       
+        @media (min-width: 768px) {
+          .histogram-bar {
+            width: calc(100% / 30 - 5px); /* Adjust for monthly display */
+          }
+        }
         `}
       </style>
     </div>

@@ -3,6 +3,7 @@ import { createHash} from 'crypto';
 import { database_location } from './config';
 import { open, Database } from "sqlite";
 
+
 export type databaseReturnType = any[] | undefined;
 
 // Function to create db tables if they don't exist
@@ -67,7 +68,7 @@ function createDB(){
                 protein REAL NOT NULL, 
                 fat REAL NOT NULL,
                 carbohydrates REAL NOT NULL,  
-                date DATETIME NOT NULL,         
+                date DATE NOT NULL,         
                 FOREIGN KEY (user) REFERENCES users(id)
         );`);
         newDB.run(`
@@ -448,7 +449,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 // Retrive user's deleted fav. foods within the past day
     export async function getDeletedFavoriteFood(userId: number){
-        const oneDay = new Date();
+        const oneDay = new Date();  
         oneDay.setDate(oneDay.getDate()-1);
         return await executeQuery(
             `SELECT foodName FROM deletedFavoriteFoods WHERE userId = ? AND deletionTime >=?`,
@@ -546,52 +547,7 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
         )
     }
 
-
-// Retrieve user's progress intervall
-    export async function getProgInterval(userId: number, interval: string) {
-        let startDateSlope, endDateSlope;
-        // Select the date range for the specified interval
-        switch (interval) {
-            case 'today':
-            // For today's interval, both start- and end- dates are set to today
-                startDateSlope = new Date().toISOString().split('T')[0];
-                endDateSlope = startDateSlope;
-                break;
-            case 'weekly':
-            // For the week's intervall, the start- and end-dates are calculated based on the current day
-                startDateSlope = new Date();
-                startDateSlope.setDate(startDateSlope.getDate() - startDateSlope.getDay()); // ex. start on sunday
-                endDateSlope = new Date();
-                endDateSlope.setDate(endDateSlope.getDate() + (6 - endDateSlope.getDay())); // end on saturday
-                // Convert dates to ISO string format (YYYY-MM-DD)
-                startDateSlope = startDateSlope.toISOString().split('T')[0];
-                endDateSlope = endDateSlope.toISOString().split('T')[0];
-                break;
-            case 'monthly':
-            // For the month's interval, the star- & end-date are set based on the last day of the current month
-                startDateSlope = new Date();
-                startDateSlope.setDate(1); // Start of the month
-                endDateSlope = new Date();
-                endDateSlope.setMonth(endDateSlope.getMonth() + 1); // End of the month, move to next month
-                endDateSlope.setDate(0); // Last day of the previous month
-                // convert the date to an ISO 8601 string formate (YYY-MM-DD)
-                startDateSlope = startDateSlope.toISOString().split('T')[0];
-                endDateSlope = endDateSlope.toISOString().split('T')[0];
-                break;
-            default:
-            // In case of invalid interval types: 
-                throw new Error('Invalid interval type');
-        }
     
-        // Query to retrieve progress of a specified interval
-        return await executeQuery(
-            `SELECT calories, fat, carbohydrates, protein, date
-            FROM savedMeals
-            WHERE user = ? AND date BETWEEN ? AND ?`,
-            [userId, startDateSlope, endDateSlope]
-        );
-    }
-
     // Retrieve user progress with meal details
     export async function getUserProgressWithMeals(userId: number) {
         try {
@@ -780,3 +736,33 @@ export async function deleteFoodData() {
         `DELETE FROM foodNutrients WHERE 1=1;`,
         []);
 }
+
+function getStartDate(interval: string): string {
+    const today = new Date();
+  
+    if (interval === 'today') {
+      return today.toISOString().split('T')[0];
+    } else if (interval === 'weekly') {
+      const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1)); 
+      return firstDayOfWeek.toISOString().split('T')[0];
+    } else if (interval === 'monthly') {
+      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      return firstDayOfMonth.toISOString().split('T')[0];
+    } else {
+      throw new Error('Invalid interval. Must be "today", "weekly", or "monthly".');
+    }
+  }
+  
+  export async function fetchgetUserProgress(userId: number, interval: string) {
+    const startDate = getStartDate(interval);
+  
+    const query = `
+      SELECT calories, protein, fat, carbohydrates, date 
+      FROM savedMeals WHERE user = ? AND date >= ? ORDER BY date`;
+  
+    const result = await executeQuery(query, [userId, startDate]);
+    return result;
+  }
+  
+
+  
