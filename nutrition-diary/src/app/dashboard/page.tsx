@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
-import { getEatenMeals } from "@/app/actions/actions";
+import { fetchTargetGoal, getEatenMeals } from "@/app/actions/actions";
 import UserProgressHistogram from "@/components/UserProgressHistogram";
 
 export default function Page() {
@@ -18,6 +18,14 @@ export default function Page() {
         name: string;
         date: string;
     }[]>([]);
+    const [target, setTarget] = useState<{
+        calories: number;
+        carbohydrates: number;
+        protein: number;
+        fat: number;
+    }[]>([]);
+
+
     const [showHistogram, setShowHistogram] = useState<boolean>(false);
     const [histogramInterval, setHistogramInterval] = useState<string>("");
 
@@ -26,8 +34,10 @@ export default function Page() {
             setLoading(true);
             console.log("Fetching eaten meals");
             const eatenMeals = await getEatenMeals(days);
+            const fetched_target = await fetchTargetGoal();
             console.log("Eaten meals:", eatenMeals);
             setMeals(eatenMeals);
+            setTarget(fetched_target);
             setLoading(false);
             console.log(meals)
         } catch (error) {

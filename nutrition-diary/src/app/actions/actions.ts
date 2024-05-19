@@ -326,34 +326,44 @@ export async function addTarget(userId: number, calories:number, carbohydrates: 
     await setTargetGoal(userId, calories, carbohydrates, protein, fat);
 }
 
-export async function fetchTargetGoal(userId: number) {
-    try {
-        const result = await getTargetGoal(userId);
-        if (!result || result.length === 0) {
-            console.error('No data returned from fetchTargetGoal');
-            return {
+export async function fetchTargetGoal() {
+    const userId = await getUserId();
+    if(userId){
+        try {
+            const result = await getTargetGoal(userId);
+            if (!result || result.length === 0) {
+                console.error('No data returned from fetchTargetGoal');
+                return [{
+                    calories: 0,
+                    carbohydrates: 0,
+                    protein: 0,
+                    fat: 0
+                }];
+            }
+            const { calories, carbohydrates, protein, fat } = result[0];
+            return [{
+                calories: Math.round(calories),
+                carbohydrates: Math.round(carbohydrates),
+                protein: Math.round(protein),
+                fat: Math.round(fat)
+            }];
+        } catch (error) {
+            console.error('Error fetching target goal:', error);
+            return [{
                 calories: 0,
                 carbohydrates: 0,
                 protein: 0,
                 fat: 0
-            };
-        }
-        const { calories, carbohydrates, protein, fat } = result[0];
-        return {
-            calories: Math.round(calories),
-            carbohydrates: Math.round(carbohydrates),
-            protein: Math.round(protein),
-            fat: Math.round(fat)
-        };
-    } catch (error) {
-        console.error('Error fetching target goal:', error);
-        return {
-            calories: 0,
-            carbohydrates: 0,
-            protein: 0,
-            fat: 0
-        };
+            }];
+        }        
     }
+    return [{
+        calories: 0,
+        carbohydrates: 0,
+        protein: 0,
+        fat: 0
+    }];
+
 }
 
 

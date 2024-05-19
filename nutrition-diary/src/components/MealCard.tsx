@@ -20,7 +20,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
     }
 
     return (
-        <div className={`${styles.mealCard} ${props.isSelected ? styles.selected : ''}`} onClick={props.onClick}>
+        <div className="h-[35vh] w-[12vw] bg-white m-10">
             <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex flex-col">
                 <p className="text-white text-[20px] m-auto">
                     {props.mealName}
