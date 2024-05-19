@@ -766,5 +766,9 @@ function getStartDate(interval: string): string {
     return result;
   }
   
-
-  
+  export async function getAllItems() {
+    let res = await executeQuery(
+        `SELECT * FROM savedMealItem;`,
+        []);
+    return res;
+}
