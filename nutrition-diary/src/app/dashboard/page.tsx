@@ -6,6 +6,7 @@ import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
 import { fetchTargetGoal, getEatenMeals } from "@/app/actions/actions";
 import UserProgressHistogram from "@/components/UserProgressHistogram";
+import { Nutrients } from "../lib/definitions";
 
 export default function Page() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,12 +19,12 @@ export default function Page() {
         name: string;
         date: string;
     }[]>([]);
-    const [target, setTarget] = useState<{
-        calories: number;
-        carbohydrates: number;
-        protein: number;
-        fat: number;
-    }[]>([]);
+    const [target, setTarget] = useState<Nutrients>({
+        calories: 0,
+        carbs: 0,
+        protein: 0,
+        fat: 0
+    });
 
 
     const [showHistogram, setShowHistogram] = useState<boolean>(false);
@@ -117,7 +118,12 @@ export default function Page() {
                                                 meal.protein, // protein
                                                 meal.fat, // fat
                                             ],
-                                            target: [0, 0, 0, 0],
+                                            target: [
+                                                target.calories,
+                                                target.carbs,
+                                                target.protein,
+                                                target.fat
+                                            ],
                                         }}                                   />
                                 ))}
                                 {!loading && <AddMealButton />}

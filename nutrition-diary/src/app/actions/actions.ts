@@ -333,36 +333,36 @@ export async function fetchTargetGoal() {
             const result = await getTargetGoal(userId);
             if (!result || result.length === 0) {
                 console.error('No data returned from fetchTargetGoal');
-                return [{
+                return {
                     calories: 0,
-                    carbohydrates: 0,
+                    carbs: 0,
                     protein: 0,
                     fat: 0
-                }];
+                };
             }
             const { calories, carbohydrates, protein, fat } = result[0];
-            return [{
+            return {
                 calories: Math.round(calories),
-                carbohydrates: Math.round(carbohydrates),
+                carbs: Math.round(carbohydrates),
                 protein: Math.round(protein),
                 fat: Math.round(fat)
-            }];
+            };
         } catch (error) {
             console.error('Error fetching target goal:', error);
-            return [{
+            return {
                 calories: 0,
-                carbohydrates: 0,
+                carbs: 0,
                 protein: 0,
                 fat: 0
-            }];
+            };
         }        
     }
-    return [{
+    return {
         calories: 0,
-        carbohydrates: 0,
+        carbs: 0,
         protein: 0,
         fat: 0
-    }];
+    };
 
 }
 
