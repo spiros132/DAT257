@@ -322,6 +322,30 @@ export async function updatePassword(username: string, password: string) {
     });
 }
 
+// Function to get user id by username
+export async function getUserId(username: string): Promise<number | null> {
+    try {
+        // Execute SQL query to retrieve user id based on username
+        const result = await executeQuery(
+            `SELECT id FROM users WHERE username = ?`,
+            [username]
+        );
+
+        // If result is not empty, return the user id
+        if (result && result.length > 0) {
+            return result[0].id;
+        } else {
+            // If user not found, return null
+            return null;
+        }
+    } catch (error) {
+        // Handle error
+        console.error('Error getting user ID:', error);
+        throw new Error('Failed to get user ID');
+    }
+}
+
+
 // Login function
 export async function loginUser(username: string, password: string) {
     const result = await errorHandler(async () => {
