@@ -305,13 +305,13 @@ export async function registerUser(username: string, password: string, height: n
 }
 
 // Function to update the user's height
-export async function updateHeight(username: string, height: number){
-    executeQuery(`UPDATE users SET height = ? WHERE username = ?`, [height, username]);
+export async function updateHeight(userId: number, height: number){
+    executeQuery(`UPDATE users SET height = ? WHERE id = ?`, [height, userId]);
 }
 
 // Function to update the user's weight
-export async function updateWeight(username: string, weight: number){
-    executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
+export async function updateWeight(userId: number, weight: number){
+    executeQuery(`UPDATE users SET weight = ? WHERE id = ?`, [weight, userId]);
 }
 
 // Function to update the user's password
