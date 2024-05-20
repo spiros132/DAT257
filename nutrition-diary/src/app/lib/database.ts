@@ -308,13 +308,13 @@ export async function registerUser(username: string, password: string, height: n
 }
 
 // Function to update the user's height
-export async function updateHeight(username: string, height: number){
-    executeQuery(`UPDATE users SET height = ? WHERE username = ?`, [height, username]);
+export async function updateHeight(userId: number, height: number){
+    executeQuery(`UPDATE users SET height = ? WHERE id = ?`, [height, userId]);
 }
 
 // Function to update the user's weight
-export async function updateWeight(username: string, weight: number){
-    executeQuery(`UPDATE users SET weight = ? WHERE username = ?`, [weight, username]);
+export async function updateWeight(userId: number, weight: number){
+    executeQuery(`UPDATE users SET weight = ? WHERE id = ?`, [weight, userId]);
 }
 
 // Function to update the user's password
@@ -324,6 +324,30 @@ export async function updatePassword(username: string, password: string) {
         return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
     });
 }
+
+// Function to get user id by username
+export async function getUserId(username: string): Promise<number | null> {
+    try {
+        // Execute SQL query to retrieve user id based on username
+        const result = await executeQuery(
+            `SELECT id FROM users WHERE username = ?`,
+            [username]
+        );
+
+        // If result is not empty, return the user id
+        if (result && result.length > 0) {
+            return result[0].id;
+        } else {
+            // If user not found, return null
+            return null;
+        }
+    } catch (error) {
+        // Handle error
+        console.error('Error getting user ID:', error);
+        throw new Error('Failed to get user ID');
+    }
+}
+
 
 // Login function
 export async function loginUser(username: string, password: string) {
@@ -777,6 +801,37 @@ function getStartDate(interval: string): string {
     }
   }
   
+  export async function setUserDailyProgress(userId: number, calories: number, fat: number, carbohydrates: number, protein: number) {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0]; 
+        await executeQuery(
+            `INSERT INTO userProgress (userId, calories, fat, carbohydrates, protein, date)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [userId, calories, fat, carbohydrates, protein, currentDate]
+        );
+        console.log("User's daily progress set successfully.");
+    } catch (error) {
+        console.error("Error setting user's daily progress:", error);
+    }
+}
+
+// Function to get user's daily progress
+export async function getUserDailyProgress(userId: number, date: number) {
+    try {
+        const progress = await executeQuery(
+            `SELECT calories, fat, carbohydrates, protein
+             FROM userProgress
+             WHERE userId = ? AND date = ?`,
+            [userId, date]
+        );
+        return progress; 
+    } catch (error) {
+        console.error("Error getting user's daily progress:", error);
+        return null;
+    }
+}
+
+
   export async function fetchgetUserProgress(userId: number, interval: string) {
     const startDate = getStartDate(interval);
   
