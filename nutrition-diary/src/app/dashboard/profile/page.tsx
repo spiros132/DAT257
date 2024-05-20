@@ -1,7 +1,6 @@
-
 "use client";
 import React, { useState } from 'react';
-import {updateTarget, getUserId } from '@/app/actions/actions';
+import { updateTarget, getUserId } from '@/app/actions/actions';
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -21,93 +20,55 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     let userId = await getUserId();
-    if(userId != null){
-    console.error(formData)
-    updateTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
+    if (userId != null) {
+      console.error(formData);
+      updateTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
+    } else {
+      throw new Error("User ID is null");
     }
-    else {
-        throw new Error("User ID is null");
-      }
   };
 
   return (
-    <div style={{ backgroundColor: 'white', minHeight: '100vh', padding: '2px', width: '100%', maxWidth: '100vw' }}>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" style={{ width: '250px', margin: '0 auto', marginBottom: '10px' }} />
-        <div style={{ position: 'absolute', top: '60px', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          
-          {/* Profile Section */}
-          <div style={{ marginBottom: '130px' }}></div>
-          <h2 style={{ color: 'black', fontSize: '24px', marginBottom: '10px', textAlign: 'left', marginLeft: '-120px' }}>Profile</h2>
-          
-          {/* Username Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>USERNAME</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="text" name="username" placeholder="Ex. Spiros" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+    <div style={{ backgroundColor: 'white', minHeight: '100vh', padding: '20px', width: '100%', maxWidth: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <img src="/NutritionDiary1.png" alt="Nutrition Diary Logo" style={{ width: '250px', marginBottom: '20px' }} />
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: '50px' }}>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>USERNAME</span>
+            <input type="text" name="username" placeholder="Ex. Spiros" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Password Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>PASSWORD</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="password" name="password" placeholder="Ex. 1./234 Rbhjdfbj" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>PASSWORD</span>
+            <input type="password" name="password" placeholder="Ex. 1./234 Rbhjdfbj" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Height Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>HEIGHT</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="height" placeholder="Ex. 189 cm" style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>HEIGHT</span>
+            <input type="number" name="height" placeholder="Ex. 189 cm" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Weight Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>WEIGHT</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="weight" placeholder="Ex. 70 Kg"  style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>WEIGHT</span>
+            <input type="number" name="weight" placeholder="Ex. 70 Kg" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Calories Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>CALORIES</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="calories" placeholder="Ex. 2000" value={formData.calories} onChange={handleChange} style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+        </div>
+        <div style={{ borderLeft: '2px solid black', height: '100%', marginRight: '50px' }}></div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>CALORIES</span>
+            <input type="number" name="calories" placeholder="Ex. 2000" value={formData.calories} onChange={handleChange} style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Carbohydrates Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>CARBOHYDRATES</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="carbohydrates" placeholder="Ex. 250" value={formData.carbohydrates} onChange={handleChange} style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>CARBOHYDRATES</span>
+            <input type="number" name="carbohydrates" placeholder="Ex. 250" value={formData.carbohydrates} onChange={handleChange} style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Protein Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>PROTEIN</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="protein" placeholder="Ex. 150" value={formData.protein} onChange={handleChange} style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>PROTEIN</span>
+            <input type="number" name="protein" placeholder="Ex. 150" value={formData.protein} onChange={handleChange} style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Fat Input */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <span style={{ width: '130px', marginLeft: '10px' }}>FAT</span>
-            <div style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px', border: '2px solid black', marginLeft: '10px' }}>
-              <input type="number" name="fat" placeholder="Ex. 70" value={formData.fat} onChange={handleChange} style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', width: '130px', marginLeft: '10px' }}/>
-            </div>
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '130px' }}>FAT</span>
+            <input type="number" name="fat" placeholder="Ex. 70" value={formData.fat} onChange={handleChange} style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
-
-          {/* Save Button */}
-          <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', marginLeft: '-140px' }}>
-            <button onClick={handleSave} style={{ backgroundColor: 'green', border: 'none', color: 'white', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', width: '160px', height: '40px', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Save</button>
-          </div>
+          <button onClick={handleSave} style={{ backgroundColor: 'green', border: 'none', color: 'white', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', width: '160px', height: '40px', borderRadius: '5px', marginLeft: 'auto', marginRight: '0' }}>Save</button>
         </div>
       </div>
     </div>
