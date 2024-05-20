@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import MealCard from "@/components/MealCard";
 import CalorieCounter from "@/components/CalorieCounter";
 import AddMealButton from "@/components/AddMealButton";
-import { getEatenMeals } from "@/app/actions/actions";
+import { addTarget, fetchTargetGoal, getEatenMeals, getUserId } from "@/app/actions/actions";
 import UserProgressHistogram from "@/components/UserProgressHistogram";
+import { Nutrients } from "../lib/definitions";
 
 export default function Page() {
+
     const [loading, setLoading] = useState<boolean>(false);
     const [days, setDays] = useState<number>(1);
     const [meals, setMeals] = useState<{
@@ -18,16 +20,29 @@ export default function Page() {
         name: string;
         date: string;
     }[]>([]);
+    const [target, setTarget] = useState<Nutrients>({
+        calories: 0,
+        carbs: 0,
+        protein: 0,
+        fat: 0
+    });
+
+
     const [showHistogram, setShowHistogram] = useState<boolean>(false);
     const [histogramInterval, setHistogramInterval] = useState<string>("");
 
     async function fetchData() {
         try {
+
+            const fetched_target = await fetchTargetGoal();
+            setTarget(fetched_target); 
+
             setLoading(true);
             console.log("Fetching eaten meals");
             const eatenMeals = await getEatenMeals(days);
             console.log("Eaten meals:", eatenMeals);
             setMeals(eatenMeals);
+
             setLoading(false);
             console.log(meals)
         } catch (error) {
@@ -49,7 +64,10 @@ export default function Page() {
     return (
         <div className="w-screen flex">
             <div className="w-[93%] h-screen">
-                <CalorieCounter target={[0, 0, 0, 0]} />
+                <CalorieCounter target={[target.calories,
+                                                target.carbs,
+                                                target.protein,
+                                                target.fat]} />
                 <div className="h-screen flex flex-col">
                     <div className="h-[50%] w-[75vw]">
                         <div>
@@ -107,7 +125,12 @@ export default function Page() {
                                                 meal.protein, // protein
                                                 meal.fat, // fat
                                             ],
-                                            target: [0, 0, 0, 0],
+                                            target: [
+                                                target.calories,
+                                                target.carbs,
+                                                target.protein,
+                                                target.fat
+                                            ],
                                         }}                                   />
                                 ))}
                                 {!loading && <AddMealButton />}

@@ -1,6 +1,6 @@
 "use server";
 
-import { getMealItems, getSavedMeals, testMealItems} from "../lib/database";
+import { getAllItems, getMealItems, getSavedMeals, testMealItems} from "../lib/database";
 import { fetchgetUserProgress } from "../lib/database";
 import { SavedFoodData, SearchFoodItemNutrientsData, SearchListFoodItemBranded, SearchListFoodItemCommon, SearchListFoodItemData } from "../lib/definitions";
 import { getFoodData, saveFoodData, saveMeal } from "../lib/database";
@@ -253,7 +253,6 @@ export async function getCalorieCounterInfo() {
 export async function getEatenMeals(days: number = 1): Promise<{calories:number,carbs:number,protein:number,fat:number, name:string, date:string}[]> {
     let userId = await getUserId();
     let data: {calories:number,carbs:number,protein:number,fat:number, name:string, date:string}[] = [];
-    console.log(days)
     if (userId != null) {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
         const meals = await getSavedMeals(userId, currentDate, days);
@@ -332,34 +331,47 @@ export async function addTarget(userId: number, calories:number, carbohydrates: 
     await setTargetGoal(userId, calories, carbohydrates, protein, fat);
 }
 
-export async function fetchTargetGoal(userId: number) {
-    try {
-        const result = await getTargetGoal(userId);
-        if (!result || result.length === 0) {
-            console.error('No data returned from fetchTargetGoal');
-            return {
-                calories: 0,
-                carbohydrates: 0,
-                protein: 0,
-                fat: 0
-            };
+export async function fetchTargetGoal() {
+        const userId = await getUserId();
+        if(userId){
+            try {
+                const result = await getTargetGoal(userId);
+                if (!result || result.length === 0) {
+                    console.log(result);
+                    console.error('No data returned from fetchTargetGoal');
+                    return {
+                        calories: 0,
+                        carbs: 0,
+                        protein: 0,
+                        fat: 0
+                    };
+                }
+                const { calories, carbohydrates, protein, fat } = result[0];
+                return {
+                    calories: Math.round(calories),
+                    carbs: Math.round(carbohydrates),
+                    protein: Math.round(protein),
+                    fat: Math.round(fat)
+                };
+            } catch (error) {
+                console.error('Error fetching target goal:', error);
+                return {
+                    calories: 0,
+                    carbs: 0,
+                    protein: 0,
+                    fat: 0
+                };
+            }               
         }
-        const { calories, carbohydrates, protein, fat } = result[0];
-        return {
-            calories: Math.round(calories),
-            carbohydrates: Math.round(carbohydrates),
-            protein: Math.round(protein),
-            fat: Math.round(fat)
-        };
-    } catch (error) {
-        console.error('Error fetching target goal:', error);
         return {
             calories: 0,
-            carbohydrates: 0,
+            carbs: 0,
             protein: 0,
             fat: 0
         };
-    }
+     
+
+
 }
 
 
@@ -367,6 +379,7 @@ export async function fetchTargetGoal(userId: number) {
 export async function updateTarget(userId: number, calories:number, carbohydrates: number, protein: number, fat:number) {
     await updateTargetGoal(userId, calories, carbohydrates, protein, fat);
 }
+
 
 
 // WIP!!!

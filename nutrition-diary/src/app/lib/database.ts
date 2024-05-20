@@ -81,7 +81,6 @@ function createDB(){
                 protein NOT NULL DEFAULT 0,
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
-                date DATETIME NOT NULL,
                 FOREIGN KEY (meal) REFERENCES savedMeals(id)
             );`);
         
@@ -843,5 +842,9 @@ export async function getUserDailyProgress(userId: number, date: number) {
     return result;
   }
   
-
-  
+  export async function getAllItems() {
+    let res = await executeQuery(
+        `SELECT * FROM savedMealItem;`,
+        []);
+    return res;
+}

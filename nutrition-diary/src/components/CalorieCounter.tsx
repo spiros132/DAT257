@@ -36,11 +36,11 @@ useEffect(() => {
                     Calories
                 </p>
                 <div className="bg-primary-light h-[20px] w-[80%] m-2">
-                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.calories/targetNutrients[0]*100)}%` }}>
+                    <div className="bg-primary h-full" style={{ width: `${Math.min(100, Math.floor(calorieCounterInfo.calories/targetNutrients[0]*100))}%` }}>
                     </div>
                 </div>
                 <p className="text-[1.4em]">
-                    {round(calorieCounterInfo.calories)} / {targetNutrients[0]}
+                    {Math.floor(calorieCounterInfo.calories)} / {targetNutrients[0]}
                 </p>
             </div>
 
@@ -49,11 +49,11 @@ useEffect(() => {
                     Carbohydrates
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.carbs/targetNutrients[1]*100)}%` }}>
+                    <div className="bg-primary h-full" style={{ width: `${Math.min(100, Math.floor(calorieCounterInfo.carbs/targetNutrients[1]*100))}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.carbs)} / {targetNutrients[1]}
+                    {Math.floor(calorieCounterInfo.carbs)} / {targetNutrients[1]}
                 </p>
             </div>
             
@@ -62,11 +62,11 @@ useEffect(() => {
                     Protein 
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.protein/targetNutrients[2]*100)}%` }}>
+                    <div className="bg-primary h-full" style={{ width: `${Math.min(100,Math.floor(calorieCounterInfo.protein/targetNutrients[2]*100))}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.protein)} / {targetNutrients[2]}
+                    {Math.floor(calorieCounterInfo.protein)} / {targetNutrients[2]}
                 </p>
             </div>
 
@@ -75,11 +75,11 @@ useEffect(() => {
                     Fat
                 </p>
                 <div className="bg-primary-light h-[15px] w-[60%] m-2">
-                    <div className="bg-primary h-full" style={{ width: `${Math.floor(calorieCounterInfo.fat/targetNutrients[3]*100)}%` }}>
+                    <div className="bg-primary h-full" style={{ width: `${Math.min(100, Math.floor(calorieCounterInfo.fat/targetNutrients[3]*100))}%` }}>
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.fat)} / {targetNutrients[3]}
+                    {Math.floor(calorieCounterInfo.fat)} / {targetNutrients[3]}
                 </p>
             </div>
 

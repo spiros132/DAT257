@@ -20,7 +20,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
     }
 
     return (
-        <div className={`${styles.mealCard} ${props.isSelected ? styles.selected : ''}`} onClick={props.onClick}>
+        <div className="h-[35vh] w-[12vw] bg-white m-10">
             <div className="bg-primary h-[20%] w-[100%] rounded-t-[20px] flex flex-col">
                 <p className="text-white text-[20px] m-auto">
                     {props.mealName}
@@ -35,7 +35,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
                         Calories
                     </p>
                     <p className="text-[0.8em]">
-                        {mealNutrients[0]} ({Math.floor(mealNutrients[0] / dailyTargetNutrients[0] * 100)}%)
+                        {Math.floor(mealNutrients[0])} ({Math.floor(mealNutrients[0] / dailyTargetNutrients[0] * 100)}%)
                     </p>
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -43,7 +43,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
                         Carbohydrates
                     </p>
                     <p className="text-[0.8em]">
-                        {mealNutrients[1]} ({Math.floor(mealNutrients[1] / dailyTargetNutrients[1] * 100)}%)
+                        {Math.floor(mealNutrients[1])} ({Math.floor(mealNutrients[1] / dailyTargetNutrients[1] * 100)}%)
                     </p>
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -51,7 +51,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
                         Protein
                     </p>
                     <p className="text-[0.8em]">
-                        {mealNutrients[2]} ({Math.floor(mealNutrients[2] / dailyTargetNutrients[2] * 100)}%)
+                        {Math.floor(mealNutrients[2])} ({Math.floor(mealNutrients[2] / dailyTargetNutrients[2] * 100)}%)
                     </p>
                 </div>
                 <div className="h-[25%] flex items-center justify-center flex-col">
@@ -59,7 +59,7 @@ export default function MealCard(props: { mealName: string, eatenDay: string, nu
                         Fat
                     </p>
                     <p className="text-[0.8em]">
-                        {mealNutrients[3]} ({Math.floor(mealNutrients[3] / dailyTargetNutrients[3] * 100)}%)
+                        {Math.floor(mealNutrients[3])} ({Math.floor(mealNutrients[3] / dailyTargetNutrients[3] * 100)}%)
                     </p>
                 </div>
             </div>
