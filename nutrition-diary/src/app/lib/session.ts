@@ -65,5 +65,12 @@ export async function deleteSession() {
 }
 
 export async function verifySession() {
-    return { isAuth: true, userId: 4 }
+    const cookie = cookies().get('session')?.value;
+    const session = await decrypt(cookie);
+
+    if(session?.userId == undefined) {
+        return { isAuth: false, userId: undefined }
+    }
+
+    return { isAuth: true, userId: session.userId }
 }
