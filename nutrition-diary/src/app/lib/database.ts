@@ -779,6 +779,37 @@ function getStartDate(interval: string): string {
     }
   }
   
+  export async function setUserDailyProgress(userId: number, calories: number, fat: number, carbohydrates: number, protein: number) {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0]; 
+        await executeQuery(
+            `INSERT INTO userProgress (userId, calories, fat, carbohydrates, protein, date)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [userId, calories, fat, carbohydrates, protein, currentDate]
+        );
+        console.log("User's daily progress set successfully.");
+    } catch (error) {
+        console.error("Error setting user's daily progress:", error);
+    }
+}
+
+// Function to get user's daily progress
+export async function getUserDailyProgress(userId: number, date: number) {
+    try {
+        const progress = await executeQuery(
+            `SELECT calories, fat, carbohydrates, protein
+             FROM userProgress
+             WHERE userId = ? AND date = ?`,
+            [userId, date]
+        );
+        return progress; 
+    } catch (error) {
+        console.error("Error getting user's daily progress:", error);
+        return null;
+    }
+}
+
+
   export async function fetchgetUserProgress(userId: number, interval: string) {
     const startDate = getStartDate(interval);
   
