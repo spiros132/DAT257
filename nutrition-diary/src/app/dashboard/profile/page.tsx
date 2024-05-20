@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState } from 'react';
-import { addTarget, getUserId } from '@/app/actions/actions';
+import {updateTarget, getUserId } from '@/app/actions/actions';
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ const ProfilePage = () => {
     let userId = await getUserId();
     if(userId != null){
     console.error(formData)
-    addTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
+    updateTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
     }
     else {
         throw new Error("User ID is null");
