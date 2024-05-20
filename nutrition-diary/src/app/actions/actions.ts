@@ -8,7 +8,6 @@ import { verifySession } from "../lib/session";
 import { redirect } from 'next/navigation'
 import { setTargetGoal } from "../lib/database";
 import { getTargetGoal } from "../lib/database";
-import { updateTargetGoal } from "../lib/database";
 import { getUserInfo } from "../lib/database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
@@ -376,9 +375,6 @@ export async function fetchTargetGoal() {
 
 
 
-export async function updateTarget(userId: number, calories:number, carbohydrates: number, protein: number, fat:number) {
-    await updateTargetGoal(userId, calories, carbohydrates, protein, fat);
-}
 
 
 

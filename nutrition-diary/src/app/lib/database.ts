@@ -541,22 +541,42 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
     }
 
 // Set user's target value for a specific time slope
-    export async function setTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
+export async function setTargetGoal(userId: number, calories: number, carbohydrates: number, protein: number, fat: number) {
+    // Check if the user already has a target goal
+    const existingGoal = await executeQuery(
+        `SELECT id FROM targetGoal WHERE userId = ?`,
+        [userId]
+    );
+
+    if (existingGoal && existingGoal.length > 0) {
+        // If an entry exists, update it
+        const updateResult = await executeQuery(
+            `UPDATE targetGoal SET calories = ?, carbohydrates = ?, protein = ?, fat = ? WHERE userId = ?`,
+            [calories, carbohydrates, protein, fat, userId]
+        );
+
+        if (updateResult) {
+            console.log("Target Goal Updated");
+            return updateResult;
+        } else {
+            throw new Error("Failed to update the target goal in the database.");
+        }
+    } else {
+        // If no entry exists, insert a new one
         const targetGoal = await executeQuery(
             `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?) RETURNING id`,
             [userId, calories, carbohydrates, protein, fat]
         );
-        if (targetGoal && targetGoal.length>0){
-            console.log("Target Goal Saved")
-            return targetGoal
-           
-        }
-        else {
-           
-            throw new Error("Failed to insert the meal into the database. " );
-            
+
+        if (targetGoal && targetGoal.length > 0) {
+            console.log("Target Goal Saved");
+            return targetGoal;
+        } else {
+            throw new Error("Failed to insert the target goal into the database.");
         }
     }
+}
+
 
 // Get user's target value for a specific time slope
 export async function getTargetGoal(userId: number){
@@ -575,13 +595,6 @@ export async function getTargetGoal(userId: number){
         }
     }
 
-// Update user's target goal
-    export async function updateTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number) {
-        return await executeQuery(
-            `UPDATE targetGoal SET calories = ?, carbohydrates = ?, protein = ?, fat = ? WHERE userId = ?`,
-            [calories, carbohydrates, protein, fat, userId]
-        );
-    }
 
 // Store user's progress in db
     export async function storeUserProgress(userId:number, calories: number, fat: number, carbohydrates: number, protein: number) {
