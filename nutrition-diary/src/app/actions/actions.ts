@@ -275,7 +275,6 @@ export async function getEatenMeals(days: number = 1): Promise<{calories:number,
             }
         }
     }
-    console.log(await getAllItems());
     return data;
     
 }
@@ -329,8 +328,6 @@ export async function addTarget(userId: number, calories:number, carbohydrates: 
 export async function fetchTargetGoal() {
         const userId = await getUserId();
         if(userId){
-            console.log("userId: " + userId);
-            addTarget(userId, 2000,200,100,2);
             try {
                 const result = await getTargetGoal(userId);
                 if (!result || result.length === 0) {

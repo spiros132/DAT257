@@ -35,7 +35,6 @@ export default function Page() {
         try {
 
             const fetched_target = await fetchTargetGoal();
-            console.log(fetched_target)
             setTarget(fetched_target); 
 
             setLoading(true);
