@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation'
 import { setTargetGoal } from "../lib/database";
 import { getTargetGoal } from "../lib/database";
 import { updateTargetGoal } from "../lib/database";
+import { getUserInfo } from "../lib/database";
 
 export async function SearchForFood(foodname: string): Promise<string | undefined> {
     const id = process.env.X_APP_ID;
@@ -151,6 +152,10 @@ export async function handleCommonResult(results: SearchListFoodItemCommon[], nu
         }
     }
     return nutrientData;
+}
+
+export async function getUserStuff(){
+    return getUserInfo(Number(getUserId()))
 }
 
 export async function handleBrandedResult(results: SearchListFoodItemBranded[], nutrientData: SavedFoodData[], secondTry: boolean = false){
@@ -322,6 +327,7 @@ export async function fetchUserProgress(userId: number, interval: string) {
   }
   
 export async function addTarget(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
+
     await setTargetGoal(userId, calories, carbohydrates, protein, fat);
 }
 

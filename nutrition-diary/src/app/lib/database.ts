@@ -19,6 +19,7 @@ function createDB(){
     // Serialize db operations to make sure they execute in sequence
     newDB.serialize(() => {
         // Create the tables if they don't exist
+   
         newDB.run(`
             CREATE TABLE IF NOT EXISTS foodNutrients (
                 food_name TEXT PRIMARY KEY NOT NULL,
@@ -232,6 +233,8 @@ export async function registerEatenMealItem(meal: number, food: string, quantity
   await executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
 }
 
+
+
 // Function to view the meals eaten by the user
 export async function viewMeals(user: string){
   return executeQuery(`SELECT eatenMeals.name, eatenMeals.id FROM eatenMeals
@@ -320,6 +323,30 @@ export async function updatePassword(username: string, password: string) {
         return await executeQuery(`UPDATE users SET password = ? WHERE username = ?`, [password, username]);
     });
 }
+
+// Function to get user id by username
+export async function getUserId(username: string): Promise<number | null> {
+    try {
+        // Execute SQL query to retrieve user id based on username
+        const result = await executeQuery(
+            `SELECT id FROM users WHERE username = ?`,
+            [username]
+        );
+
+        // If result is not empty, return the user id
+        if (result && result.length > 0) {
+            return result[0].id;
+        } else {
+            // If user not found, return null
+            return null;
+        }
+    } catch (error) {
+        // Handle error
+        console.error('Error getting user ID:', error);
+        throw new Error('Failed to get user ID');
+    }
+}
+
 
 // Login function
 export async function loginUser(username: string, password: string) {
@@ -515,18 +542,37 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 // Set user's target value for a specific time slope
     export async function setTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
-        return await executeQuery(
-            `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?)`,
+        const targetGoal = await executeQuery(
+            `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?) RETURNING id`,
             [userId, calories, carbohydrates, protein, fat]
         );
+        if (targetGoal && targetGoal.length>0){
+            console.log("Target Goal Saved")
+            return targetGoal
+           
+        }
+        else {
+           
+            throw new Error("Failed to insert the meal into the database. " );
+            
+        }
     }
 
 // Get user's target value for a specific time slope
 export async function getTargetGoal(userId: number){
-    return await executeQuery(
+    const targetGoal = await executeQuery(
             `SELECT calories, carbohydrates, protein, fat FROM targetGoal WHERE userId=?`,
             [userId]
         );
+      
+        if(targetGoal != undefined){
+            return targetGoal;
+        }
+        else {
+           
+            throw new Error("" );
+            
+        }
     }
 
 // Update user's target goal
@@ -754,6 +800,37 @@ function getStartDate(interval: string): string {
     }
   }
   
+  export async function setUserDailyProgress(userId: number, calories: number, fat: number, carbohydrates: number, protein: number) {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0]; 
+        await executeQuery(
+            `INSERT INTO userProgress (userId, calories, fat, carbohydrates, protein, date)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [userId, calories, fat, carbohydrates, protein, currentDate]
+        );
+        console.log("User's daily progress set successfully.");
+    } catch (error) {
+        console.error("Error setting user's daily progress:", error);
+    }
+}
+
+// Function to get user's daily progress
+export async function getUserDailyProgress(userId: number, date: number) {
+    try {
+        const progress = await executeQuery(
+            `SELECT calories, fat, carbohydrates, protein
+             FROM userProgress
+             WHERE userId = ? AND date = ?`,
+            [userId, date]
+        );
+        return progress; 
+    } catch (error) {
+        console.error("Error getting user's daily progress:", error);
+        return null;
+    }
+}
+
+
   export async function fetchgetUserProgress(userId: number, interval: string) {
     const startDate = getStartDate(interval);
   

@@ -67,27 +67,20 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
               <div className="bar-container">
                 <div className="goal-line" style={{ top: `${targetGoal.calories / 10}px` }}>
                   <div className="goal-label">Target</div>
+                  <span className="small-text" style={{ color: "RED" }}>{targetGoal.calories}g cals</span>
                 </div>
-                <span className="small-text">{dayData.calories}g cal</span>
-                <div className="bar calories" style={{ height: `${dayData.calories / 10}px` }}></div>
-
-                <div className="goal-line" style={{ top: `${targetGoal.carbohydrates / 10}px` }}>
-                  <div className="goal-label">Target</div>
+                <div className="bar calories flex-col" style={{ height: `${Math.max(dayData.calories, dayData.carbohydrates + dayData.protein + dayData.fat) / 10}px` }}>
+                  <span className="small-text">{dayData.calories}g cal</span>
+                  <div className="bar-segment carbohydrates" style={{ height: `${dayData.carbohydrates / 10}px`, margin: '2px 0' }}>
+                    <span className="small-text">{dayData.carbohydrates}g carbs</span>
+                  </div>
+                  <div className="bar-segment protein" style={{ height: `${dayData.protein / 10}px`, margin: '2px 0' }}>
+                    <span className="small-text">{dayData.protein}g protein</span>
+                  </div>
+                  <div className="bar-segment fat" style={{ height: `${dayData.fat / 10}px`, margin: '2px 0' }}>
+                    <span className="small-text">{dayData.fat}g fat</span>
+                  </div>
                 </div>
-                <span className="small-text">{dayData.carbohydrates}g carbs</span>
-                <div className="bar carbohydrates" style={{ height: `${dayData.carbohydrates / 10}px` }}></div>
-
-                <div className="goal-line" style={{ top: `${targetGoal.protein / 10}px` }}>
-                  <div className="goal-label">Target</div>
-                </div>
-                <span className="small-text">{dayData.protein}g protein</span>
-                <div className="bar protein" style={{ height: `${dayData.protein / 10}px` }}></div>
-
-                <div className="goal-line" style={{ top: `${targetGoal.fat / 10}px` }}>
-                  <div className="goal-label">Target</div>
-                </div>
-                <span className="small-text">{dayData.fat}g fat</span>
-                <div className="bar fat" style={{ height: `${dayData.fat / 10}px` }}></div>
               </div>
               <div className="bar-date">{new Date(dayData.date).toLocaleDateString()}</div>
             </div>
@@ -132,8 +125,9 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
           border-radius: 5px;
           position: relative;
           display: flex;
+          flex-direction: column;
           align-items: flex-end;
-          justify-content: center;
+          justify-content: flex-end;
         }
 
         .goal-line {
@@ -154,9 +148,13 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
         }
 
         .bar.calories { background-color: #007bff; }
-        .bar.carbohydrates { background-color: #28a745; }
-        .bar.protein { background-color: #ffc107; }
-        .bar.fat { background-color: #dc3545; }
+        .bar-segment {
+          width: 100%;
+          text-align: center;
+        }
+        .bar-segment.carbohydrates { background-color: #28a745; }
+        .bar-segment.protein { background-color: #ffc107; }
+        .bar-segment.fat { background-color: #dc3545; }
 
         .small-text {
           font-size: 12px; /* Adjust the font size as needed */
@@ -180,3 +178,4 @@ const UserProgressHistogram: React.FC<UserProgressProps> = ({ interval }) => {
 };
 
 export default UserProgressHistogram;
+
