@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import {addTarget, getUserId } from '@/app/actions/actions';
+import { addTarget, getUserId } from '@/app/actions/actions';
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -20,13 +20,12 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     let userId = await getUserId();
-    if(userId != null){
-    console.error(formData)
-    addTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
+    if (userId != null) {
+      console.error(formData);
+      addTarget(userId, Number(formData.calories), Number(formData.carbohydrates), Number(formData.protein), Number(formData.fat));
+    } else {
+      throw new Error("User ID is null");
     }
-    else {
-        throw new Error("User ID is null");
-      }
   };
 
   return (
@@ -51,7 +50,7 @@ const ProfilePage = () => {
             <input type="number" name="weight" placeholder="Ex. 70 Kg" style={{ border: '2px solid black', borderRadius: '5px', padding: '8px', width: '130px', marginLeft: '10px' }} />
           </div>
         </div>
-        <div style={{ borderLeft: '2px solid black', height: '100%', marginRight: '50px' }}></div>
+        <div style={{ borderLeft: '2px solid darkgrey', height: 'auto', marginRight: '50px' }}></div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
             <span style={{ width: '130px' }}>CALORIES</span>
