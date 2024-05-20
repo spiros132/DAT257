@@ -80,7 +80,6 @@ function createDB(){
                 protein NOT NULL DEFAULT 0,
                 fat NOT NULL DEFAULT 0,
                 carbohydrates NOT NULL DEFAULT 0,
-                date DATETIME NOT NULL,
                 FOREIGN KEY (meal) REFERENCES savedMeals(id)
             );`);
         
