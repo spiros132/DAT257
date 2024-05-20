@@ -40,7 +40,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1.4em]">
-                    {round(calorieCounterInfo.calories)} / {targetNutrients[0]}
+                    {Math.floor(calorieCounterInfo.calories)} / {targetNutrients[0]}
                 </p>
             </div>
 
@@ -53,7 +53,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.carbs)} / {targetNutrients[1]}
+                    {Math.floor(calorieCounterInfo.carbs)} / {targetNutrients[1]}
                 </p>
             </div>
             
@@ -66,7 +66,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.protein)} / {targetNutrients[2]}
+                    {Math.floor(calorieCounterInfo.protein)} / {targetNutrients[2]}
                 </p>
             </div>
 
@@ -79,7 +79,7 @@ useEffect(() => {
                     </div>
                 </div>
                 <p className="text-[1em]">
-                    {round(calorieCounterInfo.fat)} / {targetNutrients[3]}
+                    {Math.floor(calorieCounterInfo.fat)} / {targetNutrients[3]}
                 </p>
             </div>
 
