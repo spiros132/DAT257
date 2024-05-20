@@ -19,6 +19,7 @@ function createDB(){
     // Serialize db operations to make sure they execute in sequence
     newDB.serialize(() => {
         // Create the tables if they don't exist
+   
         newDB.run(`
             CREATE TABLE IF NOT EXISTS foodNutrients (
                 food_name TEXT PRIMARY KEY NOT NULL,
@@ -232,6 +233,8 @@ export async function registerEatenMeal(user: number, name: string, date: Date){
 export async function registerEatenMealItem(meal: number, food: string, quantity: number = 0){
   await executeQuery(`INSERT INTO eatenMealItem(meal, food, quantity) VALUES(?, ?, ?, ?)`, [meal, food, quantity])
 }
+
+
 
 // Function to view the meals eaten by the user
 export async function viewMeals(user: string){
@@ -516,18 +519,37 @@ export async function getUserInfo(userID: number = -1, username: string = ""){
 
 // Set user's target value for a specific time slope
     export async function setTargetGoal(userId: number, calories:number, carbohydrates: number, protein: number, fat:number){
-        return await executeQuery(
-            `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?)`,
+        const targetGoal = await executeQuery(
+            `INSERT INTO targetGoal (userId, calories, carbohydrates, protein, fat) VALUES (?, ?, ?, ?, ?) RETURNING id`,
             [userId, calories, carbohydrates, protein, fat]
         );
+        if (targetGoal && targetGoal.length>0){
+            console.log("Target Goal Saved")
+            return targetGoal
+           
+        }
+        else {
+           
+            throw new Error("Failed to insert the meal into the database. " );
+            
+        }
     }
 
 // Get user's target value for a specific time slope
 export async function getTargetGoal(userId: number){
-    return await executeQuery(
+    const targetGoal = await executeQuery(
             `SELECT calories, carbohydrates, protein, fat FROM targetGoal WHERE userId=?`,
             [userId]
         );
+      
+        if(targetGoal != undefined){
+            return targetGoal;
+        }
+        else {
+           
+            throw new Error("" );
+            
+        }
     }
 
 // Update user's target goal
